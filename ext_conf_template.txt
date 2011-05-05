@@ -1,0 +1,5 @@
+# cat=basic; type=integer; label=Storage PID: The pid of a site where the created records are saved. It's not used for reading! If you leave it empty, the usual extBase mechanism of detecting the stoare pid takes account.
+storagePid =
+
+# cat=basic; type=options[native=native, curl=curl]; label=Url Checking Service: You can choose between a native url checking implementation and a curl solution. You need curl as a separate module, but it has a better http implementation. Defaults to the native implementation.
+urlCheckService = native

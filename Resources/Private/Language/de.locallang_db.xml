@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallangExt>
+	<data type="array">
+		<languageKey index="de" type="array">
+			<label index="tx_dftools_domain_model_contentcomparisontest">Test: Inhaltsvergleich</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.compare_content">Inhalt der Vergleichs-URL
+			</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Vergleichs-URL</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.difference">Inhaltsdifferenz</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.test_content">Inhalt der Test-URL</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.test_message">Testbenachrichtigung</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.test_result">Test war erfolgreich?</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.test_url">Test-Url</label>
+			<label index="tx_dftools_domain_model_linkcheck">Linkcheck</label>
+			<label index="tx_dftools_domain_model_linkcheck.http_status_code">HTTP-Status-Code</label>
+			<label index="tx_dftools_domain_model_linkcheck.record_sets">Verbundene Datensätze</label>
+			<label index="tx_dftools_domain_model_linkcheck.result_url">Ergebnis-URL</label>
+			<label index="tx_dftools_domain_model_linkcheck.test_message">Testbenachrichtigung</label>
+			<label index="tx_dftools_domain_model_linkcheck.test_result">Test war erfolgreich?</label>
+			<label index="tx_dftools_domain_model_linkcheck.test_url">Test-URL</label>
+			<label index="tx_dftools_domain_model_recordset">Datensatz</label>
+			<label index="tx_dftools_domain_model_recordset.identifier">Eindeutige ID</label>
+			<label index="tx_dftools_domain_model_recordset.table_name">Tabellenname</label>
+			<label index="tx_dftools_domain_model_redirecttest">Test: Weiterleitungen</label>
+			<label index="tx_dftools_domain_model_redirecttest.category">Kategorie</label>
+			<label index="tx_dftools_domain_model_redirecttest.expected_url">Erwartete URL</label>
+			<label index="tx_dftools_domain_model_redirecttest.http_status_code">Erwarteter HTTP-Status-Code</label>
+			<label index="tx_dftools_domain_model_redirecttest.test_message">Testmitteilung</label>
+			<label index="tx_dftools_domain_model_redirecttest.test_result">Test war erfolgreich?</label>
+			<label index="tx_dftools_domain_model_redirecttest.test_url">Test-URL</label>
+			<label index="tx_dftools_domain_model_redirecttestcategory">Kategorie für Test-Weiterleitungen</label>
+			<label index="tx_dftools_domain_model_redirecttestcategory.category">Kategorie</label>
+		</languageKey>
+	</data>
+</T3locallangExt>

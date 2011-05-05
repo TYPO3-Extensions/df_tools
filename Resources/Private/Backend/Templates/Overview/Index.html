@@ -1,0 +1,43 @@
+<f:layout name="Default" />
+
+<f:section name="iconButtons" />
+
+<f:section name="main">
+	<h3 class="uppercase">
+		<f:translate key="tx_dftools_common.function.overview" />
+	</h3>
+
+	<f:flashMessages renderMode="div"/>
+
+	<dl>
+		<dt>
+			<f:link.action action="index" controller="RedirectTest">
+				<f:image src="EXT:sv/reports/tx_sv_report.png" alt="" />
+				<f:translate key="tx_dftools_common.function.redirectTestOverview" />
+			</f:link.action>
+		</dt>
+		<dd>
+			<f:translate key="tx_dftools_common.function.redirectTestOverview.description" />
+		</dd>
+
+		<dt>
+			<f:link.action action="index" controller="LinkCheck">
+				<f:image src="EXT:sv/reports/tx_sv_report.png" alt=""/>
+				<f:translate key="tx_dftools_common.function.linkCheckOverview" />
+			</f:link.action>
+		</dt>
+		<dd>
+			<f:translate key="tx_dftools_common.function.linkCheckOverview.description" />
+		</dd>
+
+		<dt>
+			<f:link.action action="index" controller="ContentComparisonTest">
+				<f:image src="EXT:sv/reports/tx_sv_report.png" alt="" />
+				<f:translate key="tx_dftools_common.function.contentComparisonTestOverview" />
+			</f:link.action>
+		</dt>
+		<dd>
+			<f:translate key="tx_dftools_common.function.contentComparisonTestOverview.description" />
+		</dd>
+	</dl>
+</f:section>

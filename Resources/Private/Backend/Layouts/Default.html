@@ -1,0 +1,63 @@
+<f:be.container enableClickMenu="FALSE" loadPrototype="FALSE" loadExtJs="TRUE">
+
+	{namespace df=Tx_DfTools_ViewHelpers}
+
+	<df:addExtDirectCode />
+	<df:addInlineLanguageLabelFile file="Private/Language/locallang.xml" />
+	<df:addJavaScriptSettings />
+
+	<df:addCssFile cssFile="{f:uri.resource(path:'StyleSheets/Common.css')}" />
+	<df:addCssFile cssFile="{f:uri.resource(path:'StyleSheets/Ext.ux.grid.RowEditor.css')}" />
+	<df:addCssFile cssFile="{f:uri.resource(path:'StyleSheets/Ext.ux.grid.GroupActions.css')}" />
+
+	<df:addJavaScriptFile javaScriptFile="../t3lib/js/extjs/notifications.js" />
+	<df:addJavaScriptFile javaScriptFile="../t3lib/js/extjs/ux/Ext.ux.FitToParent.js" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/Ext.ux.grid.RowExpander.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/Ext.ux.grid.RowEditor.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/Ext.ux.grid.GroupActions.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/ExtendedStores.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/Grid.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/AbstractApp.js')}" />
+
+	<div class="typo3-fullDoc">
+		<div id="typo3-docheader">
+			<div id="typo3-docheader-row1">
+				<div class="buttonsleft">
+					<f:render section="iconButtons" />
+				</div>
+				<div class="buttonsright">
+					<f:be.buttons.shortcut />
+				</div>
+			</div>
+
+			<div id="typo3-docheader-row2">
+				<div class="docheader-row2-left">
+					<f:be.menus.actionMenu>
+						<f:be.menus.actionMenuItem label="{f:translate(key: 'tx_dftools_common.function.overview')}"
+								controller="Overview"
+								arguments="{doStateRedirect:0}"
+								action="index" />
+						<f:be.menus.actionMenuItem
+								label="{f:translate(key: 'tx_dftools_common.function.redirectTestOverview')}"
+								controller="RedirectTest"
+								action="index" />
+						<f:be.menus.actionMenuItem
+								label="{f:translate(key: 'tx_dftools_common.function.linkCheckOverview')}"
+								controller="LinkCheck"
+								action="index" />
+						<f:be.menus.actionMenuItem
+								label="{f:translate(key: 'tx_dftools_common.function.contentComparisonTestOverview')}"
+								controller="ContentComparisonTest"
+								action="index" />
+					</f:be.menus.actionMenu>
+				</div>
+			</div>
+		</div>
+
+		<div id="typo3-docbody">
+			<div id="typo3-inner-docbody">
+				<f:render section="main" />
+			</div>
+		</div>
+	</div>
+</f:be.container>

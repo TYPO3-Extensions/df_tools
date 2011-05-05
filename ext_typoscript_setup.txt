@@ -1,0 +1,29 @@
+# custom response object to support non-string responses (Ext.Direct needs an array for example)
+# Note: Unfortunatly this can't be inside a the module namespace.
+config.tx_extbase.objects {
+    Tx_Extbase_MVC_Web_Response {
+        className = Tx_DfTools_Response_AjaxResponse
+    }
+}
+
+module.tx_dftools {
+	view {
+		templateRootPath = {$module.tx_dftools.view.templateRootPath}
+		partialRootPath = {$module.tx_dftools.view.partialRootPath}
+		layoutRootPath = {$module.tx_dftools.view.layoutRootPath}
+	}
+
+	persistence {
+		enableAutomaticCacheClearing = 0
+		updateReferenceIndex = 1
+
+		storagePid.cObject = TEXT
+		storagePid.cObject.data = global:TYPO3_CONF_VARS|EXTCONF|df_tools|storagePid
+	}
+
+	settings {
+		linkCheck {
+			ignoreTables = {$module.tx_dftools.settings.linkCheck.ignoreTables}
+		}
+	}
+}

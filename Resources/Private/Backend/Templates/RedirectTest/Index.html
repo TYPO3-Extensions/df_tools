@@ -1,0 +1,19 @@
+<f:layout name="Default" />
+
+<f:section name="iconButtons" />
+
+<f:section name="main">
+	{namespace df=Tx_DfTools_ViewHelpers}
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/RedirectTest/Store.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/RedirectTestCategory/Store.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/RedirectTestCategory/PopUpForm.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/RedirectTest/App.js')}" />
+
+	<h3 class="uppercase">
+		<f:translate key="tx_dftools_common.function.redirectTestOverview" />
+	</h3>
+
+	<f:flashMessages renderMode="div" />
+
+	<div id="tx_dftools"></div>
+</f:section>

@@ -1,0 +1,18 @@
+<f:layout name="Default" />
+
+<f:section name="iconButtons" />
+
+<f:section name="main">
+	{namespace df=Tx_DfTools_ViewHelpers}
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/RecordSet/Store.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/LinkCheck/Store.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/LinkCheck/App.js')}" />
+
+	<h3 class="uppercase">
+		<f:translate key="tx_dftools_common.function.linkCheckOverview" />
+	</h3>
+
+	<f:flashMessages renderMode="div" />
+
+	<div id="tx_dftools"></div>
+</f:section>

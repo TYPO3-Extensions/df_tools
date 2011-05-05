@@ -1,0 +1,20 @@
+<f:layout name="Default" />
+
+<f:section name="iconButtons" />
+
+<f:section name="main">
+	{namespace df=Tx_DfTools_ViewHelpers}
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/ContentComparisonTest/Store.js')}" />
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/ContentComparisonTest/App.js')}" />
+
+	<h3 class="uppercase">
+		<f:translate key="tx_dftools_common.function.contentComparisonTestOverview" />
+	</h3>
+
+	<f:flashMessages renderMode="div" />
+	<p class="help">
+		<f:translate key="tx_dftools_common.function.contentComparisonTestOverview.explanation" htmlEscape="false" />
+	</p>
+
+	<div id="tx_dftools"></div>
+</f:section>
