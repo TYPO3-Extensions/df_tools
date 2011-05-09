@@ -66,38 +66,14 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	}
 
 	/**
-	 * Callback filter for the Tca parser with special filter logic
-	 *
-	 * @param array $configuration
-	 * @return bool
-	 */
-	public function filterCallback($configuration) {
-		$excluded = FALSE;
-		if (isset($configuration['config']['max']) && $configuration['config']['max'] <= 50) {
-			$excluded = TRUE;
-		}
-
-		return $excluded;
-	}
-
-	/**
 	 * Fetches all URLs from the database
 	 *
 	 * @param array $excludedTables
 	 * @return array
 	 */
 	public function fetchUrls(array $excludedTables = array()) {
-		$this->tcaParser->setExcludedTables($excludedTables);
-		$this->tcaParser->setAllowedTypes(array('input', 'text'));
-		$this->tcaParser->setExcludedFields(array('t3ver_label'));
-		$this->tcaParser->setExcludedEvals(array(
-			'date', 'datetime', 'time', 'timesec', 'year',
-			'int', 'num', 'double2', 'alpha', 'alphanum', 'alphanum_x',
-			'md5', 'password'
-		));
-
 		$urls = array();
-		$tablesWithFields = $this->tcaParser->findFields(array($this, 'filterCallback'));
+		$tablesWithFields = Tx_DfTools_Utility_TcaUtility::getTextFields($this->tcaParser, $excludedTables);
 		foreach ((array)$tablesWithFields as $table => $fields) {
 			$fetchedUrls = $this->fetchUrlsFromDatabase($table, $fields);
 			foreach ($fetchedUrls as $url => $data) {

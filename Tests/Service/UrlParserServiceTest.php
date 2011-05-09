@@ -83,50 +83,6 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	}
 
 	/**
-	 * @return array
-	 */
-	public function filterCallbackFiltersCorrectlyDataProvider() {
-		return array(
-			'undefined max value' => array(
-				FALSE,
-				array('config' => array('title' => '')),
-			),
-			'defined max value of 100' => array(
-				FALSE,
-				array('config' => array('title' => '', 'max' => 100)),
-			),
-			'defined max value of 10' => array(
-				TRUE,
-				array('config' => array('title' => '', 'max' => 10)),
-			),
-			'defined max value of 50' => array(
-				TRUE,
-				array('config' => array('title' => '', 'max' => 50)),
-			),
-			'defined max value of string 10' => array(
-				TRUE,
-				array('config' => array('title' => '', 'max' => '10')),
-			),
-			'defined max value of string 100' => array(
-				FALSE,
-				array('config' => array('title' => '', 'max' => '100')),
-			),
-		);
-	}
-
-	/**
-	 * @test
-	 * @dataProvider filterCallbackFiltersCorrectlyDataProvider
-	 *
-	 * @param boolean $expected
-	 * @param array $input
-	 * @return void
-	 */
-	public function filterCallbackFiltersCorrectly($expected, array $input) {
-		$this->assertSame($expected, $this->fixture->filterCallback($input));
-	}
-
-	/**
 	 * @test
 	 * @return void
 	 */
