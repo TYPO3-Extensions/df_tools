@@ -69,11 +69,17 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	 * Fetches all URLs from the database
 	 *
 	 * @param array $excludedTables
+	 * @param array $excludedTableFields
 	 * @return array
 	 */
-	public function fetchUrls(array $excludedTables = array()) {
+	public function fetchUrls(array $excludedTables = array(), array $excludedTableFields = array()) {
+		$tablesWithFields = Tx_DfTools_Utility_TcaUtility::getTextFields(
+			$this->tcaParser,
+			$excludedTables,
+			$excludedTableFields
+		);
+
 		$urls = array();
-		$tablesWithFields = Tx_DfTools_Utility_TcaUtility::getTextFields($this->tcaParser, $excludedTables);
 		foreach ((array)$tablesWithFields as $table => $fields) {
 			$fetchedUrls = $this->fetchUrlsFromDatabase($table, $fields);
 			foreach ($fetchedUrls as $url => $data) {

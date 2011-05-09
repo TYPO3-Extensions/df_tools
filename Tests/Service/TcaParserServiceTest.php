@@ -72,7 +72,7 @@ class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function settingTheExcludeFieldsPropertyWorks() {
-		$fields = array('field1', 'field2');
+		$fields = array('table<field1>', 'field2');
 		$this->fixture->setExcludedFields($fields);
 		$this->assertSame($fields, $this->fixture->getExcludedFields());
 	}
@@ -189,6 +189,23 @@ class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$this->fixture->setExcludedEvals(array('date', 'datetime', 'trim'));
 		$this->fixture->setExcludedFields(array('t3ver_label'));
 		$this->assertSame($this->getExpectedFieldArray(), $this->fixture->findFields());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function getFieldsRespectsDifferentKindsOfExcludeFields() {
+		$this->prepareTcaConfiguration();
+
+		$this->fixture->setAllowedTypes(array('input', 'text'));
+		$this->fixture->setExcludedEvals(array('date', 'datetime', 'trim'));
+		$this->fixture->setExcludedFields(array('t3ver_label', 'pages<keywords>'));
+
+		$expectedFields = $this->getExpectedFieldArray();
+		array_splice($expectedFields['pages'], 3, 1);
+
+		$this->assertSame($expectedFields, $this->fixture->findFields());
 	}
 
 	/**

@@ -50,12 +50,13 @@ final class Tx_DfTools_Utility_TcaUtility {
 	 *
 	 * @param Tx_DfTools_Service_TcaParserService $tcaParser
 	 * @param array $excludedTables
+	 * @param array $excludedTableFields
 	 * @return array
 	 */
-	public static function getTextFields(Tx_DfTools_Service_TcaParserService $tcaParser, array $excludedTables = array()) {
+	public static function getTextFields(Tx_DfTools_Service_TcaParserService $tcaParser, array $excludedTables = array(), array $excludedTableFields = array()) {
 		$tcaParser->setExcludedTables($excludedTables);
 		$tcaParser->setAllowedTypes(array('input', 'text'));
-		$tcaParser->setExcludedFields(array('t3ver_label'));
+		$tcaParser->setExcludedFields(array_merge($excludedTableFields, array('t3ver_label')));
 		$tcaParser->setExcludedEvals(array(
 			'date', 'datetime', 'time', 'timesec', 'year',
 			'int', 'num', 'double2', 'alpha', 'alphanum', 'alphanum_x',

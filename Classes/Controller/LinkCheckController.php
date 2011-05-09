@@ -155,13 +155,19 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 		$excludedTables = array();
 		$excludedTablesString = $this->extensionConfiguration['excludedTables'];
 		if ($excludedTablesString !== '') {
-			$excludedTables = explode(',', $excludedTablesString);
+			$excludedTables = explode(',', trim($excludedTablesString, ','));
+		}
+
+		$excludedTableFields = array();
+		$excludedTableFieldsString = $this->extensionConfiguration['excludedTableFields'];
+		if ($excludedTableFieldsString !== '') {
+			$excludedTableFields = explode(',', trim($excludedTableFieldsString, ','));
 		}
 
 		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
 		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
 		$urlParser->injectTcaParser($this->objectManager->get('Tx_DfTools_Service_TcaParserService'));
-		$rawUrlData = $urlParser->fetchUrls($excludedTables);
+		$rawUrlData = $urlParser->fetchUrls($excludedTables, $excludedTableFields);
 
 		return $rawUrlData;
 	}

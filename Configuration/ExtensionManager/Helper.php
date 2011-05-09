@@ -70,7 +70,7 @@ class tx_DfTools_ExtensionManager_Helper implements t3lib_Singleton {
 		$tableFields = Tx_DfTools_Utility_TcaUtility::getTextFields($tcaParser, $excludedTables);
 		foreach ($tableFields as $table => $fields) {
 			foreach ($fields as $field) {
-				$items[] = array($table . '::' . $field, $table . '|' . $field);
+				$items[] = array('[' . $table . '] ' . $field, $table . '<' . $field . '>');
 			}
 		}
 

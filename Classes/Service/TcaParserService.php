@@ -49,6 +49,11 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 	/**
 	 * List of excluded fields
 	 *
+	 * Example structures of field entries:
+	 *
+	 * - All tables: t3ver_label
+	 * - Specific table: tt_content<bodytext>
+	 * 
 	 * @var array
 	 */
 	protected $excludedFields = array();
@@ -215,7 +220,8 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 		foreach ($GLOBALS['TCA'][$table]['columns'] as $field => $configuration) {
 			$isAllowedType = in_array($configuration['config']['type'], $allowedTypes);
 			$hasExcludedEval = $this->hasExcludedEval($configuration['config']['eval'], $excludedEvals);
-			if (isset($excludedFields[$field]) || !$isAllowedType || $hasExcludedEval) {
+			$isExcludedField = (isset($excludedFields[$field]) || isset($excludedFields[$table . '<' . $field . '>']));
+			if ($isExcludedField || !$isAllowedType || $hasExcludedEval) {
 				continue;
 			}
 
