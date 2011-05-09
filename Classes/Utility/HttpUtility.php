@@ -47,8 +47,8 @@ final class Tx_DfTools_Utility_HttpUtility {
 			if (trim(t3lib_div::getIndpEnv('HTTP_HOST')) !== '') {
 				$locationUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
 			} else {
-				if (!is_array($GLOBALS['TSFE']->config)) {
-					self::initTSFE();					
+				if (!is_object($GLOBALS['TSFE'])) {
+					self::initTSFE();
 				}
 				
 				if (trim($GLOBALS['TSFE']->baseUrl) !== '') {
