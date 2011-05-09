@@ -7,7 +7,8 @@ if (!defined('TYPO3_MODE')) {
 if (TYPO3_MODE === 'BE') {
 		// set global storage pid
 	$dfToolsExtConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools']);
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['storagePid'] = $dfToolsExtConf['storagePid'];
+	$storagePids = Tx_DfTools_Utility_TcaUtility::stripTablePrefixFromGroupDBValues($dfToolsExtConf['storagePid']);
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['storagePid'] = $storagePids[0];
 
 		// Scheduler registration
 	$prefix = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:';

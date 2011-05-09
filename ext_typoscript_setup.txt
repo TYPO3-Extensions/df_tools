@@ -22,8 +22,5 @@ module.tx_dftools {
 	}
 
 	settings {
-		linkCheck {
-			ignoreTables = {$module.tx_dftools.settings.linkCheck.ignoreTables}
-		}
 	}
 }

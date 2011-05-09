@@ -230,6 +230,20 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 
 		return $fields;
 	}
+
+	/**
+	 * Returns a list of all tables
+	 *
+	 * @return array
+	 */
+	public function getAllTables() {
+		$tables = array();
+		foreach ($GLOBALS['TCA'] as  $table => $_) {
+			$tables[] = $table;
+		}
+
+		return $tables;
+	}
 }
 
 ?>

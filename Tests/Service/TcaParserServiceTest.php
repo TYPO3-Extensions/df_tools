@@ -239,6 +239,22 @@ class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$fields = $this->fixture->findFields(array($this, 'callbackFilter'));
 		$this->assertSame($expected, $fields);
 	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function getAllTablesReturnsAListOfAllTables() {
+		$this->prepareTcaConfiguration();
+		$tables = $this->fixture->getAllTables();
+		$expectedTables = array(
+			'pages', 'pages_language_overlay',
+			'sys_language', 'sys_news',
+			'be_users',
+		);
+
+		$this->assertSame($expectedTables, $tables);
+	}
 }
 
 ?>

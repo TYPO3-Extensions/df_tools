@@ -5,6 +5,12 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE === 'BE') {
+		// CSH for the virtual configuration table
+	t3lib_extMgm::addLLrefForTCAdescr(
+		'tx_dftools_configuration',
+		'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_csh_tx_dftools_configuration.xml'
+	);
+
 	Tx_Extbase_Utility_Extension::registerModule(
 		$_EXTKEY,
 		'tools',

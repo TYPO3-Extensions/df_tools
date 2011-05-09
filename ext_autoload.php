@@ -3,7 +3,9 @@
 $extensionPath = t3lib_extMgm::extPath('df_tools');
 
 return array(
+	'tx_dftools_service_tcaparserservice' => $extensionPath . 'Classes/Service/TcaParserService.php',
 	'tx_dftools_service_extbaseconnectorservice' => $extensionPath . 'Classes/Service/ExtBaseConnectorService.php',
+	'tx_dftools_utility_tcautility' => $extensionPath . 'Classes/Utility/TcaUtility.php',
 	'tx_dftools_extdirect_abstractdataprovider' => $extensionPath . 'Classes/ExtDirect/AbstractDataProvider.php',
 
 	'tx_dftools_task_abstracttask' => $extensionPath . 'Classes/Task/AbstractTask.php',

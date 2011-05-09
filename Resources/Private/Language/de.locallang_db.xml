@@ -3,8 +3,7 @@
 	<data type="array">
 		<languageKey index="de" type="array">
 			<label index="tx_dftools_domain_model_contentcomparisontest">Test: Inhaltsvergleich</label>
-			<label index="tx_dftools_domain_model_contentcomparisontest.compare_content">Inhalt der Vergleichs-URL
-			</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.compare_content">Inhalt der Vergleichs-URL&lt;br /&gt;			</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Vergleichs-URL</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.difference">Inhaltsdifferenz</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_content">Inhalt der Test-URL</label>

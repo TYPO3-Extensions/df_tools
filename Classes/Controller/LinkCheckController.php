@@ -153,7 +153,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 */
 	protected function fetchRawUrls() {
 		$excludedTables = array();
-		$excludedTablesString = trim($this->settings['linkCheck']['ignoreTables']);
+		$excludedTablesString = $this->extensionConfiguration['excludedTables'];
 		if ($excludedTablesString !== '') {
 			$excludedTables = explode(',', $excludedTablesString);
 		}

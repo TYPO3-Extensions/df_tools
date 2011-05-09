@@ -11,9 +11,5 @@ module.tx_dftools {
 	}
 
 	settings {
-		linkCheck {
-			# cat=module.tx_dftools//misc; type=string; label=Comma-separated list of exclude tables for the synchronization
-			ignoreTables = tx_dftools_domain_model_redirecttest,tx_dftools_domain_model_linkcheck,tx_dftools_domain_model_contentcomparisontest
-		}
 	}
 }
