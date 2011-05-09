@@ -118,21 +118,17 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 	 * @return array
 	 */
 	public function resolveURL() {
+		$http_response_header = array();
 		$stream = fopen($this->url, 'r', NULL, $this->context);
 		try {
-			if (!$stream) {
-				throw new RuntimeException('Could not resolve host \'' . $this->host . '\'', 10000);
+			$content = '';
+			$metaData = array('timed_out' => FALSE, 'uri' => $this->url);
+			if ($stream) {
+				$metaData = stream_get_meta_data($stream);
+				$content = stream_get_contents($stream);
 			}
 
-			$content = stream_get_contents($stream);
-			$metaData = stream_get_meta_data($stream);
-
-			if (isset($metaData['wrapper_data']['headers'])) {
-				$headers = $metaData['wrapper_data']['headers'];
-			} else {
-				$headers = $metaData['wrapper_data'];
-			}
-
+			$headers = $http_response_header;
 			if (!count($headers)) {
 				throw new RuntimeException('Could not connect to host \'' . $this->host . '\'', 10001);
 			} elseif ($metaData['timed_out']) {
