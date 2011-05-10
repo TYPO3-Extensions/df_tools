@@ -9,6 +9,11 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="tx_dftools_domain_model_backlinktest">Back Link Test</label>
+			<label index="tx_dftools_domain_model_backlinktest.expected_url">Expected Url</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_message">Test Message</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_result">Test Succeeded?</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_url">Test Url</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest">Content Comparison Test</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_content">Compare URL Content</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Compare URL</label>

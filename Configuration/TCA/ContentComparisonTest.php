@@ -146,7 +146,7 @@ $TCA['tx_dftools_domain_model_contentcomparisontest'] = array(
 		),
 		'test_result' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_linkcheck.test_result',
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_contentcomparisontest.test_result',
 			'config' => array(
 				'type' => 'input',
 				'size' => 1,

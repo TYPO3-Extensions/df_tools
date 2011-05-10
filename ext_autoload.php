@@ -12,6 +12,8 @@ return array(
 	'tx_dftools_task_abstractfields' => $extensionPath . 'Classes/Task/AbstractFields.php',
 	'tx_dftools_task_redirecttesttask' => $extensionPath . 'Classes/Task/RedirectTestTask.php',
 	'tx_dftools_task_redirecttestfields' => $extensionPath . 'Classes/Task/RedirectTestFields.php',
+	'tx_dftools_task_backlinktesttask' => $extensionPath . 'Classes/Task/BackLinkTestTask.php',
+	'tx_dftools_task_backlinktestfields' => $extensionPath . 'Classes/Task/BackLinkTestFields.php',
 	'tx_dftools_task_contentcomparisontesttask' => $extensionPath . 'Classes/Task/ContentComparisonTestTask.php',
 	'tx_dftools_task_contentcomparisontestfields' => $extensionPath . 'Classes/Task/ContentComparisonTestFields.php',
 	'tx_dftools_task_linkchecktask' => $extensionPath . 'Classes/Task/LinkCheckTask.php',

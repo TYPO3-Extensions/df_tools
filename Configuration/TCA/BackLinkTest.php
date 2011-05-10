@@ -4,16 +4,16 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$TCA['tx_dftools_domain_model_redirecttest'] = array(
-	'ctrl' => $TCA['tx_dftools_domain_model_redirecttest']['ctrl'],
+$TCA['tx_dftools_domain_model_backlinktest'] = array(
+	'ctrl' => $TCA['tx_dftools_domain_model_backlinktest']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
-			test_url, expected_url, http_status_code, test_result, test_message, category, starttime, endtime',
+			test_url, expected_url, test_result, test_message, starttime, endtime',
 	),
 	'types' => array(
 		'0' => array(
 			'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1,
-				test_url, expected_url, http_status_code, test_result, test_message, category,
+				test_url, expected_url, test_result, test_message,
 				--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,
 				starttime, endtime'
 		),
@@ -46,9 +46,9 @@ $TCA['tx_dftools_domain_model_redirecttest'] = array(
 				'items' => array(
 					array('', 0),
 				),
-				'foreign_table' => 'tx_dftools_domain_model_redirecttest',
-				'foreign_table_where' => 'AND tx_dftools_domain_model_redirecttest.pid=###CURRENT_PID### ' .
-					' AND tx_dftools_domain_model_redirecttest.sys_language_uid IN (-1,0)',
+				'foreign_table' => 'tx_dftools_domain_model_backlinktest',
+				'foreign_table_where' => 'AND tx_dftools_domain_model_backlinktest.pid=###CURRENT_PID### ' .
+					' AND tx_dftools_domain_model_backlinktest.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l10n_diffsource' => array(
@@ -95,7 +95,7 @@ $TCA['tx_dftools_domain_model_redirecttest'] = array(
 		),
 		'test_url' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest.test_url',
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.test_url',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
@@ -104,7 +104,7 @@ $TCA['tx_dftools_domain_model_redirecttest'] = array(
 		),
 		'expected_url' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest.expected_url',
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.expected_url',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
@@ -113,7 +113,7 @@ $TCA['tx_dftools_domain_model_redirecttest'] = array(
 		),
 		'test_result' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest.test_result',
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.test_result',
 			'config' => array(
 				'type' => 'input',
 				'size' => 1,
@@ -129,57 +129,13 @@ $TCA['tx_dftools_domain_model_redirecttest'] = array(
 		),
 		'test_message' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest.test_message',
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.test_message',
 			'config' => array(
 				'type' => 'text',
 				'cols' => 40,
 				'rows' => 2,
 				'eval' => 'trim',
 				'readOnly' => TRUE,
-			),
-		),
-		'http_status_code' => array(
-			'exclude' => 0,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest.http_status_code',
-			'config' => array(
-				'type' => 'input',
-				'size' => 4,
-				'eval' => 'int'
-			),
-		),
-		'category' => array(
-			'exclude' => 0,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest.category',
-			'config' => array(
-				'type' => 'group',
-				'internal_type' => 'db',
-				'allowed' => 'tx_dftools_domain_model_redirecttestcategory',
-				'foreign_table' => 'tx_dftools_domain_model_redirecttestcategory',
-				'minitems' => 0,
-				'maxitems' => 1,
-				'wizards' => array(
-					'suggest' => array(
-						'type' => 'suggest',
-					),
-					'add' => array(
-						'type' => 'script',
-						'title' => 'New group',
-						'icon' => 'add.gif',
-						'params' => array(
-							'table' => 'tx_df_products_group',
-							'pid' => '###CURRENT_PID###',
-							'setValue' => 'prepend'
-						),
-						'script' => 'wizard_add.php',
-					),
-					'edit' => array(
-						'type' => 'popup',
-						'title' => 'Edit group',
-						'icon' => 'edit2.gif',
-						'JSopenParams' => 'height=350,width=580,status=0,menubar=0,scrollbars=1',
-						'script' => 'wizard_edit.php',
-					)
-				),
 			),
 		),
 	),

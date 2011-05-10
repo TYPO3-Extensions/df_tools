@@ -21,6 +21,7 @@ if (TYPO3_MODE === 'BE') {
 			'RedirectTest' => 'index',
 			'RedirectTestCategory' => 'read',
 			'LinkCheck' => 'index',
+			'BackLinkTest' => 'index',
 			'ContentComparisonTest' => 'index',
 		),
 		array(
@@ -133,6 +134,31 @@ $TCA['tx_dftools_domain_model_recordset'] = array(
 		),
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/RecordSet.php',
 		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_recordset.gif'
+	)
+);
+
+t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_backlinktest');
+$TCA['tx_dftools_domain_model_backlinktest'] = array(
+	'ctrl' => array(
+		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest',
+		'label' => 'test_url',
+		'dividers2tabs' => true,
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'versioningWS' => 2,
+		'versioning_followPages' => TRUE,
+		'origUid' => 't3_origuid',
+		'languageField' => 'sys_language_uid',
+		'transOrigPointerField' => 'l10n_parent',
+		'transOrigDiffSourceField' => 'l10n_diffsource',
+		'delete' => 'deleted',
+		'enablecolumns' => array(
+			'disabled' => 'hidden',
+			'starttime' => 'starttime',
+			'endtime' => 'endtime',
+		),
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/BackLinkTest.php',
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_backlinktest.gif'
 	)
 );
 

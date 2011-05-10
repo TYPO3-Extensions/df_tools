@@ -2,6 +2,11 @@
 <T3locallangExt>
 	<data type="array">
 		<languageKey index="de" type="array">
+			<label index="tx_dftools_domain_model_backlinktest">Test: Backlink</label>
+			<label index="tx_dftools_domain_model_backlinktest.expected_url">Erwartete URL</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_message">Testmitteilung</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_result">Test war erfolgreich?</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_url">Test-URL</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest">Test: Inhaltsvergleich</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_content">Inhalt der Vergleichs-URL&lt;br /&gt;			</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Vergleichs-URL</label>

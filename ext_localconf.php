@@ -26,6 +26,13 @@ if (TYPO3_MODE === 'BE') {
 		'additionalFields' => 'tx_DfTools_Task_ContentComparisonTestFields'
 	);
 
+	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['Tx_DfTools_Task_BackLinkTestTask'] = array(
+		'extension' => $_EXTKEY,
+		'title' => $prefix . 'tx_dftools_domain_model_backlinktest.scheduler.name',
+		'description' => $prefix . 'tx_dftools_domain_model_backlinktest.scheduler.description',
+		'additionalFields' => 'tx_DfTools_Task_BackLinkTestFields'
+	);
+
 	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['Tx_DfTools_Task_LinkCheckTask'] = array(
 		'extension' => $_EXTKEY,
 		'title' => $prefix . 'tx_dftools_domain_model_linkcheck.scheduler.name',
@@ -51,6 +58,9 @@ if (TYPO3_MODE === 'BE') {
 
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RecordSet.DataProvider'] =
 		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/RecordSetDataProvider.php:Tx_DfTools_ExtDirect_RecordSetDataProvider';
+
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.BackLinkTest.DataProvider'] =
+		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/BackLinkTestDataProvider.php:Tx_DfTools_ExtDirect_BackLinkTestDataProvider';
 
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.ContentComparisonTest.DataProvider'] =
 		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/ContentComparisonTestDataProvider.php:Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider';

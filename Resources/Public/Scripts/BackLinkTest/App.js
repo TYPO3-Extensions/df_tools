@@ -22,37 +22,25 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-Ext.ns('TYPO3.Backend.DfTools', 'TYPO3.DfTools.ContentComparisonTest');
+Ext.ns('TYPO3.Backend.DfTools', 'TYPO3.DfTools.BackLinkTest');
 
 /**
- * Main Application Code For The Content Comparison Test App
+ * Main Application Code For The Back Link Test App
  *
  * @author Stefan Galinski <sgalinski@df.eu>
- * @class TYPO3.DfTools.ContentComparisonTest.App
+ * @class TYPO3.DfTools.BackLinkTest.App
  * @extends TYPO3.DfTools.AbstractApp
- * @namespace TYPO3.DfTools.ContentComparisonTest
+ * @namespace TYPO3.DfTools.BackLinkTest
  */
-TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
-	/**
-	 * @private
-	 * @type {Ext.ux.grid.RowExpander}
-	 */
-	rowExpander: null,
-
-	/**
-	 * @private
-	 * @type {Array}
-	 */
-	expandedRows: [],
-
+TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	/**
 	 * Initializes the component
 	 *
 	 * @return {void}
 	 */
 	initComponent: function() {
-		this.dataProvider = TYPO3.DfTools.ContentComparisonTest.DataProvider;
-		this.gridStore = new TYPO3.DfTools.ContentComparisonTest.Store();
+		this.dataProvider = TYPO3.DfTools.BackLinkTest.DataProvider;
+		this.gridStore = new TYPO3.DfTools.BackLinkTest.Store();
 
 		this.grid = new TYPO3.DfTools.Grid({
 			renderTo: 'tx_dftools',
@@ -60,10 +48,6 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 			store: this.gridStore,
 			cm: this.getColumnModel(),
 			fetchRowClass: this.fetchRowClass.createDelegate(this),
-
-			plugins: [
-				this.getRowExpander()
-			],
 
 			viewConfiguration: {
 				hideGroupedColumn: true
@@ -73,16 +57,16 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 					id: 'tx_dftools-button-runTest',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.run + '"></span>'
-							+ '<span class="tx_dftools-button-text">'
-							+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTests'] + '</span>',
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_backlinktest.runTests'] + '</span>',
 					scope: this,
 					handler: this.onRunTests
 				}, {
 					id: 'tx_dftools-button-createRecord',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.create + '"></span>'
-							+ '<span class="tx_dftools-button-text">'
-							+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.create'] + '</span>',
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_backlinktest.create'] + '</span>',
 					scope: this,
 					handler: this.onAddRecord
 				}
@@ -90,92 +74,35 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 
 			groupActions: [{
 					iconCls: TYPO3.settings.DfTools.Sprites.run,
-					qtip: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTests'],
+					qtip: TYPO3.lang['tx_dftools_domain_model_backlinktest.runTests'],
 					scope: this,
 					callback: this.onRunTestsOfGroup
 				}
 			]
 		});
 
-		TYPO3.DfTools.ContentComparisonTest.App.superclass.initComponent.apply(this, arguments);
+		TYPO3.DfTools.BackLinkTest.App.superclass.initComponent.apply(this, arguments);
 	},
 
 	/**
-	 * Returns a row expander instance
-	 *
-	 * @private
-	 * @return {Ext.ux.grid.RowExpander}
-	 */
-	getRowExpander: function() {
-		return TYPO3.DfTools.ContentComparisonTest.App.superclass.getRowExpander.call(this, {
-			enableCaching: false,
-			tpl: new Ext.Template('<div id="tx_dftools-gridRow-{__identity}" >{difference}</div>')
-		});
-	},
-
-	/**
-	 * Adds a new content comparison test
+	 * Adds a new back link test
 	 *
 	 * @return {void}
 	 */
 	onAddRecord: function() {
-		var contentComparisonTest = new TYPO3.DfTools.ContentComparisonTest.Model({
+		var backLinkTest = new TYPO3.DfTools.BackLinkTest.Model({
 			__identity: 0,
 			testResult: 0,
 			testMessage: '',
 			testUrl: '/',
-			compareUrl: '/',
-			difference: ''
+			expectedUrl: '/'
 		});
 
-		this.grid.addRecord(contentComparisonTest);
+		this.grid.addRecord(backLinkTest);
 	},
 
 	/**
-	 * Returns the icon class for the test mode
-	 *
-	 * @private
-	 * @param {String} value
-	 * @param {Object} meta
-	 * @param {Ext.data.Record} record
-	 * @return {String}
-	 */
-	observeTestModeState: function(value, meta, record) {
-		var tooltip = '', iconClass = '';
-		if (record.get('testUrl') === record.get('compareUrl')) {
-			tooltip = TYPO3.lang['tx_dftools_domain_model_contentcomparetest.updateTestContent'];
-			iconClass = TYPO3.settings.DfTools.Sprites.refresh;
-		}
-
-		this.items[1].tooltip = tooltip;
-		return iconClass;
-	},
-
-	/**
-	 * Fires a server that updates the test content
-	 *
-	 * @param {TYPO3.DfTools.Grid} grid
-	 * @param {int} rowIndex
-	 * @return {void}
-	 */
-	onUpdateTestContent: function(grid, rowIndex) {
-		this.closeExpandedRows();
-		var record = grid.getStore().getAt(rowIndex);
-		var id = record.get('__identity');
-
-		TYPO3.DfTools.ContentComparisonTest.DataProvider.updateTestContent(id, function(response) {
-			if (response.success) {
-				record.data = Ext.apply(record.data, response.data || {});
-				record.commit();
-
-				var label = TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated'];
-				TYPO3.Flashmessage.display(TYPO3.Severity.ok, TYPO3.lang['tx_dftools_common.info'], label);
-			}
-		}, this);
-	},
-
-	/**
-	 * Returns the column model for the content comparison test grid
+	 * Returns the column model for the back link test grid
 	 *
 	 * @private
 	 * @return {Ext.grid.ColumnModel}
@@ -189,9 +116,9 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 			columns: [
 				new Ext.grid.RowNumberer({
 					width: 30
-				}), this.getRowExpander(), {
+				}), {
 					id: 'testUrl',
-					header: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.test_url'],
+					header: TYPO3.lang['tx_dftools_domain_model_backlinktest.test_url'],
 					dataIndex: 'testUrl',
 					groupable: false,
 					width: 200,
@@ -204,9 +131,9 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 						allowBlank: false
 					}
 				}, {
-					id: 'compareUrl',
-					header: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.compare_url'],
-					dataIndex: 'compareUrl',
+					id: 'expectedUrl',
+					header: TYPO3.lang['tx_dftools_domain_model_backlinktest.expected_url'],
+					dataIndex: 'expectedUrl',
 					groupable: false,
 					width: 200,
 
@@ -219,7 +146,7 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 					}
 				}, {
 					id: 'testResult',
-					header: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.test_result'],
+					header: TYPO3.lang['tx_dftools_domain_model_backlinktest.test_result'],
 					dataIndex: 'testResult',
 					width: 50,
 					editable: false,
@@ -242,9 +169,6 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 					items: [{
 							getClass: this.observeTestState
 						}, {
-							getClass: this.observeTestModeState,
-							handler: this.onUpdateTestContent.createDelegate(this)
-						}, {
 							iconCls: TYPO3.settings.DfTools.Sprites.destroy,
 							tooltip: TYPO3.lang['tx_dftools_common.delete'],
 							scope: this,
@@ -253,7 +177,7 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 							}
 						}, {
 							iconCls: TYPO3.settings.DfTools.Sprites.run,
-							tooltip: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTest'],
+							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.runTest'],
 							scope: this,
 							handler: this.onRunSingleTest
 						}
@@ -265,5 +189,5 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 });
 
 Ext.onReady(function() {
-	TYPO3.Backend.DfTools.App = new TYPO3.DfTools.ContentComparisonTest.App().run();
+	TYPO3.Backend.DfTools.App = new TYPO3.DfTools.BackLinkTest.App().run();
 });

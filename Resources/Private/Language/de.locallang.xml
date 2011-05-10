@@ -14,6 +14,8 @@
 			<label index="tx_dftools_common.error">Fehler</label>
 			<label index="tx_dftools_common.errors">Fehler</label>
 			<label index="tx_dftools_common.exception">Fehler</label>
+			<label index="tx_dftools_common.function.backLinkTestOverview">Test - Backlinks</label>
+			<label index="tx_dftools_common.function.backLinkTestOverview.description">Unter Zuhilfename dieses Werkzeugs, können Sie prüfen, ob bestimmte Seiten Backlinks zu Ihrer Domain enthalten. Diese Aufgabe kann auch als Scheduler-Job automatisiert gestartet werden.</label>
 			<label index="tx_dftools_common.function.contentComparisonTestOverview">Test - Inhaltsvergleich</label>
 			<label index="tx_dftools_common.function.contentComparisonTestOverview.description">Falls Sie einmal die Inhalte zweier Seiten vergleichen müssen, kann Ihnen dieses Werkzeug helfen. Es müssen lediglich zwei URL's eingegeben werden, um ein Vergleich der Inhalte zu starten. Natürlich kann dies auch per Scheduler-Job automatisiert gesteuert werden.</label>
 			<label index="tx_dftools_common.function.contentComparisonTestOverview.explanation">Dieses Werkzeug gibt Ihnen die Möglichkeit, Inhalte zweier URLs zu vergleichen. Es existieren zwei verschiedene Test-Modi. Zum einen können Sie die Inhalte zweier verschiedener URLs miteinander vergleichen und zum anderen den Inhalt einer früheren Version der Seite mit dem aktuellem Zustand. Hierzu müssen die ULRs identisch sein.&lt;br /&gt;&lt;br /&gt;Anmerkung: Der Inhaltsvergleich prüft nur die Inhalte zwischen &amp;lt;!--TYPO3SEARCH_begin--&amp;gt; und &amp;lt;!--TYPO3SEARCH_end--&amp;gt;. Falls diese nicht gesetzt sind, wird der komplette Inhalt geprüft.</label>
@@ -39,6 +41,17 @@
 			<label index="tx_dftools_common.update">Aktualisieren</label>
 			<label index="tx_dftools_common.updateSuccessful">Die Aktualisierung wurde erfolgreich ausgeführt!</label>
 			<label index="tx_dftools_common.warning">Warnung</label>
+			<label index="tx_dftools_domain_model_backlinktest.create">Backlink-Test anlegen</label>
+			<label index="tx_dftools_domain_model_backlinktest.expected_url">Erwartete URL</label>
+			<label index="tx_dftools_domain_model_backlinktest.runTest">Test starten</label>
+			<label index="tx_dftools_domain_model_backlinktest.runTests">Tests starten</label>
+			<label index="tx_dftools_domain_model_backlinktest.scheduler.description">Diese Aufgabe führt die Backlink-Tests aus und sendet im Fehlerfall eine Mail an die Verantwortlichen.</label>
+			<label index="tx_dftools_domain_model_backlinktest.scheduler.mailBody">Die folgenden Backlink-Tests schlugen fehl:</label>
+			<label index="tx_dftools_domain_model_backlinktest.scheduler.mailSubject">Benachrichtigung über fehlgeschlagene Backlink-Tests</label>
+			<label index="tx_dftools_domain_model_backlinktest.scheduler.name">Backlink-Tests ausführen</label>
+			<label index="tx_dftools_domain_model_backlinktest.test.missingExpectedUrl">Erwartete URL nicht im Inhalt&lt;br /&gt;Test-URL: %1$s&lt;br /&gt;Erwartete URL: %2$s</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_result">Testergebnis</label>
+			<label index="tx_dftools_domain_model_backlinktest.test_url">Test-URL</label>
 			<label index="tx_dftools_domain_model_contentcomparetest.updateTestContent">Testinhalt aktualisieren</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest">Test: Inhaltsvergleich</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Vergleichs-URL</label>

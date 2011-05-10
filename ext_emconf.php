@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'dF Tools',
-	'description' => 'Contains some useful tools like a testing tool for redirects, a link checker and a content comparison tool between the same or different urls. Furthermore there is full scheduler support for all tests and synchronization tasks.',
+	'description' => 'Contains some useful tools like a testing tool for redirects, a link checker, a back link checker and a content comparison tool between the same or different urls. Furthermore there is full scheduler support for all tests and synchronization tasks.',
 	'category' => 'be',
 	'author' => 'Stefan Galinski',
 	'author_email' => 'sgalinski@df.eu',
