@@ -3,7 +3,7 @@
 *  Copyright notice
 *
 *  (c) 2010 Xavier Perseguers (typo3@perseguers.ch)
-*  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+*  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is

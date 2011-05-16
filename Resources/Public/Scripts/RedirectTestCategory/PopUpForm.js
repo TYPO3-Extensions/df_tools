@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
  *
  *  All rights reserved
  *
