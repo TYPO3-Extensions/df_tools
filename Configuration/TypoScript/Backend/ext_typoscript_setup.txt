@@ -1,5 +1,5 @@
 # custom response object to support non-string responses (Ext.Direct needs an array for example)
-# Note: Unfortunatly this can't be inside a the module namespace.
+# Note: Unfortunatly this can not be inside a the module namespace.
 config.tx_extbase.objects {
     Tx_Extbase_MVC_Web_Response {
         className = Tx_DfTools_Response_AjaxResponse
