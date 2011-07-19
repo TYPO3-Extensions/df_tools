@@ -35,15 +35,6 @@ if (TYPO3_MODE === 'BE') {
 		'run' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/run.png',
 	);
 	t3lib_SpriteManager::addSingleIcons($icons, $_EXTKEY);
-
-	$extPath = t3lib_extMgm::extPath($_EXTKEY);
-	t3lib_extMgm::addTypoScriptConstants(
-		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_constants.txt')
-	);
-	
-	t3lib_extMgm::addTypoScriptSetup(
-		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_setup.txt')
-	);
 }
 
 t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_redirecttest');
