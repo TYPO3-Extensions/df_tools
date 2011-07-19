@@ -256,7 +256,7 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					header: TYPO3.lang['tx_dftools_domain_model_redirecttest.http_status_code.grid'],
 					dataIndex: 'httpStatusCode',
 					align: 'center',
-					width: 50,
+					width: 60,
 					editor: {
 						xtype: 'numberfield',
 						allowBlank: false,
@@ -314,7 +314,7 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					hideable: false,
 					menuDisabled: true,
 					editable: false,
-					width: 45,
+					width: 55,
 					align: 'right',
 
 					app: this,
@@ -332,6 +332,11 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 							tooltip: TYPO3.lang['tx_dftools_domain_model_redirecttest.runTest'],
 							scope: this,
 							handler: this.onRunSingleTest
+						}, {
+							iconCls: TYPO3.settings.DfTools.Sprites.edit,
+							tooltip: TYPO3.lang['tx_dftools_domain_model_redirecttest.edit'],
+							scope: this,
+							handler: this.onEditRecord
 						}
 					]
 				}

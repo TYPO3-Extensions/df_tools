@@ -45,6 +45,7 @@
 			<label index="tx_dftools_common.updateSuccessful">Die Aktualisierung wurde erfolgreich ausgeführt!</label>
 			<label index="tx_dftools_common.warning">Warnung</label>
 			<label index="tx_dftools_domain_model_backlinktest.create">Backlink-Test anlegen</label>
+			<label index="tx_dftools_domain_model_backlinktest.edit">Backlink-Test bearbeiten</label>
 			<label index="tx_dftools_domain_model_backlinktest.expected_url">Erwartete URL</label>
 			<label index="tx_dftools_domain_model_backlinktest.runTest">Test starten</label>
 			<label index="tx_dftools_domain_model_backlinktest.runTests">Tests starten</label>
@@ -60,6 +61,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Vergleichs-URL</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.create">Inhaltsvergleich anlegen</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.difference">Inhaltsdifferenz</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.edit">Inhaltsvergleichstest bearbeiten</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTest">Test starten</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTests">Tests starten</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.description">Diese Aufgabe führt die Inhaltsvergleichstests aus und sendet im Fehlerfall eine Benachrichtigungsmail an die Verantwortlichen.</label>
@@ -104,6 +106,7 @@
 			<label index="tx_dftools_domain_model_redirecttest">Test: Weiterleitungen</label>
 			<label index="tx_dftools_domain_model_redirecttest.category">Kategorie</label>
 			<label index="tx_dftools_domain_model_redirecttest.create">Weiterleitungstest anlegen</label>
+			<label index="tx_dftools_domain_model_redirecttest.edit">Weiterleitung bearbeiten</label>
 			<label index="tx_dftools_domain_model_redirecttest.expected_url">Erwartete URL</label>
 			<label index="tx_dftools_domain_model_redirecttest.http_status_code">Erwarteter HTTP-Status-Code</label>
 			<label index="tx_dftools_domain_model_redirecttest.http_status_code.grid">HTTP-Code (Erwartet)</label>

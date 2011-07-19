@@ -123,6 +123,17 @@ TYPO3.DfTools.AbstractApp = Ext.extend(Ext.Component, {
 	},
 
 	/**
+	 * Opens the edit panel for the record
+	 *
+	 * @param {TYPO3.DfTools.Grid} grid
+	 * @param {int} rowIndex
+	 * @return {void}
+	 */
+	onEditRecord: function(grid, rowIndex) {
+		this.grid.rowEditorPlugin.startEditing(rowIndex);
+	},
+
+	/**
 	 * Runs tests for all entries inside a group
 	 *
 	 * Note: The grid will be disabled until the tests are finished!

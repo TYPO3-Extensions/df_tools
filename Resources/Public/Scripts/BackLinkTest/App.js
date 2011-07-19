@@ -162,7 +162,7 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					hideable: false,
 					menuDisabled: true,
 					editable: false,
-					width: 45,
+					width: 55,
 					align: 'right',
 
 					app: this,
@@ -180,6 +180,11 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.runTest'],
 							scope: this,
 							handler: this.onRunSingleTest
+						}, {
+							iconCls: TYPO3.settings.DfTools.Sprites.edit,
+							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.edit'],
+							scope: this,
+							handler: this.onEditRecord
 						}
 					]
 				}

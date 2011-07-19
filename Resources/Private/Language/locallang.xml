@@ -52,6 +52,7 @@
 			<label index="tx_dftools_common.updateSuccessful">The updates were successfully executed!</label>
 			<label index="tx_dftools_common.warning">Warning</label>
 			<label index="tx_dftools_domain_model_backlinktest.create">Add Back Link Test</label>
+			<label index="tx_dftools_domain_model_backlinktest.edit">Edit Backlink Test</label>
 			<label index="tx_dftools_domain_model_backlinktest.expected_url">Expected URL</label>
 			<label index="tx_dftools_domain_model_backlinktest.runTest">Run Test</label>
 			<label index="tx_dftools_domain_model_backlinktest.runTests">Run tests</label>
@@ -67,6 +68,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.compare_url">Compare URL</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.create">Create Content Comparison Test</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.difference">Content Difference</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.edit">Edit Content Comparison Test</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTest">Run Test</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTests">Run Tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.description">This task runs the content comparison tests and sends a mail to the responsible persons if something fails.</label>
@@ -111,6 +113,7 @@
 			<label index="tx_dftools_domain_model_redirecttest">Redirect Test</label>
 			<label index="tx_dftools_domain_model_redirecttest.category">Category</label>
 			<label index="tx_dftools_domain_model_redirecttest.create">Add Redirect Test</label>
+			<label index="tx_dftools_domain_model_redirecttest.edit">Edit Redirect Test</label>
 			<label index="tx_dftools_domain_model_redirecttest.expected_url">Expected URL</label>
 			<label index="tx_dftools_domain_model_redirecttest.http_status_code">Expected HTTP Status Code</label>
 			<label index="tx_dftools_domain_model_redirecttest.http_status_code.grid">HTTP Code (Expected)</label>
