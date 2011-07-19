@@ -175,7 +175,7 @@ t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_contentcomparis
 $TCA['tx_dftools_domain_model_contentcomparisontest'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_contentcomparisontest',
-		'label' => 'original_content_url',
+		'label' => 'test_url',
 		'dividers2tabs' => true,
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
