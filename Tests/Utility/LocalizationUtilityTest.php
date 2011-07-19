@@ -64,7 +64,7 @@ class Tx_DfTools_Utility_LocalizationUtilityTest extends Tx_Extbase_Tests_Unit_B
 	 * @dataProvider localizableStringCanBeCreatedDataProvider
 	 *
 	 * @param string $expected
-	 * @param string $input
+	 * @param string $label
 	 * @param array $parameters
 	 * @return void
 	 */

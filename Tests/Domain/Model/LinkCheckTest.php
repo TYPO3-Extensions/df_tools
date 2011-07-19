@@ -179,7 +179,7 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	}
 
 	/**
-	 * @return void
+	 * @return array
 	 */
 	public function testHandlesAllCasesDataProvider() {
 		return array(

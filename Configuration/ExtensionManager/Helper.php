@@ -34,10 +34,9 @@ class tx_DfTools_ExtensionManager_Helper implements t3lib_Singleton {
 	 * Returns a list of tables in the expected TCA configuration format
 	 *
 	 * @param array $fieldConfiguration configuration
-	 * @param object $transferData unused
 	 * @return void
 	 */
-	public function getAllTables(&$fieldConfiguration, $transferData = NULL) {
+	public function getAllTables(&$fieldConfiguration) {
 		/** @var $tcaParser Tx_DfTools_Service_TcaParserService */
 		$tcaParser = t3lib_div::makeInstance('Tx_DfTools_Service_TcaParserService');
 		$tables = $tcaParser->getAllTables();
@@ -58,10 +57,9 @@ class tx_DfTools_ExtensionManager_Helper implements t3lib_Singleton {
 	 * Returns a list of all available tables and fields excluding the already excluded tables
 	 *
 	 * @param array $fieldConfiguration configuration
-	 * @param object $transferData unused
 	 * @return void
 	 */
-	public function getAllTableFields(&$fieldConfiguration, $transferData = NULL) {
+	public function getAllTableFields(&$fieldConfiguration) {
 		/** @var $tcaParser Tx_DfTools_Service_TcaParserService */
 		$tcaParser = t3lib_div::makeInstance('Tx_DfTools_Service_TcaParserService');
 

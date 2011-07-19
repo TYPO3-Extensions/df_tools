@@ -79,8 +79,6 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 
 	/**
 	 * The constructor.
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		$this->recordSets = new Tx_Extbase_Persistence_ObjectStorage();
@@ -184,7 +182,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Setter for recordSets
 	 *
-	 * @param Tx_Extbase_Persistence_ObjectStorage<Tx_DfTools_Domain_Model_RecordSet> $recordSets
+	 * @param Tx_Extbase_Persistence_ObjectStorage $recordSets
 	 * @return void
 	 */
 	public function setRecordSets(Tx_Extbase_Persistence_ObjectStorage $recordSets) {
@@ -213,7 +211,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Removes a RecordSet
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSet
+	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSetToRemove
 	 * @return void
 	 */
 	public function removeRecordSet(Tx_DfTools_Domain_Model_RecordSet $recordSetToRemove) {

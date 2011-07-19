@@ -39,8 +39,6 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 
 	/**
 	 * Constructor
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');

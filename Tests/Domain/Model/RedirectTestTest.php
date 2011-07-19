@@ -175,7 +175,7 @@ class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_Bas
 	}
 
 	/**
-	 * @return void
+	 * @return array
 	 */
 	public function testHandlesAllCasesDataProvider() {
 		return array(

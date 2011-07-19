@@ -43,7 +43,7 @@ class Tx_DfTools_Task_LinkCheckSynchronizeTask extends Tx_DfTools_Task_AbstractT
 	/**
 	 * Not used in this task!
 	 *
-	 * @param array failedRecords
+	 * @param array $failedRecords
 	 * @return void
 	 */
 	protected function sendNotificationEmail(array $failedRecords) {

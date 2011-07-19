@@ -239,7 +239,6 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * Checks the differences of the saved contents inside the content comparison test
 	 * and updates the instance accordingly
 	 *
-	 * @param Tx_DfTools_Domain_Model_ContentComparisonTest $contentComparisonTest
 	 * @return void
 	 */
 	protected function checkDifferences() {

@@ -53,8 +53,6 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 
 	/**
 	 * Initializes the instance
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		/** @var $bootStrap Tx_Extbase_Core_Bootstrap */

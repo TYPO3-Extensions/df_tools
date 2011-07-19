@@ -169,7 +169,7 @@ TYPO3.DfTools.RedirectTestCategory.PopUpForm = Ext.extend(Ext.FormPanel, {
 	},
 
 	/**
-	 * Updates the record informations and closes the form window
+	 * Updates the record information's and closes the form window
 	 *
 	 * @return {void}
 	 */

@@ -108,7 +108,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	/**
 	 * Removes all back link tests that can be found with the given identifiers
 	 *
-	 * @param array[int] $identifiers
+	 * @param array $identifiers
 	 * @return void
 	 */
 	public function destroyAction($identifiers) {

@@ -93,6 +93,9 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 	/**
 	 * @dataProvider updateRecordTransformRecordInformationAsCorrectParametersForExtBaseDataProvider
 	 * @test
+	 *
+	 * @param array $parameters
+	 * @param array $record
 	 * @return void
 	 */
 	public function updateRecordTransformRecordInformationAsCorrectParametersForExtBase($parameters, $record) {

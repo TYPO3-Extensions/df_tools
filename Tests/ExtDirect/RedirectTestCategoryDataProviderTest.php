@@ -90,6 +90,9 @@ class Tx_DfTools_ExtBaseConnector_RedirectTestCategoryDataProviderTest extends T
 	/**
 	 * @dataProvider updateRecordTransformRecordInformationAsCorrectParametersForExtBaseDataProvider
 	 * @test
+	 *
+	 * @param array $parameters
+	 * @param array $record
 	 * @return void
 	 */
 	public function updateRecordTransformRecordInformationAsCorrectParametersForExtBase($parameters, $record) {

@@ -173,7 +173,7 @@ abstract class Tx_DfTools_Service_UrlChecker_AbstractService implements t3lib_Si
 	/**
 	 * Returns the protocol of the domain
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function getProtocol() {
 		return $this->protocol;

@@ -27,7 +27,7 @@
 ***************************************************************/
 
 /**
- * This class provides a wizard used in EM to prepare a configuration based on flexforms.
+ * This class provides a wizard used in EM to prepare a configuration based on a flexform.
  *
  * @author Xavier Perseguers <typo3@perseguers.ch>
  * @author Stefan Galinski <sgalinski@df.eu>
@@ -89,11 +89,9 @@ class tx_DfTools_ExtensionManager_FlexForm {
 	/**
 	 * Renders a FlexForm configuration form.
 	 *
-	 * @param array	Parameter array. Contains fieldName and fieldValue.
-	 * @param t3lib_tsStyleConfig $pObj Parent object
 	 * @return string HTML wizard
 	 */
-	public function display(array $params, t3lib_tsStyleConfig $pObj) {
+	public function display() {
 		if (t3lib_div::_GP('form_submitted')) {
 			$this->processData();
 		}

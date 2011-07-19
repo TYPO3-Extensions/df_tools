@@ -50,7 +50,7 @@ final class Tx_DfTools_Utility_LocalizationUtility {
 
 	/**
 	 * Creates a localizable string with attached parameters that can be used with
-	 * the static function: localizeParameterDrivenString. The parameters are splitted
+	 * the static function: localizeParameterDrivenString. The parameters are split
 	 * by the following character string: |!|
 	 *
 	 * @see localizeParameterDrivenString

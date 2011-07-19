@@ -139,7 +139,7 @@ abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_Additional
 	 * Takes care of saving the additional fields' values in the task's object
 	 *
 	 * @param array	$submittedData An array containing the data submitted by the add/edit task form
-	 * @param Tx_DfTools_Task_AbstractTask	$task Reference to the scheduler backend module
+	 * @param tx_scheduler_Task|Tx_DfTools_Task_AbstractTask $task Reference to the scheduler backend module
 	 * @return void
 	 */
 	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {

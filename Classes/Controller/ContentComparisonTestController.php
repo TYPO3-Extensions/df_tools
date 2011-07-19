@@ -108,7 +108,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	/**
 	 * Removes all content comparison tests that can be found with the given identifiers
 	 *
-	 * @param array[int] $identifiers
+	 * @param array $identifiers
 	 * @return void
 	 */
 	public function destroyAction(array $identifiers) {

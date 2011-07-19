@@ -43,7 +43,7 @@ class Tx_DfTools_Task_LinkCheckTask extends Tx_DfTools_Task_AbstractTask {
 	/**
 	 * Sends a notification email about the failed tests
 	 *
-	 * @param array failedRecords
+	 * @param array $failedRecords
 	 * @return void
 	 */
 	protected function sendNotificationEmail(array $failedRecords) {

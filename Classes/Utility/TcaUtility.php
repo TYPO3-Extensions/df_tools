@@ -70,7 +70,7 @@ final class Tx_DfTools_Utility_TcaUtility {
 	 * Strips the prefixed table names from the group db (tca type) values and returns an
 	 * array of pure ids
 	 *
-	 * @param string
+	 * @param string $values
 	 * @return array
 	 */
 	public static function stripTablePrefixFromGroupDBValues($values) {

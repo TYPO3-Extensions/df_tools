@@ -151,7 +151,7 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 	/**
 	 * Sends a notification email about the failed tests
 	 *
-	 * @param array failedRecords
+	 * @param array $failedRecords
 	 * @return void
 	 */
 	abstract protected function sendNotificationEmail(array $failedRecords);
