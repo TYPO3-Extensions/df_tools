@@ -160,8 +160,8 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 				}
 			}),
 
-			height: 100,
-			width: 500,
+			height: 150,
+			width: 700,
 			viewConfig: {
 				autoFill: true
 			},
@@ -171,23 +171,24 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			border: false,
 
 			columns: [{
-					id: 'tableName',
+					id: 'humanReadableTableName',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.table_name'],
-					dataIndex: 'tableName',
+					dataIndex: 'humanReadableTableName',
 					sortable: true,
-					width: 100
+					width: 170
 				}, {
 					id: 'field',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.field'],
 					dataIndex: 'field',
 					sortable: true,
-					width: 100
+					width: 130
 				}, {
 					id: 'identifier',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.identifier'],
 					dataIndex: 'identifier',
 					sortable: true,
-					width: 50
+					width: 80,
+					align: 'center'
 				}, {
 					id: 'actions',
 					xtype: 'actioncolumn',
@@ -195,7 +196,7 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					hideable: false,
 					menuDisabled: true,
 					width: 50,
-					align: 'right',
+					align: 'center',
 
 					items: [{
 							iconCls: TYPO3.settings.DfTools.Sprites.edit,

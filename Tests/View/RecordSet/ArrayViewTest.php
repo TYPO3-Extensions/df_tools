@@ -42,7 +42,7 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	public function setUp() {
 		$class = $this->buildAccessibleProxy('Tx_DfTools_View_RecordSet_ArrayView');
 		$this->fixture = $this->getMockBuilder($class)
-			->setMethods(array('dummy'))
+			->setMethods(array('getReadableTableAndFieldName'))
 			->disableOriginalConstructor()
 			->getMock();
 	}
@@ -74,6 +74,7 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 				array(
 					'__identity' => 0,
 					'tableName' => 'FooBar',
+					'humanReadableTableName' => 'Readable',
 					'field' => 'FooBar',
 					'identifier' => 12
 				),
@@ -83,7 +84,8 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 				array(
 					'__identity' => 0,
 					'tableName' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
-					'field' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
+					'humanReadableTableName' => 'Readable',
+					'field' => 'FooBar',
 					'identifier' => 500,
 				),
 			)
@@ -94,12 +96,15 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $linkCheck
+	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSet
 	 * @param array $expected
 	 * @return void
 	 */
 	public function recordsCanBeRendered($recordSet, $expected) {
 		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->expects($this->once())->method('getReadableTableAndFieldName')
+			->with($recordSet)->will($this->returnValue(array('Readable', 'FooBar')));
+
 		$this->assertSame($expected, $this->fixture->_call('getPlainRecord', $recordSet));
 	}
 }

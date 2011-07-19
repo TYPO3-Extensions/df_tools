@@ -40,16 +40,41 @@ class Tx_DfTools_View_RecordSet_ArrayView extends Tx_DfTools_View_AbstractArrayV
 	}
 
 	/**
+	 * Returns the human readable table and field name of a given record set in an array
+	 *
+	 * Note: Access this data by using the following code:
+	 * list($table, $field) = $this->getReadableTableAndFieldName($recordSet);
+	 *
+	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSet
+	 * @return array
+	 */
+	protected function getReadableTableAndFieldName(Tx_DfTools_Domain_Model_RecordSet $recordSet) {
+		$table = $recordSet->getTableName();
+		t3lib_div::loadTCA($table);
+
+		$label = $GLOBALS['TCA'][$table]['ctrl']['title'];
+		$humanReadableTable = $GLOBALS['LANG']->sL($label);
+
+		$label = $GLOBALS['TCA'][$table]['columns'][$recordSet->getField()]['label'];
+		$humanReadableField = $GLOBALS['LANG']->sL($label);
+
+		return array($humanReadableTable, $humanReadableField);
+	}
+
+	/**
 	 * Renders a redirect test into a plain array
 	 *
 	 * @param Tx_DfTools_Domain_Model_RecordSet $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {
+		list($humanReadableTable, $humanReadableField) = $this->getReadableTableAndFieldName($record);
+
 		return array(
 			'__identity' => intval($record->getUid()),
 			'tableName' => htmlspecialchars($record->getTableName()),
-			'field' => htmlspecialchars($record->getField()),
+			'humanReadableTableName' => htmlspecialchars($humanReadableTable),
+			'field' => htmlspecialchars($humanReadableField),
 			'identifier' => intval($record->getIdentifier()),
 		);
 	}
