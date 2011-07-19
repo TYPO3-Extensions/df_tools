@@ -210,6 +210,8 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 	getRowEditorPlugin: function() {
 		return new Ext.ux.grid.RowEditor({
 			clicksToEdit: 2,
+			frameWidth: 4,
+			minButtonWidth: 100,
 			saveText: TYPO3.lang['tx_dftools_common.update'],
 			cancelText: TYPO3.lang['tx_dftools_common.cancel'],
 			commitChangesText: TYPO3.lang['tx_dftools_common.editor_cancelOrCommit'],
