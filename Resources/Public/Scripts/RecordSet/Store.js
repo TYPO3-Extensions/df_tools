@@ -40,6 +40,10 @@ TYPO3.DfTools.RecordSet.Model = Ext.data.Record.create([{
 		type: 'string',
 		allowBlank: false
 	}, {
+		name: 'field',
+		type: 'string',
+		allowBlank: false
+	}, {
 		name: 'identifier',
 		type: 'int'
 	}, {

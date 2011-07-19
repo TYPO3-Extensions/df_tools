@@ -102,6 +102,7 @@
 			<label index="tx_dftools_domain_model_linkcheck.test_result">Test Result</label>
 			<label index="tx_dftools_domain_model_linkcheck.test_url">Test URL</label>
 			<label index="tx_dftools_domain_model_recordset">Record Set</label>
+			<label index="tx_dftools_domain_model_recordset.field">Field</label>
 			<label index="tx_dftools_domain_model_recordset.identifier">Identifier</label>
 			<label index="tx_dftools_domain_model_recordset.table_name">Database Table</label>
 			<label index="tx_dftools_domain_model_redirectestcategory.categoryExists">The category title &quot;%s&quot; is already in use!</label>

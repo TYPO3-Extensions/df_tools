@@ -49,6 +49,7 @@ class Tx_DfTools_View_RecordSet_ArrayView extends Tx_DfTools_View_AbstractArrayV
 		return array(
 			'__identity' => intval($record->getUid()),
 			'tableName' => htmlspecialchars($record->getTableName()),
+			'field' => htmlspecialchars($record->getField()),
 			'identifier' => intval($record->getIdentifier()),
 		);
 	}

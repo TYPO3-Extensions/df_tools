@@ -39,6 +39,14 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	protected $tableName = '';
 
 	/**
+	 * Database Field
+	 *
+	 * @validate NotEmpty
+	 * @var string $field
+	 */
+	protected $field = '';
+
+	/**
 	 * Identifier
 	 *
 	 * @validate NotEmpty
@@ -64,6 +72,25 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	 */
 	public function getTableName() {
 		return $this->tableName;
+	}
+
+	/**
+	 * Setter for field
+	 *
+	 * @param string $field
+	 * @return void
+	 */
+	public function setField($field) {
+		$this->field = $field;
+	}
+
+	/**
+	 * Getter for field
+	 *
+	 * @return string
+	 */
+	public function getField() {
+		return $this->field;
 	}
 
 	/**

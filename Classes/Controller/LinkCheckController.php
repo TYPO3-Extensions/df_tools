@@ -164,9 +164,13 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 			$excludedTableFields = explode(',', trim($excludedTableFieldsString, ','));
 		}
 
+		/** @var $tcaParser Tx_DfTools_Service_TcaParserService */
+		$tcaParser = $this->objectManager->get('Tx_DfTools_Service_TcaParserService');
+
 		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
 		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
-		$urlParser->injectTcaParser($this->objectManager->get('Tx_DfTools_Service_TcaParserService'));
+		$urlParser->injectTcaParser($tcaParser);
+
 		$rawUrlData = $urlParser->fetchUrls($excludedTables, $excludedTableFields);
 
 		return $rawUrlData;

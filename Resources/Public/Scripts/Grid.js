@@ -146,7 +146,7 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 			this.rowEditorPlugin.stopEditing();
 		}
 
-		TYPO3.Dialog.QuestionDialog({
+		new TYPO3.Dialog.QuestionDialog({
 			title: TYPO3.lang['tx_dftools_common.deleteQuestion.title'],
 			msg: TYPO3.lang['tx_dftools_common.deleteQuestion.message'],
 			buttons: Ext.Msg.YESNO,

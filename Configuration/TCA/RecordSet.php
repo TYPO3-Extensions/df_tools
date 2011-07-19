@@ -7,12 +7,12 @@ $TCA['tx_dftools_domain_model_recordset'] = array(
 	'ctrl' => $TCA['tx_dftools_domain_model_recordset']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
-			table_name, identifier, starttime, endtime',
+			table_name, field, identifier, starttime, endtime',
 	),
 	'types' => array(
 		'0' => array(
 			'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1,
-				table_name, identifier,
+				table_name, field, identifier,
 				--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,
 				starttime, endtime'
 		),
@@ -95,6 +95,15 @@ $TCA['tx_dftools_domain_model_recordset'] = array(
 		'table_name' => array(
 			'exclude' => 0,
 			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_recordset.table_name',
+			'config' => array(
+				'type' => 'input',
+				'size' => 30,
+				'eval' => 'trim,required'
+			),
+		),
+		'field' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_recordset.field',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,

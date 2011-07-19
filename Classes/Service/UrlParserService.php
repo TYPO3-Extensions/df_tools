@@ -132,27 +132,36 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	 *
 	 * @param array $rows
 	 * @param string $table
-	 * @return array
+	 * @return array $array[<url>][<table><uid>] = array(<table>, <uid>)
 	 */
 	protected function parseRows(array $rows, $table) {
 		$urls = array();
 		foreach ((array) $rows as $row) {
 			$foundUrls = array();
-			$searchString = implode(' ', $row);
 			$regularExpression = '/((?:https|http|ftps|ftp):\/\/[^\s<>\)\]|"\']+)/is';
-			preg_match_all($regularExpression, $searchString, $foundUrls);
-
-			$length = count($foundUrls[1]);
-			for ($i = 0; $i < $length; ++$i) {
-				$url = trim($foundUrls[1][$i], '.');
-				$url = html_entity_decode($url, ENT_COMPAT, 'UTF-8');
-
-				list($url, $anchor) = explode('#', $url, 2);
-				if ($anchor{0} === '!') {
-					$url .= '#' . $anchor;
+			foreach ($row as $field => $value) {
+				if ($field === 'uid') {
+					continue;
 				}
 
-				$urls[$url][$table . $row['uid']] = array($table, $row['uid']);
+				$matches = array();
+				preg_match_all($regularExpression, $value, $matches);
+				$foundUrls[$field] = $matches;
+			}
+
+			foreach ($foundUrls as $field => $matches) {
+				$length = count($matches[1]);
+				for ($i = 0; $i < $length; ++$i) {
+					$url = trim($matches[1][$i], '.');
+					$url = html_entity_decode($url, ENT_COMPAT, 'UTF-8');
+
+					list($url, $anchor) = explode('#', $url, 2);
+					if ($anchor{0} === '!') {
+						$url .= '#' . $anchor;
+					}
+
+					$urls[$url][$table . $field . $row['uid']] = array($table, $field, $row['uid']);
+				}
 			}
 		}
 
@@ -190,7 +199,7 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 				continue;
 			}
 
-			$urls[$row['url']]['pages' . $row['uid']] = array('pages', $row['uid']);
+			$urls[$row['url']]['pages' . 'url' . $row['uid']] = array('pages', 'url', $row['uid']);
 		}
 
 		return $urls;

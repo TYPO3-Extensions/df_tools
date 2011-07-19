@@ -108,7 +108,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	/**
 	 * Returns the existing raw url data without the record sets!
 	 *
-	 * @return array $array[<table><identifier>] = <recordSetData>
+	 * @return array $array[<table><field><identifier>] = <recordSetData>
 	 */
 	protected function fetchExistingRawRecordSets() {
 		$enableFields = $this->linkCheckRepository->getPageSelectInstance()->enableFields(
@@ -117,7 +117,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 		);
 
 		$resource = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'uid, table_name, identifier',
+			'uid, table_name, field, identifier',
 			'tx_dftools_domain_model_recordset',
 			'1=1' . $enableFields
 		);
@@ -128,7 +128,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 		}
 
 		while (($recordSet = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resource))) {
-			$identifier = $recordSet['table_name'] . $recordSet['identifier'];
+			$identifier = $recordSet['table_name'] . $recordSet['field'] . $recordSet['identifier'];
 			$recordSets[$identifier] = $recordSet;
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($resource);
@@ -142,17 +142,19 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * Note: The record set will be created if it doesn't exists!
 	 *
 	 * @param string $table
+	 * @param string $field
 	 * @param string $identifier
 	 * @param array $existingRawRecordSets by reference
 	 * @return Tx_DfTools_Domain_Model_RecordSet
 	 */
-	protected function getValidRecordSet($table, $identifier, array &$existingRawRecordSets) {
-		$index = $table . $identifier;
+	protected function getValidRecordSet($table, $field, $identifier, array &$existingRawRecordSets) {
+		$index = $table . $field . $identifier;
 		if (!isset($existingRawRecordSets[$index])) {
 			/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 			$recordSet = $this->objectManager->create('Tx_DfTools_Domain_Model_RecordSet');
 			$recordSet->setTableName($table);
 			$recordSet->setIdentifier($identifier);
+			$recordSet->setField($field);
 
 			$aggregateRootObjects = new Tx_Extbase_Persistence_ObjectStorage();
 			$aggregateRootObjects->attach($recordSet);
@@ -165,6 +167,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 			$existingRawRecordSets[$index] = array(
 				'uid' => $recordSet->getUid(),
 				'table_name' => $table,
+				'field' => $field,
 				'identifier' => $identifier,
 			);
 		} else {
@@ -189,8 +192,8 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 		$recordWasEdited = FALSE;
 		$recordSets = $record->getRecordSets();
 		foreach ($recordSets as $recordSet) {
-			$index = $recordSet->getTableName() . $recordSet->getIdentifier();
-			if (!isset($rawUrls[$index])) {
+			$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
+			if (!isset($rawUrls[$index]) || $recordSet->getField() === '') {
 				$recordWasEdited = TRUE;
 				$record->removeRecordSet($recordSet);
 			}
@@ -201,20 +204,28 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	}
 
 	/**
-	 * Adds missing record sets to an url record based on the given raw url information's
+	 * Adds missing record sets to an url record based on the given raw url information's. Returns
+	 * a boolean TRUE if a record set was added, otherwise FALSE.
 	 *
 	 * @param array $rawUrls by reference
 	 * @param Tx_DfTools_Domain_Model_LinkCheck $record
 	 * @param array $existingRawRecordSets by reference
-	 * @return void
+	 * @return boolean
 	 */
 	protected function addMissingRecordSetsToUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $record, array &$existingRawRecordSets) {
+		$recordWasEdited = FALSE;
 		foreach ($rawUrls as $rawRecordSet) {
-			list($table, $identifier) = $rawRecordSet;
+			list($table, $field, $identifier) = $rawRecordSet;
+			if ($field === '' || $table === '' || $identifier === '') {
+				continue;
+			}
 
-			$recordSet = $this->getValidRecordSet($table, $identifier, $existingRawRecordSets);
+			$recordWasEdited = TRUE;
+			$recordSet = $this->getValidRecordSet($table, $field, $identifier, $existingRawRecordSets);
 			$record->addRecordSet($recordSet);
 		}
+
+		return $recordWasEdited;
 	}
 
 	/**
@@ -232,9 +243,9 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 			$record->setTestUrl($url);
 
 			foreach ($rawRecordSets as $rawRecordSet) {
-				list($table, $identifier) = $rawRecordSet;
+				list($table, $field, $identifier) = $rawRecordSet;
 
-				$recordSet = $this->getValidRecordSet($table, $identifier, $existingRawRecordSets);
+				$recordSet = $this->getValidRecordSet($table, $field, $identifier, $existingRawRecordSets);
 				$record->addRecordSet($recordSet);
 			}
 
@@ -269,8 +280,9 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 
 			$recordWasEdited = $this->removeUnknownRecordSetsFromUrlRecord($rawUrls[$url], $record);
 			if (count($rawUrls[$url])) {
-				$recordWasEdited = TRUE;
-				$this->addMissingRecordSetsToUrlRecord($rawUrls[$url], $record, $existingRawRecordSets);
+				$recordWasEdited = $this->addMissingRecordSetsToUrlRecord(
+					$rawUrls[$url], $record, $existingRawRecordSets
+				);
 			}
 
 			if ($recordWasEdited) {

@@ -60,10 +60,12 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	public function recordsCanBeRenderedDataProvider() {
 		$recordSetNormal = new Tx_DfTools_Domain_Model_RecordSet();
 		$recordSetNormal->setTableName('FooBar');
+		$recordSetNormal->setField('FooBar');
 		$recordSetNormal->setIdentifier('12');
 
 		$recordSetWithXSS = new Tx_DfTools_Domain_Model_RecordSet();
 		$recordSetWithXSS->setTableName('<img src="" onerror="alert(\'Ooops!!!\');"/>');
+		$recordSetWithXSS->setField('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$recordSetWithXSS->setIdentifier(500);
 
 		return array(
@@ -72,6 +74,7 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 				array(
 					'__identity' => 0,
 					'tableName' => 'FooBar',
+					'field' => 'FooBar',
 					'identifier' => 12
 				),
 			),
@@ -80,6 +83,7 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 				array(
 					'__identity' => 0,
 					'tableName' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
+					'field' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
 					'identifier' => 500,
 				),
 			)

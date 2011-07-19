@@ -177,6 +177,12 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					sortable: true,
 					width: 100
 				}, {
+					id: 'field',
+					header: TYPO3.lang['tx_dftools_domain_model_recordset.field'],
+					dataIndex: 'field',
+					sortable: true,
+					width: 100
+				}, {
 					id: 'identifier',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.identifier'],
 					dataIndex: 'identifier',

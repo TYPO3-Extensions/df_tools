@@ -23,6 +23,7 @@
 			<label index="tx_dftools_domain_model_linkcheck.test_result">Test war erfolgreich?</label>
 			<label index="tx_dftools_domain_model_linkcheck.test_url">Test-URL</label>
 			<label index="tx_dftools_domain_model_recordset">Datensatz</label>
+			<label index="tx_dftools_domain_model_recordset.field">Feld</label>
 			<label index="tx_dftools_domain_model_recordset.identifier">Eindeutige ID</label>
 			<label index="tx_dftools_domain_model_recordset.table_name">Tabellenname</label>
 			<label index="tx_dftools_domain_model_redirecttest">Test: Weiterleitungen</label>

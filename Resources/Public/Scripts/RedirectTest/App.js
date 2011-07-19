@@ -134,7 +134,7 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 * @return {void}
 	 */
 	onDeleteUnusedCategories: function() {
-		TYPO3.Dialog.QuestionDialog({
+		new TYPO3.Dialog.QuestionDialog({
 			title: TYPO3.lang['tx_dftools_domain_model_redirecttestcategory.massDeleteQuestion.title'],
 			msg: TYPO3.lang['tx_dftools_domain_model_redirecttestcategory.massDeleteQuestion.message'],
 			buttons: Ext.Msg.YESNO,

@@ -71,6 +71,15 @@ class Tx_DfTools_Domain_Model_RecordSetTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @test
 	 * @return void
 	 */
+	public function setFieldWorks() {
+		$this->fixture->setField('FooBar');
+		$this->assertSame('FooBar', $this->fixture->getField());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
 	public function setIdentifierWorks() {
 		$this->fixture->setIdentifier(12);
 		$this->assertSame(12, $this->fixture->getIdentifier());

@@ -110,32 +110,35 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	public function parseRowsCanFetchAllUrlsDataProvider() {
 		return array(
 			'one url in a single field' => array(
-				array('http://foo.bar' => array('pages1' => array('pages', 1))),
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar')),
 			),
 			'multiple urls in a single field' => array(
 				array(
-					'http://foo.bar' => array('pages1' => array('pages', 1)),
-					'http://foo.bar2' => array('pages1' => array('pages', 1)),
+					'http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1)),
+					'http://foo.bar2' => array('pagestitle1' => array('pages', 'title', 1)),
 				),
 				array(array('uid' => 1, 'title' => 'http://foo.bar blablabla http://foo.bar2')),
 			),
 			'one url in multiple fields' => array(
-				array('http://foo.bar' => array('pages1' => array('pages', 1))),
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'field2' => 'FooBar', 'title' => 'http://foo.bar')),
 			),
 			'multiple urls in multiple fields' => array(
 				array(
-					'http://foo.bar2' => array('pages1' => array('pages', 1)),
-					'http://foo.bar' => array('pages1' => array('pages', 1)),
+					'http://foo.bar2' => array('pagesfield21' => array('pages', 'field2', 1)),
+					'http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1)),
 				),
 				array(array('uid' => 1, 'field2' => 'http://foo.bar2', 'title' => 'http://foo.bar')),
 			),
 			'multiple urls in multiple fields with multiple rows' => array(
 				array(
-					'http://foo.bar2' => array('pages1' => array('pages', 1), 'pages3' => array('pages', 3)),
-					'http://foo.bar' => array('pages1' => array('pages', 1)),
-					'http://foo.bar3' => array('pages2' => array('pages', 2)),
+					'http://foo.bar2' => array(
+						'pagesfield21' => array('pages', 'field2', 1),
+						'pagestitle3' => array('pages', 'title', 3)
+					),
+					'http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1)),
+					'http://foo.bar3' => array('pagestitle2' => array('pages', 'title', 2)),
 				),
 				array(
 					array('uid' => 1, 'field2' => 'http://foo.bar2', 'title' => 'http://foo.bar'),
@@ -143,48 +146,51 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 					array('uid' => 3, 'title' => 'http://foo.bar2'),
 				),
 			),
-			'multiple urls in multiple fields with multiple rows' => array(
+			'multiple urls in multiple fields without multiple rows' => array(
 				array(
-					'http://foo.bar' => array('pages1' => array('pages', 1)),
+					'http://foo.bar' => array(
+						'pagesfield11' => array('pages', 'field1', 1),
+						'pagesfield21' => array('pages', 'field2', 1),
+					),
 				),
 				array(
 					array('uid' => 1, 'field1' => 'http://foo.bar', 'field2' => 'http://foo.bar'),
 				),
 			),
 			'ftp url ending with quote' => array(
-				array('ftp://foo.bar' => array('pages1' => array('pages', 1))),
+				array('ftp://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'ftp://foo.bar"foo')),
 			),
 			'ftps url ending with single quote' => array(
-				array('ftps://foo.bar' => array('pages1' => array('pages', 1))),
+				array('ftps://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'ftps://foo.bar\'foo')),
 			),
 			'http url with anchor' => array(
-				array('http://foo.bar' => array('pages1' => array('pages', 1))),
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar#bla foo')),
 			),
 			'http url ending with space' => array(
-				array('http://foo.bar' => array('pages1' => array('pages', 1))),
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar foo')),
 			),
 			'http url ending with dot' => array(
-				array('http://foo.bar' => array('pages1' => array('pages', 1))),
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar. foo')),
 			),
 			'http url ending with file extension' => array(
-				array('http://foo.bar/bla.php' => array('pages1' => array('pages', 1))),
+				array('http://foo.bar/bla.php' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar/bla.php foo')),
 			),
 			'https url ending with angle bracket' => array(
-				array('https://foo.bar' => array('pages1' => array('pages', 1))),
+				array('https://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'https://foo.bar<foo')),
 			),
 			'http url with html entities' => array(
-				array('https://foo.bar?a&b' => array('pages1' => array('pages', 1))),
+				array('https://foo.bar?a&b' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'https://foo.bar?a&amp;b<foo')),
 			),
 			'https url from twitter (/#!/ segment)' => array(
-				array('https://twitter.com/#!/sgalinski' => array('pages1' => array('pages', 1))),
+				array('https://twitter.com/#!/sgalinski' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'https://twitter.com/#!/sgalinski')),
 			),
 		);
@@ -243,9 +249,9 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 			->with('uid, url, urltype', 'pages', $whereClause);
 
 		$expectedUrls = array(
-			'http://foo.bar' => array('pages1' => array('pages', 1)),
-			'ftp://foo.bar' => array('pages2' => array('pages', 2)),
-			'https://foo.bar' => array('pages4' => array('pages', 4)),
+			'http://foo.bar' => array('pagesurl1' => array('pages', 'url', 1)),
+			'ftp://foo.bar' => array('pagesurl2' => array('pages', 'url', 2)),
+			'https://foo.bar' => array('pagesurl4' => array('pages', 'url', 4)),
 		);
 
 		$this->assertSame($expectedUrls, $this->fixture->_call('fetchLinkCheckLinkType'));
