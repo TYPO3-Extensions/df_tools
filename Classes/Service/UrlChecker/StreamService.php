@@ -119,7 +119,7 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 	 */
 	public function resolveURL() {
 		$http_response_header = array();
-		$stream = fopen($this->url, 'r', NULL, $this->context);
+		$stream = @fopen($this->url, 'r', NULL, $this->context);
 		try {
 			$content = '';
 			$metaData = array('timed_out' => FALSE, 'uri' => $this->url);
@@ -146,7 +146,9 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 			fclose($stream);
 
 		} catch (Exception $exception) {
-			fclose($stream);
+			if (is_resource($stream)) {
+				fclose($stream);
+			}
 			throw $exception;
 		}
 

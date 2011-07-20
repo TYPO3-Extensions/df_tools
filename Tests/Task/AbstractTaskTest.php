@@ -110,7 +110,7 @@ class Tx_DfTools_Task_AbstractTaskTest extends Tx_Extbase_Tests_Unit_BaseTestCas
 	public function checkTestResultsSendsFailedRecordsByMailDataProvider() {
 		return array(
 			'failed tests' => array(
-				FALSE, array(
+				TRUE, array(
 					array('testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK),
 					array('testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR),
 					array('testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK),
