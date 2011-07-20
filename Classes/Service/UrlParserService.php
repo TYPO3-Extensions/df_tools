@@ -138,13 +138,15 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 		$urls = array();
 		foreach ((array) $rows as $row) {
 			$foundUrls = array();
-			$regularExpression = '/((?:https|http|ftps|ftp):\/\/[^\s<>\)\]|"\']+)/is';
+			$regularExpression = '#((https?|ftp)://[\w\d:\#\!@%/;\$\(\)~\_\?\+\-=\.&]{3,1015})#is';
 			foreach ($row as $field => $value) {
 				if ($field === 'uid') {
 					continue;
 				}
 
 				$matches = array();
+				$value = htmlentities($value, ENT_NOQUOTES, 'UTF-8', FALSE);
+				$value = str_replace(array('&lt;', '&gt;'), array('<', '>'), $value);
 				preg_match_all($regularExpression, $value, $matches);
 				$foundUrls[$field] = $matches;
 			}
@@ -152,8 +154,16 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 			foreach ($foundUrls as $field => $matches) {
 				$length = count($matches[1]);
 				for ($i = 0; $i < $length; ++$i) {
-					$url = trim($matches[1][$i], '.');
-					$url = html_entity_decode($url, ENT_COMPAT, 'UTF-8');
+					$url = html_entity_decode($matches[1][$i], ENT_NOQUOTES, 'UTF-8');
+
+					$trimList = '.';
+					if (strpos($url, ')') !== FALSE) {
+						$characterMap = count_chars($url);
+						if ($characterMap[ord('(')] !== $characterMap[ord(')')]) {
+							$trimList .= ')';
+						}
+					}
+					$url = trim($url, $trimList);
 
 					list($url, $anchor) = explode('#', $url, 2);
 					if ($anchor{0} === '!') {

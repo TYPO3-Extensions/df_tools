@@ -161,9 +161,9 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 				array('ftp://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'ftp://foo.bar"foo')),
 			),
-			'ftps url ending with single quote' => array(
-				array('ftps://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
-				array(array('uid' => 1, 'title' => 'ftps://foo.bar\'foo')),
+			'ftp url ending with single quote' => array(
+				array('ftp://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => 'ftp://foo.bar\'foo')),
 			),
 			'http url with anchor' => array(
 				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
@@ -173,9 +173,17 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar foo')),
 			),
+			'http url ending with comma' => array(
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => 'http://foo.bar, foo')),
+			),
 			'http url ending with dot' => array(
 				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'http://foo.bar. foo')),
+			),
+			'http url ending with a closing brace' => array(
+				array('http://foo.bar/foo_(bar)' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => 'http://foo.bar/foo_(bar). foo')),
 			),
 			'http url ending with file extension' => array(
 				array('http://foo.bar/bla.php' => array('pagestitle1' => array('pages', 'title', 1))),
@@ -185,13 +193,29 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 				array('https://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'https://foo.bar<foo')),
 			),
+			'http url with ending brace' => array(
+				array('http://foo.bar' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => '(http://foo.bar)')),
+			),
+			'http url with braces inside the url' => array(
+				array('http://foo.bar/foo_(bar)' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => 'http://foo.bar/foo_(bar)')),
+			),
 			'http url with html entities' => array(
-				array('https://foo.bar?a&b' => array('pagestitle1' => array('pages', 'title', 1))),
-				array(array('uid' => 1, 'title' => 'https://foo.bar?a&amp;b<foo')),
+				array('https://foo.bar?a=1&b=2' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => 'https://foo.bar?a=1&amp;b=2<foo')),
 			),
 			'https url from twitter (/#!/ segment)' => array(
 				array('https://twitter.com/#!/sgalinski' => array('pagestitle1' => array('pages', 'title', 1))),
 				array(array('uid' => 1, 'title' => 'https://twitter.com/#!/sgalinski')),
+			),
+			'https url from facebook defined in typoscript within an iframe' => array(
+				array('https://www.facebook.com/plugins/like.php?href=www.facebook.com%2Fdomainfactory.GmbH&send=false&layout=button_count&width=115&show_faces=false&action=like&colorscheme=light&font=arial&height=21' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => ' value = <iframe src="https://www.facebook.com/plugins/like.php?href=www.facebook.com%2Fdomainfactory.GmbH&amp;send=false&amp;layout=button_count&amp;width=115&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=arial&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:115px; height:21px;"></iframe>')),
+			),
+			'https url with umlauts' => array(
+				array('https://kundenmenü.de' => array('pagestitle1' => array('pages', 'title', 1))),
+				array(array('uid' => 1, 'title' => 'https://kundenmenü.de')),
 			),
 		);
 	}
