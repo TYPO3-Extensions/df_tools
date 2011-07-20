@@ -35,7 +35,7 @@ final class Tx_DfTools_Utility_HttpUtility {
 	 *
 	 * Note:
 	 * The method t3lib_div::locationHeaderUrl does the same, but it's much slower and
-	 * doesn't work with installation in subdirectories and if we must handle AJAX or Scheduler
+	 * doesn't work with installation in sub-directories and if we must handle AJAX or Scheduler
 	 * requests.
 	 *
 	 * @static
@@ -47,7 +47,7 @@ final class Tx_DfTools_Utility_HttpUtility {
 			if (trim(t3lib_div::getIndpEnv('HTTP_HOST')) !== '') {
 				$locationUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
 			} else {
-				if (!is_object($GLOBALS['TSFE'])) {
+				if (!is_object($GLOBALS['TSFE']) || !is_array($GLOBALS['TSFE']->config)) {
 					self::initTSFE();
 				}
 				
