@@ -87,6 +87,22 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 					'expectedUrl' => 'fooBar',
 				)
 			),
+
+			'simple update call with quoted expected url' => array(
+				array(
+					'__hmac' => 'hmac',
+					'backLinkTest' => array(
+						'__identity' => 2,
+						'testUrl' => 'fooBar',
+						'expectedUrl' => 'http:\\\/\\\/foo.bar',
+					)
+				), array(
+					'__hmac' => 'hmac',
+					'__identity' => 2,
+					'testUrl' => 'fooBar',
+					'expectedUrl' => 'http:\/\/foo.bar',
+				)
+			),
 		);
 	}
 
@@ -113,7 +129,7 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 			'__hmac' => '__hmac',
 			'newBackLinkTest' => array(
 				'testUrl' => 'FooBar',
-				'expectedUrl' => 'FooBar',
+				'expectedUrl' => 'http:\\\/\\\/foo.bar',
 			)
 		);
 		$this->addMockedExtBaseConnector('BackLinkTest', 'create', $parameters);
@@ -124,7 +140,7 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 		$record->records->__hmac = '__hmac';
 		$record->records->__identity = 0;
 		$record->records->testUrl = 'FooBar';
-		$record->records->expectedUrl = 'FooBar';
+		$record->records->expectedUrl = 'http:\/\/foo.bar';
 
 		$this->fixture->create($record);
 	}

@@ -169,7 +169,7 @@ class Tx_DfTools_Domain_Model_BackLinkTest extends Tx_Extbase_DomainObject_Abstr
 
 			$message = '';
 			$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK;
-			$regularExpression = '/href="' . preg_quote($expectedUrl, '/') . '"/is';
+			$regularExpression = '/href="' . str_replace(array('\/', '/'), array('/', '\/'), $expectedUrl) . '"/is';
 			if (!preg_match($regularExpression, $report['content'])) {
 				$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR;
 				$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(

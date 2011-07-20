@@ -51,7 +51,7 @@ class Tx_DfTools_ExtDirect_BackLinkTestDataProvider extends Tx_DfTools_ExtDirect
 			'backLinkTest' => array(
 				'__identity' => intval($updatedRecord['__identity']),
 				'testUrl' => $updatedRecord['testUrl'],
-				'expectedUrl' => $updatedRecord['expectedUrl'],
+				'expectedUrl' => str_replace('\\', '\\\\', $updatedRecord['expectedUrl']),
 			)
 		);
 
@@ -70,7 +70,7 @@ class Tx_DfTools_ExtDirect_BackLinkTestDataProvider extends Tx_DfTools_ExtDirect
 			'__hmac' => $newRecord['__hmac'],
 			'newBackLinkTest' => array(
 				'testUrl' => $newRecord['testUrl'],
-				'expectedUrl' => $newRecord['expectedUrl'],
+				'expectedUrl' => str_replace('\\', '\\\\', $newRecord['expectedUrl']),
 			)
 		);
 

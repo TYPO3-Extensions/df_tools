@@ -132,10 +132,17 @@ class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_Bas
 			'url in content' => array(
 				array('content' => 'Anything is fine: <a href="http://foo.bar/test/">test</a> or not?'),
 				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				'http://foo.bar/test/'
 			),
 			'url not in content' => array(
 				array('content' => 'Anything is fine or not?'),
 				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR,
+				'http://foo.bar/test/'
+			),
+			'regular expression' => array(
+				array('content' => 'Anything is fine: <a href="https://foo.bar/test/">test</a> or not?'),
+				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				'https?:\/\/foo.bar/.+'
 			),
 		);
 	}
@@ -146,10 +153,12 @@ class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_Bas
 	 *
 	 * @param array $resolveUrlOutput
 	 * @param int $testResult
+	 * @param string $expectedUrl
 	 * @return void
 	 */
-	public function testHandlesAllCases(array $resolveUrlOutput, $testResult) {
+	public function testHandlesAllCases(array $resolveUrlOutput, $testResult, $expectedUrl) {
 		$urlCheckerService = $this->getUrlCheckerService($resolveUrlOutput);
+		$this->fixture->setExpectedUrl($expectedUrl);
 		$this->fixture->test($urlCheckerService);
 		$this->assertSame($testResult, $this->fixture->getTestResult());
 	}
