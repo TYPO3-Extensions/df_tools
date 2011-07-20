@@ -87,7 +87,7 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 	 * Checks the test results and sends a mail with the non-working
 	 *
 	 * @param array $testResults
-	 * @return boolean
+	 * @return boolean always TRUE
 	 */
 	protected function checkTestResults(array $testResults) {
 		$notifySeverities = array(
@@ -103,13 +103,11 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 			}
 		}
 
-		$result = TRUE;
 		if (count($failedRecords)) {
-			$result = FALSE;
 			$this->sendNotificationEmail($failedRecords);
 		}
 
-		return $result;
+		return TRUE;
 	}
 
 	/**
