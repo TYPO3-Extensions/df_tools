@@ -37,9 +37,16 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 	protected $fixture;
 
 	/**
+	 * @var boolean
+	 */
+	protected $backupCurlUse;
+
+	/**
 	 * @return void
 	 */
 	public function setUp() {
+		$this->backupCurlUse = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'];
+
 		/** @noinspection PhpUndefinedMethodInspection */
 		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_UrlChecker_Factory');
 		$this->fixture = $this->getMockBuilder($proxyClass)
@@ -52,6 +59,7 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 	 * @return void
 	 */
 	public function tearDown() {
+		$GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] = $this->backupCurlUse;
 		unset($this->fixture);
 	}
 
@@ -78,10 +86,10 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 				'', 'Tx_DfTools_Service_UrlChecker_StreamService'
 			),
 			'native type' => array(
-				'native', 'Tx_DfTools_Service_UrlChecker_StreamService'
+				FALSE, 'Tx_DfTools_Service_UrlChecker_StreamService'
 			),
 			'curl type' => array(
-				'curl', 'Tx_DfTools_Service_UrlChecker_CurlService'
+				TRUE, 'Tx_DfTools_Service_UrlChecker_CurlService'
 			),
 		);
 	}
@@ -90,11 +98,13 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 	 * @test
 	 * @dataProvider getReturnsUrlCheckerServiceDataProvider
 	 *
-	 * @param string $type
+	 * @param boolean $type
 	 * @param string $expectedClass
 	 * @return void
 	 */
 	public function getReturnsUrlCheckerService($type, $expectedClass) {
+		$GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] = $type;
+
 		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
 		$objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('get'));
 		$this->fixture->injectObjectManager($objectManager);

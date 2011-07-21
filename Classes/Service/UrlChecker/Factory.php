@@ -48,12 +48,11 @@ class Tx_DfTools_Service_UrlChecker_Factory {
 	/**
 	 * Returns an instance of the url checker depending on your extension configuration
 	 *
-	 * @param string $type native (default) or curl
 	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
 	 */
-	public function get($type = 'native') {
+	public function get() {
 		/** @var $instance Tx_DfTools_Service_UrlChecker_AbstractService */
-		if ($type === 'curl') {
+		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse']) {
 			$instance = $this->objectManager->get('Tx_DfTools_Service_UrlChecker_CurlService');
 		} else {
 			$instance = $this->objectManager->get('Tx_DfTools_Service_UrlChecker_StreamService');

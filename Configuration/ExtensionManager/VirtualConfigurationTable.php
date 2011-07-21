@@ -11,7 +11,7 @@ $TCA['tx_dftools_configuration'] = array(
 	),
 	'types' => array(
 		'0' => array(
-			'showitem' => 'storagePid,urlCheckService,excludedTables,excludedTableFields',
+			'showitem' => 'storagePid,excludedTables,excludedTableFields',
 		),
 	),
 	'palettes' => array(
@@ -30,20 +30,6 @@ $TCA['tx_dftools_configuration'] = array(
 				'size' => 1,
 				'minitems' => 1,
 				'maxitems' => 1,
-			),
-		),
-		'urlCheckService' => array(
-			'label'   => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.urlCheckService',
-			'config'  => array(
-				'type' => 'select',
-				'default' => 'native',
-				'items' => array(
-					array('Native', 'native'),
-					array('cUrl', 'curl'),
-				),
-				'minitems' => 1,
-				'maxitems' => 1,
-				'size' => 1,
 			),
 		),
 		'excludedTables' => array(

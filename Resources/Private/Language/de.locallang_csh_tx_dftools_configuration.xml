@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<T3locallangExt>
-	<data type="array">
-		<languageKey index="de" type="array">
-			<label index="urlCheckService.description">Benutze die native Option, falls das PHP-cUrl-Modul nicht installiert ist oder seltsame Fehler während den Tests auftreten. Sollte das Modul jedoch installiert sein, so sollte dies bevorzugt genutzt werden, da die Variante oftmals bessere Ergebnisse liefert. </label>
-		</languageKey>
-	</data>
-</T3locallangExt>

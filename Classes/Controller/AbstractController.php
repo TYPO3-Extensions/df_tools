@@ -166,7 +166,7 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	protected function getUrlCheckerService() {
 		/** @var $factory Tx_DfTools_Service_UrlChecker_Factory */
 		$factory = $this->objectManager->get('Tx_DfTools_Service_UrlChecker_Factory');
-		return $factory->get($this->extensionConfiguration['urlCheckService']);
+		return $factory->get();
 	}
 }
 
