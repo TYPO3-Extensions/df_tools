@@ -124,7 +124,7 @@ abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_Additional
 			if ($address === FALSE) {
 				$validInput = FALSE;
 				$label = $GLOBALS['LANG']->sL('LLL:EXT:df_tools/Resources/Private/Language/locallang.xml:' .
-											  'tx_dftools_common.scheduler.emailNotValid');
+					'tx_dftools_common.scheduler.emailNotValid');
 				$schedulerModule->addMessage($label, t3lib_FlashMessage::ERROR);
 				break;
 			}

@@ -87,7 +87,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Dom
 			} else {
 				$class = 'Tx_DfTools_Domain_Model_RedirectTest';
 				$field = $this->dataMapper->convertPropertyNameToColumnName($field, $class);
-				$field = $GLOBALS['TYPO3_DB']->fullQuoteStr($field);
+				$field = $GLOBALS['TYPO3_DB']->fullQuoteStr($field, 'Tx_DfTools_Domain_Model_RedirectTest');
 				$orderings[] = trim($field, '\'') . ' ' . $direction;
 			}
 		}

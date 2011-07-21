@@ -5,15 +5,6 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE === 'BE') {
-	$extPath = t3lib_extMgm::extPath($_EXTKEY);
-	t3lib_extMgm::addTypoScriptConstants(
-		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_constants.txt')
-	);
-	
-	t3lib_extMgm::addTypoScriptSetup(
-		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_setup.txt')
-	);
-
 		// set global storage pid
 	$dfToolsExtConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools']);
 	$storagePids = Tx_DfTools_Utility_TcaUtility::stripTablePrefixFromGroupDBValues($dfToolsExtConf['storagePid']);
@@ -26,6 +17,13 @@ if (TYPO3_MODE === 'BE') {
 		'title' => $prefix . 'tx_dftools_domain_model_redirecttest.scheduler.name',
 		'description' => $prefix . 'tx_dftools_domain_model_redirecttest.scheduler.description',
 		'additionalFields' => 'tx_DfTools_Task_RedirectTestFields'
+	);
+
+	$prefix = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:';
+	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['Tx_DfTools_Task_RedirectTestRealUrlImportTask'] = array(
+		'extension' => $_EXTKEY,
+		'title' => $prefix . 'tx_dftools_domain_model_redirecttest.schedulerImport.name',
+		'description' => $prefix . 'tx_dftools_domain_model_redirecttest.schedulerImport.description'
 	);
 
 	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['Tx_DfTools_Task_ContentComparisonTestTask'] = array(

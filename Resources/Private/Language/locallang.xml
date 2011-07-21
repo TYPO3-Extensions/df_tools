@@ -128,6 +128,8 @@
 			<label index="tx_dftools_domain_model_redirecttest.scheduler.mailBody">The following redirects failed:</label>
 			<label index="tx_dftools_domain_model_redirecttest.scheduler.mailSubject">Notification about failed redirects</label>
 			<label index="tx_dftools_domain_model_redirecttest.scheduler.name">Execute Redirect Tests</label>
+			<label index="tx_dftools_domain_model_redirecttest.schedulerImport.description">This task creates redirect tests from the entries in the realurl redirect table. They are saved inside the category &quot;RealUrl&quot;.</label>
+			<label index="tx_dftools_domain_model_redirecttest.schedulerImport.name">RealUrl-Import</label>
 			<label index="tx_dftools_domain_model_redirecttest.test.httpCodeMismatch">Expected HTTP Code: %1$s&lt;br /&gt;Fetched HTTP Code: %2$s</label>
 			<label index="tx_dftools_domain_model_redirecttest.test.urlMismatch">Test URL: %1$s&lt;br /&gt;Expected URL: %2$s&lt;br /&gt;Fetched URL: %3$s</label>
 			<label index="tx_dftools_domain_model_redirecttest.test_url">Test URL</label>

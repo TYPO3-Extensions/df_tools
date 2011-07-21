@@ -116,6 +116,15 @@ class Tx_DfTools_Controller_RedirectTestControllerTest extends Tx_DfTools_Tests_
 	 * @test
 	 * @return void
 	 */
+	public function realUrlImportServiceCanBeReturned() {
+		$service = $this->fixture->getRealUrlImportService();
+		$this->assertInstanceOf('Tx_DfTools_Service_RealUrlImportService', $service);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
 	public function readFetchesSortedRange() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->repository->expects($this->once())->method('findSortedAndInRangeByCategory')
@@ -183,6 +192,23 @@ class Tx_DfTools_Controller_RedirectTestControllerTest extends Tx_DfTools_Tests_
 			->with($this->isType('integer'));
 
 		$this->fixture->destroyAction(array(10, 20));
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function importFromRealUrlUsesTheService() {
+		/** @var $objectManager Tx_ExtBase_Object_ObjectManager */
+		$objectManager = $this->getMock('Tx_ExtBase_Object_ObjectManager', array('get'));
+		$this->fixture->injectObjectManager($objectManager);
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$importService = $this->getMock('Tx_DfTools_Service_RealUrlImportService', array('importFromRealUrl'));
+		$importService->expects($this->once())->method('importFromRealUrl');
+		$objectManager->expects($this->once())->method('get')->will($this->returnValue($importService));
+
+		$this->fixture->importFromRealUrlAction();
 	}
 
 	/**

@@ -70,6 +70,15 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	}
 
 	/**
+	 * Returns an instance of the realUrl import service
+	 *
+	 * @return Tx_DfTools_Service_RealUrlImportService
+	 */
+	public function getRealUrlImportService() {
+		return $this->objectManager->get('Tx_DfTools_Service_RealUrlImportService');
+	}
+
+	/**
 	 * @return void
 	 */
 	public function initializeIndexAction() {
@@ -154,6 +163,17 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 			$redirectTest = $this->redirectTestRepository->findByUid(intval($identifier));
 			$this->redirectTestRepository->remove($redirectTest);
 		}
+	}
+
+	/**
+	 * Imports entries from the realUrl redirect table as redirect tests
+	 *
+	 * @return void
+	 */
+	public function importFromRealUrlAction() {
+		$importer = $this->getRealUrlImportService();
+		$importer->importFromRealUrl();
+		unset($importer);
 	}
 
 	/**

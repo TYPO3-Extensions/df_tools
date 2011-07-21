@@ -39,8 +39,8 @@ class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	protected $backupGlobals = TRUE;
 
 	/**
-	 * Exclude TYPO3_DB from backup/ restore of $GLOBALS
-	 * because resource types cannot be handled during serializing
+	 * Exclude TYPO3_DB from backup/restore of $GLOBALS,
+	 * because resource types cannot be handled during the serialization
 	 *
 	 * @var array
 	 */

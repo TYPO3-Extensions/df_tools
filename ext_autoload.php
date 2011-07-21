@@ -19,6 +19,7 @@ return array(
 	'tx_dftools_task_linkchecktask' => $extensionPath . 'Classes/Task/LinkCheckTask.php',
 	'tx_dftools_task_linkcheckfields' => $extensionPath . 'Classes/Task/LinkCheckFields.php',
 	'tx_dftools_task_linkchecksynchronizetask' => $extensionPath . 'Classes/Task/LinkCheckSynchronizeTask.php',
+	'tx_dftools_task_redirecttestrealurlimporttask' => $extensionPath . 'Classes/Task/RedirectTestRealUrlImportTask.php',
 
 	'tx_dftools_tests_extbaseconnectortestcase' => $extensionPath . 'Tests/ExtBaseConnectorTestCase.php',
 	'tx_dftools_tests_controllertestcase' => $extensionPath . 'Tests/ControllerTestCase.php',
