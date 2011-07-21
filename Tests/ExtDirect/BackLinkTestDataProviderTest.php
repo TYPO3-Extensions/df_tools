@@ -54,6 +54,38 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 	/**
 	 * @return array
 	 */
+	public function readCallsExtBaseControllerWithParametersDataProvider() {
+		return array(
+			'default' => array(
+				(object) array('start' => 0, 'limit' => 200, 'sort' => 'testResult', 'dir' => 'DESC'),
+			),
+			'non-normalized input' => array(
+				(object) array('start' => '0', 'limit' => '200', 'sort' => 'testResult', 'dir' => 'desc'),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider readCallsExtBaseControllerWithParametersDataProvider
+	 * @test
+	 *
+	 * @param stdClass $input
+	 * @return void
+	 */
+	public function readCallsExtBaseControllerWithParameters($input) {
+		$parameters = array(
+			'offset' => 0,
+			'limit' => 200,
+			'sortingField' => 'testResult',
+			'sortAscending' => FALSE
+		);
+		$this->addMockedExtBaseConnector('BackLinkTest', 'read', $parameters);
+		$this->fixture->read($input);
+	}
+
+	/**
+	 * @return array
+	 */
 	public function updateRecordTransformRecordInformationAsCorrectParametersForExtBaseDataProvider() {
 		return array(
 			'simple update call #1' => array(

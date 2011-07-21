@@ -54,6 +54,38 @@ class Tx_DfTools_ExtBaseConnector_RedirectTestDataProviderTest extends Tx_DfTool
 	/**
 	 * @return array
 	 */
+	public function readCallsExtBaseControllerWithParametersDataProvider() {
+		return array(
+			'default' => array(
+				(object) array('start' => 0, 'limit' => 200, 'sort' => 'testResult', 'dir' => 'DESC'),
+			),
+			'non-normalized input' => array(
+				(object) array('start' => '0', 'limit' => '200', 'sort' => 'testResult', 'dir' => 'desc'),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider readCallsExtBaseControllerWithParametersDataProvider
+	 * @test
+	 *
+	 * @param stdClass $input
+	 * @return void
+	 */
+	public function readCallsExtBaseControllerWithParameters($input) {
+		$parameters = array(
+			'offset' => 0,
+			'limit' => 200,
+			'sortingField' => 'testResult',
+			'sortAscending' => FALSE
+		);
+		$this->addMockedExtBaseConnector('RedirectTest', 'read', $parameters);
+		$this->fixture->read($input);
+	}
+
+	/**
+	 * @return array
+	 */
 	public function updateRecordTransformRecordInformationAsCorrectParametersForExtBaseDataProvider() {
 		return array(
 			'simple update call #1' => array(
@@ -164,6 +196,31 @@ class Tx_DfTools_ExtBaseConnector_RedirectTestDataProviderTest extends Tx_DfTool
 		$record->records->httpStatusCode = 404;
 
 		$this->fixture->create($record);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function destroyRecordsCallsExtBaseController() {
+		$parameters = array(
+			'identifiers' => array(1, 2, 3),
+		);
+		$this->addMockedExtBaseConnector('RedirectTest', 'destroy', $parameters);
+		$this->fixture->destroyRecords(array(1, 2, 3));
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function runTestCallsExtBaseController() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$parameters = array(
+			'identity' => 2,
+		);
+		$this->addMockedExtBaseConnector('RedirectTest', 'runTest', $parameters);
+		$this->fixture->_call('runTestForRecord', 2);
 	}
 }
 

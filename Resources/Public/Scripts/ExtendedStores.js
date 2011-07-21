@@ -311,7 +311,7 @@ TYPO3.DfTools.GroupingStore = Ext.extend(Ext.data.GroupingStore, Ext.apply(TYPO3
 	 */
 	onDataChanged: function() {
 		var sortState = this.getSortState();
-		if (!Ext.isDefined(sortState)) {
+		if (!Ext.isDefined(sortState) || this.remoteSort) {
 			return;
 		}
 

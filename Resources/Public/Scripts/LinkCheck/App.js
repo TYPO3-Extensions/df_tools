@@ -94,23 +94,6 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 				}
 			],
 
-			bbar: new Ext.PagingToolbar({
-				store: this.gridStore,
-				pageSize: 200,
-				displayInfo: true,
-				afterPageText: TYPO3.lang['tx_dftools_common.pager.ofPages'],
-				beforePageText: TYPO3.lang['tx_dftools_common.pager.page'],
-				displayMsg: TYPO3.lang['tx_dftools_domain_model_linkcheck.pager.displayAmountOfThis'],
-				emptyMsg: TYPO3.lang['tx_dftools_domain_model_linkcheck.pager.noData'],
-
-				listeners: {
-					beforechange: {
-						scope: this,
-						fn: this.closeExpandedRows
-					}
-				}
-			}),
-
 			groupActions: [{
 					iconCls: TYPO3.settings.DfTools.Sprites.run,
 					qtip: TYPO3.lang['tx_dftools_domain_model_linkcheck.runTests'],
@@ -120,6 +103,7 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			]
 		});
 
+		this.grid.getBottomToolbar().on('beforechange', this.closeExpandedRows, this);
 		TYPO3.DfTools.LinkCheck.App.superclass.initComponent.apply(this, arguments);
 	},
 

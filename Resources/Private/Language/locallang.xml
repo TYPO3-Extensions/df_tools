@@ -39,6 +39,8 @@
 			<label index="tx_dftools_common.info">Information</label>
 			<label index="tx_dftools_common.item">Item</label>
 			<label index="tx_dftools_common.items">Items</label>
+			<label index="tx_dftools_common.pager.displayAmountOfThis">Displaying tests {0} - {1} of {2}</label>
+			<label index="tx_dftools_common.pager.noData">No Tests available</label>
 			<label index="tx_dftools_common.pager.ofPages">of {0}</label>
 			<label index="tx_dftools_common.pager.page">Page</label>
 			<label index="tx_dftools_common.scheduler.emailNotValid">The notification e-mail address is not valid!</label>
@@ -86,8 +88,6 @@
 			<label index="tx_dftools_domain_model_linkcheck.http_status_code.grid">HTTP Code</label>
 			<label index="tx_dftools_domain_model_linkcheck.ignoreTestRecord">Ignore Record</label>
 			<label index="tx_dftools_domain_model_linkcheck.observeTestRecord">Observe Record</label>
-			<label index="tx_dftools_domain_model_linkcheck.pager.displayAmountOfThis">Displaying tests {0} - {1} of {2}</label>
-			<label index="tx_dftools_domain_model_linkcheck.pager.noData">No Tests available</label>
 			<label index="tx_dftools_domain_model_linkcheck.record_sets">Related Record Sets</label>
 			<label index="tx_dftools_domain_model_linkcheck.resetFalsePositiveState">Reset False Positive State</label>
 			<label index="tx_dftools_domain_model_linkcheck.result_url">Result URL</label>

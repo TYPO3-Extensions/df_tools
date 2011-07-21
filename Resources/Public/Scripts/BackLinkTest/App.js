@@ -40,7 +40,15 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 */
 	initComponent: function() {
 		this.dataProvider = TYPO3.DfTools.BackLinkTest.DataProvider;
-		this.gridStore = new TYPO3.DfTools.BackLinkTest.Store();
+		this.gridStore = new TYPO3.DfTools.BackLinkTest.Store({
+			remoteSort: true,
+			baseParams: {
+				start: 0,
+				limit: 200,
+				sort: 'testResult',
+				dir: 'DESC'
+			}
+		});
 
 		this.grid = new TYPO3.DfTools.Grid({
 			renderTo: 'tx_dftools',

@@ -52,12 +52,35 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 	}
 
 	/**
+	 * @return array
+	 */
+	public function readCallsExtBaseControllerWithParametersDataProvider() {
+		return array(
+			'default' => array(
+				(object) array('start' => 0, 'limit' => 200, 'sort' => 'testResult', 'dir' => 'DESC'),
+			),
+			'non-normalized input' => array(
+				(object) array('start' => '0', 'limit' => '200', 'sort' => 'testResult', 'dir' => 'desc'),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider readCallsExtBaseControllerWithParametersDataProvider
 	 * @test
+	 *
+	 * @param stdClass $input
 	 * @return void
 	 */
-	public function read() {
-		$this->addMockedExtBaseConnector('ContentComparisonTest', 'read');
-		$this->fixture->read();
+	public function readCallsExtBaseControllerWithParameters($input) {
+		$parameters = array(
+			'offset' => 0,
+			'limit' => 200,
+			'sortingField' => 'testResult',
+			'sortAscending' => FALSE
+		);
+		$this->addMockedExtBaseConnector('ContentComparisonTest', 'read', $parameters);
+		$this->fixture->read($input);
 	}
 
 	/**

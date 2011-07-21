@@ -55,8 +55,10 @@ class Tx_DfTools_Controller_RedirectTestControllerTest extends Tx_DfTools_Tests_
 		$this->fixture->injectObjectManager($this->objectManager);
 
 		/** @var $repository Tx_DfTools_Domain_Repository_RedirectTestRepository */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestRepository';
-		$this->repository = $this->getMock($class, array('findAll', 'findByUid', 'update', 'add', 'remove'));
+		$this->repository = $this->getMock(
+			'Tx_DfTools_Domain_Repository_RedirectTestRepository',
+			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRangeByCategory', 'countAll')
+		);
 		$this->fixture->injectRedirectTestRepository($this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -114,10 +116,13 @@ class Tx_DfTools_Controller_RedirectTestControllerTest extends Tx_DfTools_Tests_
 	 * @test
 	 * @return void
 	 */
-	public function readCallsFindAll() {
+	public function readFetchesSortedRange() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll');
-		$this->fixture->readAction();
+		$this->repository->expects($this->once())->method('findSortedAndInRangeByCategory')
+			->with(1, 2, array('test' => TRUE));
+		$this->repository->expects($this->once())->method('countAll');
+		$this->view->expects($this->exactly(2))->method('assign');
+		$this->fixture->readAction(1, 2, 'test', TRUE);
 	}
 
 	/**

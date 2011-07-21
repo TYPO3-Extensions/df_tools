@@ -93,8 +93,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	public function readAction($offset, $limit, $sortingField, $sortAscending) {
 		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
 		$linkChecks = $this->linkCheckRepository->findSortedAndInRange(
-			$offset, $limit,
-			$sortingField, $sortAscending
+			$offset, $limit, array($sortingField => $sortAscending)
 		);
 
 		$this->view->assign('records', $linkChecks);

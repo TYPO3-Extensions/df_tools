@@ -111,6 +111,19 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 			}, this);
 		}
 
+		if (this.store.baseParams.limit) {
+			this.bbar = {
+				xtype: 'paging',
+				store: this.store,
+				pageSize: this.store.baseParams.limit,
+				displayInfo: true,
+				afterPageText: TYPO3.lang['tx_dftools_common.pager.ofPages'],
+				beforePageText: TYPO3.lang['tx_dftools_common.pager.page'],
+				displayMsg: TYPO3.lang['tx_dftools_common.pager.displayAmountOfThis'],
+				emptyMsg: TYPO3.lang['tx_dftools_common.pager.noData']
+			};
+		}
+
 		TYPO3.DfTools.Grid.superclass.initComponent.apply(this, arguments);
 	},
 

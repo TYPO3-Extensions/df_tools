@@ -30,29 +30,6 @@
  * @package df_tools
  */
 class Tx_DfTools_Domain_Repository_LinkCheckRepository extends Tx_DfTools_Domain_Repository_AbstractRepository {
-	/**
-	 * Finds a range of link check tests sorted by the given information's
-	 *
-	 * @param int $offset
-	 * @param int $limit
-	 * @param string $sortingField
-	 * @param boolean $sortAscending
-	 * @return Tx_Extbase_Persistence_QueryResult
-	 */
-	public function findSortedAndInRange($offset, $limit, $sortingField, $sortAscending) {
-		$query = $this->createQuery();
-		$query->setOffset(intval($offset));
-		$query->setLimit(intval($limit));
-
-		if ($sortingField !== '') {
-			$direction = ($sortAscending ?
-				Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING :
-				Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING);
-			$query->setOrderings(array($sortingField => $direction));
-		}
-
-		return $query->execute();
-	}
 }
 
 ?>

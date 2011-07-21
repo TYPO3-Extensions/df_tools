@@ -52,7 +52,15 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 	 */
 	initComponent: function() {
 		this.dataProvider = TYPO3.DfTools.ContentComparisonTest.DataProvider;
-		this.gridStore = new TYPO3.DfTools.ContentComparisonTest.Store();
+		this.gridStore = new TYPO3.DfTools.ContentComparisonTest.Store({
+			remoteSort: true,
+			baseParams: {
+				start: 0,
+				limit: 200,
+				sort: 'testResult',
+				dir: 'DESC'
+			}
+		});
 
 		this.grid = new TYPO3.DfTools.Grid({
 			renderTo: 'tx_dftools',

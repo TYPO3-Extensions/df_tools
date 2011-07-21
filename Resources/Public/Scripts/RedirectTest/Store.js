@@ -113,15 +113,7 @@ TYPO3.DfTools.RedirectTest.Store = Ext.extend(TYPO3.DfTools.GroupingStore, {
 			storeId: 'DfToolsRedirectTestStore',
 			autoLoad: false,
 			groupField: 'categoryId',
-			multiSortInfo: {
-				sorters: [{
-					field: 'categoryId',
-					direction: 'ASC'
-				}, {
-					field: 'testResult',
-					direction: 'DESC'
-				}]
-			},
+			groupDir: 'ASC',
 			proxy: new Ext.data.DirectProxy({
 				api: {
 					read: TYPO3.DfTools.RedirectTest.DataProvider.read,

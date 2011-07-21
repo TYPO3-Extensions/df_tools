@@ -71,11 +71,20 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	/**
 	 * Returns all back link test records
 	 *
+	 * @param int $offset
+	 * @param int $limit
+	 * @param string $sortingField
+	 * @param boolean $sortAscending
 	 * @return void
 	 */
-	public function readAction() {
-		$records = $this->backLinkTestRepository->findAll();
+	public function readAction($offset, $limit, $sortingField, $sortAscending) {
+		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
+		$records = $this->backLinkTestRepository->findSortedAndInRange(
+			$offset, $limit, array($sortingField => $sortAscending)
+		);
+
 		$this->view->assign('records', $records);
+		$this->view->assign('totalRecords', $this->backLinkTestRepository->countAll());
 	}
 
 	/**

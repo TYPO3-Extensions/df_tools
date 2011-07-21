@@ -71,11 +71,20 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	/**
 	 * Reads all existing content comparison tests
 	 *
+	 * @param int $offset
+	 * @param int $limit
+	 * @param string $sortingField
+	 * @param boolean $sortAscending
 	 * @return void
 	 */
-	public function readAction() {
-		$tests = $this->contentComparisonTestRepository->findAll();
-		$this->view->assign('records', $tests);
+	public function readAction($offset, $limit, $sortingField, $sortAscending) {
+		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
+		$records = $this->contentComparisonTestRepository->findSortedAndInRange(
+			$offset, $limit, array($sortingField => $sortAscending)
+		);
+
+		$this->view->assign('records', $records);
+		$this->view->assign('totalRecords', $this->contentComparisonTestRepository->countAll());
 	}
 
 	/**

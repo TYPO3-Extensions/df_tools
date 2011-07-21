@@ -31,6 +31,11 @@
  */
 class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Domain_Repository_AbstractRepository {
 	/**
+	 * @var Tx_Extbase_Persistence_Mapper_DataMapper
+	 */
+	protected $dataMapper;
+
+	/**
 	 * Default settings
 	 *
 	 * @return void
@@ -41,6 +46,66 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Dom
 		$this->setDefaultOrderings(
 			array('category' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING)
 		);
+	}
+
+	/**
+	 * Injects the DataMapper to map nodes to objects
+	 *
+	 * @param Tx_Extbase_Persistence_Mapper_DataMapper $dataMapper
+	 * @return void
+	 */
+	public function injectDataMapper(Tx_Extbase_Persistence_Mapper_DataMapper $dataMapper) {
+		$this->dataMapper = $dataMapper;
+	}
+
+	/**
+	 * Finds a range of records sorted by the given information's
+	 *
+	 * Note: The sortingInformation array consists of an undefined amount of
+	 * additional sorters that are defined as key/value pairs. Each sorter consists
+	 * of a field as key and a direction as boolean value there TRUE means ascending.
+	 *
+	 * Example:
+	 * array('sorter1' => TRUE, 'sorter2' => FALSE);
+	 *
+	 * @param int $offset
+	 * @param int $limit
+	 * @param array $sortingInformation
+	 * @return Tx_Extbase_Persistence_QueryResult
+	 */
+	public function findSortedAndInRangeByCategory($offset, $limit, array $sortingInformation) {
+		/** @var $pageSelect t3lib_pageSelect */
+		$pageSelect = $this->getPageSelectInstance();
+		$categoryEnableFields = $pageSelect->enableFields('tx_dftools_domain_model_redirecttestcategory');
+		$enableFields = $pageSelect->enableFields('tx_dftools_domain_model_redirecttest');
+
+		$orderings = array('tx_dftools_domain_model_redirecttestcategory.category ASC');
+		foreach ($sortingInformation as $field => $direction) {
+			$direction = ($direction ? 'ASC' : 'DESC');
+			if ($field === 'categoryId') {
+				$orderings[0] = 'tx_dftools_domain_model_redirecttestcategory.category ' . $direction;
+			} else {
+				$class = 'Tx_DfTools_Domain_Model_RedirectTest';
+				$field = $this->dataMapper->convertPropertyNameToColumnName($field, $class);
+				$field = $GLOBALS['TYPO3_DB']->fullQuoteStr($field);
+				$orderings[] = trim($field, '\'') . ' ' . $direction;
+			}
+		}
+
+		/** @var $query Tx_Extbase_Persistence_Query */
+		$query = $this->createQuery();
+		$query->statement(
+			'SELECT tx_dftools_domain_model_redirecttest.* ' .
+			'FROM tx_dftools_domain_model_redirecttest ' .
+				'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
+					'ON tx_dftools_domain_model_redirecttest.category = ' .
+						'tx_dftools_domain_model_redirecttestcategory.uid' .
+						$categoryEnableFields .
+			' WHERE 1=1' . $enableFields .
+			' ORDER BY ' . implode(', ', $orderings) .
+			' LIMIT ' . intval($offset) . ', ' . intval($limit));
+
+		return $query->execute();
 	}
 }
 

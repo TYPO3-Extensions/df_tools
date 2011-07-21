@@ -116,8 +116,10 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Tests_Con
 	 */
 	public function readFetchesSortedRange() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findSortedAndInRange');
+		$this->repository->expects($this->once())->method('findSortedAndInRange')
+			->with(1, 2, array('test' => TRUE));
 		$this->repository->expects($this->once())->method('countAll');
+		$this->view->expects($this->exactly(2))->method('assign');
 		$this->fixture->readAction(1, 2, 'test', TRUE);
 	}
 

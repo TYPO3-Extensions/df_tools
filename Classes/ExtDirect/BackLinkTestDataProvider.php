@@ -33,9 +33,17 @@ class Tx_DfTools_ExtDirect_BackLinkTestDataProvider extends Tx_DfTools_ExtDirect
 	/**
 	 * Returns all back link tests
 	 *
+	 * @param stdClass $parameters
 	 * @return array
 	 */
-	public function read() {
+	public function read($parameters) {
+		/** @noinspection PhpUndefinedFieldInspection */
+		$this->extBaseConnector->setParameters(array(
+			'offset' => intval($parameters->start),
+			'limit' => intval($parameters->limit),
+			'sortingField' => $parameters->sort,
+			'sortAscending' => strtoupper($parameters->dir) === 'ASC' ? TRUE : FALSE,
+		));
 		return $this->extBaseConnector->runControllerAction('BackLinkTest', 'read');
 	}
 

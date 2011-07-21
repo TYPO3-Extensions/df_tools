@@ -32,6 +32,8 @@
 			<label index="tx_dftools_common.info">Information</label>
 			<label index="tx_dftools_common.item">Eintrag</label>
 			<label index="tx_dftools_common.items">Einträge</label>
+			<label index="tx_dftools_common.pager.displayAmountOfThis">Zeige Tests {0} - {1} von {2}</label>
+			<label index="tx_dftools_common.pager.noData">Keine Tests verfügbar</label>
 			<label index="tx_dftools_common.pager.ofPages">von {0}</label>
 			<label index="tx_dftools_common.pager.page">Seite</label>
 			<label index="tx_dftools_common.scheduler.emailNotValid">Die E-Mail-Adresse zur Benachrichtigung ist nicht gültig!</label>
@@ -79,8 +81,6 @@
 			<label index="tx_dftools_domain_model_linkcheck.http_status_code.grid">HTTP-Code</label>
 			<label index="tx_dftools_domain_model_linkcheck.ignoreTestRecord">Eintrag ignorieren</label>
 			<label index="tx_dftools_domain_model_linkcheck.observeTestRecord">Eintrag beachten</label>
-			<label index="tx_dftools_domain_model_linkcheck.pager.displayAmountOfThis">Zeige Tests {0} - {1} von {2}</label>
-			<label index="tx_dftools_domain_model_linkcheck.pager.noData">Keine Tests verfügbar</label>
 			<label index="tx_dftools_domain_model_linkcheck.record_sets">Verbundene Datensätze</label>
 			<label index="tx_dftools_domain_model_linkcheck.resetFalsePositiveState">Falsch-Positiv-Status zurücksetzen</label>
 			<label index="tx_dftools_domain_model_linkcheck.result_url">Ergebnis-URL</label>

@@ -55,8 +55,10 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 		$this->fixture->injectObjectManager($this->objectManager);
 
 		/** @var $repository Tx_DfTools_Domain_Repository_ContentComparisonTestRepository */
-		$class = 'Tx_DfTools_Domain_Repository_ContentComparisonTestRepository';
-		$this->repository = $this->getMock($class, array('findAll', 'findByUid', 'update', 'add', 'remove'));
+		$this->repository = $this->getMock(
+			'Tx_DfTools_Domain_Repository_ContentComparisonTestRepository',
+			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange')
+		);
 		$this->fixture->injectContentComparisonTestRepository($this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -95,10 +97,13 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 	 * @test
 	 * @return void
 	 */
-	public function readActionFindAllEntries() {
+	public function readFetchesSortedRange() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll');
-		$this->fixture->readAction();
+		$this->repository->expects($this->once())->method('findSortedAndInRange')
+			->with(1, 2, array('test' => TRUE));
+		$this->repository->expects($this->once())->method('countAll');
+		$this->view->expects($this->exactly(2))->method('assign');
+		$this->fixture->readAction(1, 2, 'test', TRUE);
 	}
 
 	/**

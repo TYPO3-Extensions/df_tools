@@ -51,9 +51,17 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 */
 	initComponent: function() {
 		this.dataProvider = TYPO3.DfTools.RedirectTest.DataProvider;
-		this.gridStore = new TYPO3.DfTools.RedirectTest.Store();
-		this.categoryStore = new TYPO3.DfTools.RedirectTestCategory.Store();
 		this.popUpForm = new TYPO3.DfTools.RedirectTestCategory.PopUpForm();
+		this.categoryStore = new TYPO3.DfTools.RedirectTestCategory.Store();
+		this.gridStore = new TYPO3.DfTools.RedirectTest.Store({
+			remoteSort: true,
+			baseParams: {
+				start: 0,
+				limit: 200,
+				sort: 'testResult',
+				dir: 'DESC'
+			}
+		});
 
 		this.grid = new TYPO3.DfTools.Grid({
 			renderTo: 'tx_dftools',

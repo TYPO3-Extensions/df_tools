@@ -60,6 +60,39 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 
 		return $this->pageSelect;
 	}
+
+	/**
+	 * Finds a range of records sorted by the given information's
+	 *
+	 * Note: The sortingInformation array consists of an undefined amount of
+	 * additional sorters that are defined as key/value pairs. Each sorter consists
+	 * of a field as key and a direction as boolean value there TRUE means ascending.
+	 *
+	 * Example:
+	 * array('sorter1' => TRUE, 'sorter2' => FALSE);
+	 *
+	 * @param int $offset
+	 * @param int $limit
+	 * @param array $sortingInformation
+	 * @return Tx_Extbase_Persistence_QueryResult
+	 */
+	public function findSortedAndInRange($offset, $limit, array $sortingInformation) {
+		/** @var $query Tx_Extbase_Persistence_Query */
+		$query = $this->createQuery();
+		$query->setOffset(intval($offset));
+		$query->setLimit(intval($limit));
+
+		if (count($sortingInformation)) {
+			foreach ($sortingInformation as $field => $direction) {
+				$sortingInformation[$field] = ($direction ?
+					Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING :
+					Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING);
+			}
+			$query->setOrderings($sortingInformation);
+		}
+
+		return $query->execute();
+	}
 }
 
 ?>
