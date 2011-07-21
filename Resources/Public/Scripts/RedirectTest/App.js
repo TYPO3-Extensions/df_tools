@@ -114,6 +114,11 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			]
 		});
 
+		var hideCategory = this.changeVisibilityOfCategoryColumn.createDelegate(this, [true]);
+		this.grid.rowEditorPlugin.on('canceledit', hideCategory, this);
+		this.grid.rowEditorPlugin.on('afteredit', hideCategory, this);
+		this.grid.on('dblclick', this.changeVisibilityOfCategoryColumn.createDelegate(this, [false]), this);
+
 		TYPO3.DfTools.RedirectTest.App.superclass.initComponent.apply(this, arguments);
 	},
 
@@ -134,6 +139,17 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 		});
 
 		return this;
+	},
+
+	/**
+	 * Changes the visibility of the category column
+	 *
+	 * @param {Boolean} hide
+	 * @return {void}
+	 */
+	changeVisibilityOfCategoryColumn: function(hide) {
+		var columnModel = this.grid.getColumnModel();
+		columnModel.setHidden(columnModel.findColumnIndex('categoryId'), hide);
 	},
 
 	/**
@@ -180,6 +196,7 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 * @return {void}
 	 */
 	onAddRecord: function() {
+		this.changeVisibilityOfCategoryColumn(false);
 		var redirectTest = new TYPO3.DfTools.RedirectTest.Model({
 			__identity: 0,
 			categoryId: 0,
@@ -225,7 +242,8 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	getColumnModel: function() {
 		return new Ext.grid.ColumnModel({
 			defaults: {
-				sortable: true
+				sortable: true,
+				groupable: false
 			},
 
 			columns: [
@@ -235,7 +253,6 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					id: 'testUrl',
 					header: TYPO3.lang['tx_dftools_domain_model_redirecttest.test_url'],
 					dataIndex: 'testUrl',
-					groupable: false,
 					width: 200,
 
 					scope: this,
@@ -249,7 +266,6 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					id: 'expectedUrl',
 					header: TYPO3.lang['tx_dftools_domain_model_redirecttest.expected_url'],
 					dataIndex: 'expectedUrl',
-					groupable: false,
 					width: 200,
 
 					scope: this,
@@ -275,6 +291,8 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					id: 'category',
 					header: TYPO3.lang['tx_dftools_domain_model_redirecttest.category'],
 					dataIndex: 'categoryId',
+					groupable: true,
+					hidden: true,
 					width: 100,
 
 					renderer: function(value) {

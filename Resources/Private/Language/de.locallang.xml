@@ -127,7 +127,7 @@
 			<label index="tx_dftools_domain_model_redirecttestcategory.edit">Kategorie bearbeiten</label>
 			<label index="tx_dftools_domain_model_redirecttestcategory.massDeleteQuestion.message">Möchten Sie wirklich alle ungenutzen Kategorien löschen?</label>
 			<label index="tx_dftools_domain_model_redirecttestcategory.massDeleteQuestion.title">Massenlöschung</label>
-			<label index="tx_dftools_domain_model_redirecttestcategory.removeUnusedCategories">Entferne Ungenutzte Kategorien</label>
+			<label index="tx_dftools_domain_model_redirecttestcategory.removeUnusedCategories">Entferne ungenutzte Kategorien</label>
 			<label index="tx_dftools_domain_model_redirecttestcategory.unusedCategoriesDeleted">Alle ungenutzten Kategorien wurden vom Repository entfernt!</label>
 			<label index="tx_dftools_errorAction.error">Fehler</label>
 			<label index="tx_dftools_errorAction.generic">Ein Fehler ist beim Aufruf von %s -&gt; %s aufgetreten.&lt;br /&gt;&lt;br /&gt;</label>
