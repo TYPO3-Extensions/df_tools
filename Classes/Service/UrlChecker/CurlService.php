@@ -37,36 +37,43 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 	 *
 	 * @var resource
 	 */
-	protected $cUrlHandle = NULL;
+	protected $curlHandle = NULL;
+
+	/**
+	 * Proxy curl handle
+	 *
+	 * @var resource
+	 */
+	protected $proxyCurlHandle = NULL;
 
 	/**
 	 * Destructor
 	 */
 	public function __destruct() {
-		if ($this->cUrlHandle) {
-			curl_close($this->cUrlHandle);
+		if (is_resource($this->curlHandle)) {
+			curl_close($this->curlHandle);
 		}
+
+		if (is_resource($this->proxyCurlHandle)) {
+			curl_close($this->proxyCurlHandle);
+		}
+
 		parent::__destruct();
 	}
 
 	/**
-	 * Initializes cUrl
+	 * Initializes a curl handle and returns it
 	 *
 	 * @throws RuntimeException
-	 * @return void
+	 * @return resource
 	 */
-	public function init() {
-		if ($this->cUrlHandle) {
-			return;
-		}
-
-		$this->cUrlHandle = curl_init();
-		if (!$this->cUrlHandle) {
-			$this->cUrlHandle = NULL;
+	protected function getCurlHandle() {
+		$curlHandle = curl_init();
+		if (!$curlHandle) {
 			throw new RuntimeException('cUrl could not be initialized!');
 		}
 
-		curl_setopt_array($this->cUrlHandle, array(
+		curl_setopt_array($curlHandle, array(
 			CURLOPT_ENCODING => '',
 			CURLOPT_USERAGENT => $this->userAgent,
 			CURLOPT_HTTPHEADER => array('Expect:'),
@@ -82,7 +89,48 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 			CURLOPT_SSL_VERIFYPEER => FALSE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_VERBOSE => TRUE,
-		 ));
+		));
+
+		return $curlHandle;
+	}
+
+	/**
+	 * Initializes the cUrl instance
+	 *
+	 * @throws RuntimeException
+	 * @return void
+	 */
+	public function init() {
+		if ($this->curlHandle !== NULL) {
+			return;
+		}
+
+		$this->curlHandle = $this->getCurlHandle();
+	}
+
+	/**
+	 * Initializes the proxy cUrl instance
+	 *
+	 * @return void
+	 */
+	public function initProxyCurlInstance() {
+		$proxyServer = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer'];
+		if ($this->proxyCurlHandle !== NULL && $proxyServer !== '') {
+			return;
+		}
+
+		$this->proxyCurlHandle = $this->getCurlHandle();
+		curl_setopt($this->proxyCurlHandle, CURLOPT_PROXY, $proxyServer);
+
+		$proxyTunnel = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyTunnel'];
+		if ($proxyTunnel !== '') {
+			curl_setopt($this->proxyCurlHandle, CURLOPT_HTTPPROXYTUNNEL, $proxyTunnel);
+		}
+
+		$proxyUserPass = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyUserPass'];
+		if ($proxyUserPass !== '') {
+			curl_setopt($this->proxyCurlHandle, CURLOPT_PROXYUSERPWD, $proxyUserPass);
+		}
 	}
 
 	/**
@@ -95,16 +143,26 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 	 * Note: You must use setUrl to set the testing url!
 	 *
 	 * @throws RuntimeException contains any internal cUrl errors
+	 * @param boolean $useProxyInstance
 	 * @return array
 	 */
-	public function resolveURL() {
-		curl_setopt($this->cUrlHandle, CURLOPT_URL, $this->url);
-		$content = curl_exec($this->cUrlHandle);
-		$curlInfo = curl_getinfo($this->cUrlHandle);
+	public function resolveURL($useProxyInstance = FALSE) {
+		$curlHandle = $this->curlHandle;
+		if ($useProxyInstance) {
+			$curlHandle = $this->proxyCurlHandle;
+		}
 
-		$curlInfo['error'] = intval(curl_errno($this->cUrlHandle));
-		$curlInfo['errorMessage'] = curl_error($this->cUrlHandle);
-		if ($curlInfo['error'] !== 0 || $curlInfo['errorMessage'] !== '') {
+		curl_setopt($curlHandle, CURLOPT_URL, $this->url);
+		$content = curl_exec($curlHandle);
+		$curlInfo = curl_getinfo($curlHandle);
+
+		$curlInfo['error'] = intval(curl_errno($curlHandle));
+		$curlInfo['errorMessage'] = curl_error($curlHandle);
+		if ($curlInfo['error'] === 56) {
+			$this->initProxyCurlInstance();
+			return $this->resolveURL(TRUE);
+
+		} elseif ($curlInfo['error'] !== 0 || $curlInfo['errorMessage'] !== '') {
 			throw new RuntimeException($curlInfo['errorMessage'] . ' [' . $curlInfo['error'] . ']');
 		}
 

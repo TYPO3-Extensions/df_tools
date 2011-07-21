@@ -67,7 +67,18 @@ class Tx_DfTools_Service_UrlChecker_CurlServiceTest extends Tx_Extbase_Tests_Uni
 		$this->fixture->init();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertInternalType('resource', $this->fixture->_get('cUrlHandle'));
+		$this->assertInternalType('resource', $this->fixture->_get('curlHandle'));
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function initProxyCreatesValidCurlHandle() {
+		$this->fixture->initProxyCurlInstance();
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->assertInternalType('resource', $this->fixture->_get('proxyCurlHandle'));
 	}
 }
 
