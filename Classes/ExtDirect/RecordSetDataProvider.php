@@ -47,6 +47,23 @@ class Tx_DfTools_ExtDirect_RecordSetDataProvider extends Tx_DfTools_ExtDirect_Ab
 	}
 
 	/**
+	 * Returns the view link to the frontend of a given table/id pair
+	 *
+	 * @param string $tableName
+	 * @param int $identifier
+	 * @return string
+	 */
+	public function getViewLink($tableName, $identifier) {
+		$parameters = array(
+			'tableName' => $tableName,
+			'identifier' => $identifier,
+		);
+
+		$this->extBaseConnector->setParameters($parameters);
+		return $this->extBaseConnector->runControllerAction('LinkCheck', 'getViewLink');
+	}
+
+	/**
 	 * Not implemented!
 	 *
 	 * @param array $updatedRecord

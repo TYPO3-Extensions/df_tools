@@ -188,6 +188,11 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 							urlIdentity: identity,
 							scope: this,
 							handler: this.onOpenRecordSet
+						}, {
+							iconCls: TYPO3.settings.DfTools.Sprites.showPage,
+							tooltip: TYPO3.lang['tx_dftools_common.showPage'],
+							scope: this,
+							handler: this.onShowPage
 						}
 					]
 				}
@@ -206,11 +211,31 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 * @return {void}
 	 */
 	onOpenRecordSet: function(grid, rowIndex) {
-		var recordSet = grid.getStore().getAt(rowIndex);
-		var url = 'alt_doc.php?edit[' + recordSet.get('tableName') +
-				'][' + recordSet.get('identifier') + ']=edit&returnUrl=' +
+		var dataSet = grid.getStore().getAt(rowIndex);
+		var url = 'alt_doc.php?edit[' + dataSet.get('tableName') +
+				'][' + dataSet.get('identifier') + ']=edit&returnUrl=' +
 				TYPO3.settings.DfTools.Settings.destroyWindowFile;
 		window.open(url, 'newTYPO3frontendWindow').focus();
+	},
+
+	/**
+	* Opens a new window with the related page of the data set
+	*
+	* @param {Ext.grid.GridPanel} grid
+	* @param {int} rowIndex
+	* @return {void}
+	*/
+	onShowPage: function(grid, rowIndex) {
+		var dataSet = grid.getStore().getAt(rowIndex);
+		var frontendWindow = window.open('', 'newTYPO3frontendWindow');
+		TYPO3.DfTools.RecordSet.DataProvider.getViewLink(
+			dataSet.get('tableName'),
+			dataSet.get('identifier'),
+			function(result) {
+				frontendWindow.location = result;
+				frontendWindow.focus();
+			}
+		);
 	},
 
 	/**

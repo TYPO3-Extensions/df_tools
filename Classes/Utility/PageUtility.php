@@ -24,55 +24,38 @@
  ***************************************************************/
 
 /**
- * Abstract View Helper
+ * Collection of smaller page utility functions
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_ViewHelpers_AbstractViewHelper extends Tx_Fluid_ViewHelpers_Be_AbstractBackendViewHelper {
+final class Tx_DfTools_Utility_PageUtility {
 	/**
-	 * Page Renderer
+	 * Fetches the page id given by the table name and id pair and calculates the
+	 * resulting view link that is returned afterwards.
 	 *
-	 * @var t3lib_PageRenderer
-	 */
-	protected $pageRenderer = NULL;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		if (TYPO3_MODE === 'BE') {
-			$this->injectPageRenderer($this->getDocInstance()->getPageRenderer());
-		} else {
-			$this->injectPageRenderer($GLOBALS['TSFE']->getPageRenderer());
-		}
-	}
-
-	/**
-	 * Sets the page renderer
-	 *
-	 * @param t3lib_PageRenderer $pageRenderer
-	 * @return void
-	 */
-	public function injectPageRenderer(t3lib_PageRenderer $pageRenderer) {
-		$this->pageRenderer = $pageRenderer;
-	}
-
-	/**
-	 * Returns the base url of the site
-	 *
-	 * Note: Works only in frontend mode
-	 *
+	 * @param string $tableName
+	 * @param int $identifier
 	 * @return string
 	 */
-	public function getBaseUrl() {
-		if ($GLOBALS['TSFE']->absRefPrefix !== '') {
-			$baseUrl = $GLOBALS['TSFE']->absRefPrefix;
-		} else {
-			$baseUrl = $GLOBALS['TSFE']->baseUrl;
+	public static function getViewLinkFromTableNameAndIdPair($tableName, $identifier) {
+		$pageId = $identifier;
+		if ($tableName !== 'pages') {
+			$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+				'pid',
+				$tableName,
+				'uid = ' . intval($identifier)
+			);
+
+			if ($record !== NULL) {
+				$pageId = $record['pid'];
+			}
 		}
 
-		return $baseUrl;
+		$javascriptLink = t3lib_BEfunc::viewOnClick($pageId);
+		preg_match('/window\.open\(\'([^\']+)\'/i', $javascriptLink, $match);
+
+		return $match[1];
 	}
 }
 

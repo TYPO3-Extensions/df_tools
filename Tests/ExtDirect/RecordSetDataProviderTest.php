@@ -60,6 +60,19 @@ class Tx_DfTools_ExtBaseConnector_RecordSetDataProviderTest extends Tx_DfTools_T
 		$this->addMockedExtBaseConnector('LinkCheck', 'readRecordSets', $parameters);
 		$this->fixture->read((object)array('identity' => '12'));
 	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function getViewLinkCallsExtBaseControllerWithParameters() {
+		$parameters = array(
+			'tableName' => 'pages',
+			'identifier' => 3,
+		);
+		$this->addMockedExtBaseConnector('LinkCheck', 'getViewLink', $parameters);
+		$this->fixture->getViewLink('pages', '3');
+	}
 }
 
 ?>

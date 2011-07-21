@@ -39,9 +39,15 @@ class Tx_DfTools_ViewHelpers_AbstractViewHelperTest extends Tx_Extbase_Tests_Uni
 	protected $fixture = NULL;
 
 	/**
+	 * @var tslib_fe
+	 */
+	protected $backupTSFE = NULL;
+
+	/**
 	 * @return void
 	 */
 	public function setUp() {
+		$this->backupTSFE = $GLOBALS['TSFE'];
 		$this->fixture = $this->getAccessibleMock('Tx_DfTools_ViewHelpers_AbstractViewHelper', array('dummy'));
 	}
 
@@ -49,6 +55,7 @@ class Tx_DfTools_ViewHelpers_AbstractViewHelperTest extends Tx_Extbase_Tests_Uni
 	 * @return void
 	 */
 	public function tearDown() {
+		$GLOBALS['TSFE'] = $this->backupTSFE;
 		unset($this->fixture);
 	}
 
@@ -66,6 +73,26 @@ class Tx_DfTools_ViewHelpers_AbstractViewHelperTest extends Tx_Extbase_Tests_Uni
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->injectPageRenderer($pageRenderer);
 		$this->assertSame($pageRenderer, $this->fixture->_get('pageRenderer'));
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function getBaseUrlWorksWithAbsRefPrefix() {
+		$GLOBALS['TSFE']->baseUrl = '';
+		$GLOBALS['TSFE']->absRefPrefix = 'AbsRefPrefix';
+		$this->assertSame('AbsRefPrefix', $this->fixture->getBaseUrl());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function getBaseUrlWorksWithBaseUrl() {
+		$GLOBALS['TSFE']->absRefPrefix = '';
+		$GLOBALS['TSFE']->baseUrl = 'BaseUrl';
+		$this->assertSame('BaseUrl', $this->fixture->getBaseUrl());
 	}
 }
 

@@ -38,6 +38,7 @@
 			<label index="tx_dftools_common.pager.page">Seite</label>
 			<label index="tx_dftools_common.scheduler.emailNotValid">Die E-Mail-Adresse zur Benachrichtigung ist nicht gültig!</label>
 			<label index="tx_dftools_common.scheduler.notificationEmailAddress">E-Mail-Adresse zur Benachrichtigung</label>
+			<label index="tx_dftools_common.showPage">Zugehörige Seite anzeigen</label>
 			<label index="tx_dftools_common.testResult.error">Fehler</label>
 			<label index="tx_dftools_common.testResult.ignore">Ignoriert</label>
 			<label index="tx_dftools_common.testResult.information">Falsch-Positiv (Information)</label>

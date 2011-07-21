@@ -284,6 +284,17 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 		$this->handleExceptionalTest($linkCheck);
 		$this->view->assign('records', array($linkCheck));
 	}
+
+	/**
+	 * Returns the url to the frontend page of a table/id pair
+	 *
+	 * @param string $tableName
+	 * @param int $identifier
+	 * @return string
+	 */
+	public function getViewLinkAction($tableName, $identifier) {
+		return Tx_DfTools_Utility_PageUtility::getViewLinkFromTableNameAndIdPair($tableName, $identifier);
+	}
 }
 
 ?>

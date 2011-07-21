@@ -45,6 +45,7 @@
 			<label index="tx_dftools_common.pager.page">Page</label>
 			<label index="tx_dftools_common.scheduler.emailNotValid">The notification e-mail address is not valid!</label>
 			<label index="tx_dftools_common.scheduler.notificationEmailAddress">Notification E-Mail Address</label>
+			<label index="tx_dftools_common.showPage">Show related page</label>
 			<label index="tx_dftools_common.testResult.error">Error</label>
 			<label index="tx_dftools_common.testResult.ignore">Ignore</label>
 			<label index="tx_dftools_common.testResult.information">False Positive (Information)</label>
