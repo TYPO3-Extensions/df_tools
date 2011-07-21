@@ -5,12 +5,6 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE === 'BE') {
-		// CSH for the virtual configuration table
-	t3lib_extMgm::addLLrefForTCAdescr(
-		'tx_dftools_configuration',
-		'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_csh_tx_dftools_configuration.xml'
-	);
-
 	Tx_Extbase_Utility_Extension::registerModule(
 		$_EXTKEY,
 		'tools',
@@ -35,6 +29,15 @@ if (TYPO3_MODE === 'BE') {
 		'run' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/run.png',
 	);
 	t3lib_SpriteManager::addSingleIcons($icons, $_EXTKEY);
+
+	$extPath = t3lib_extMgm::extPath($_EXTKEY);
+	t3lib_extMgm::addTypoScriptConstants(
+		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_constants.txt')
+	);
+	
+	t3lib_extMgm::addTypoScriptSetup(
+		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_setup.txt')
+	);
 }
 
 t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_redirecttest');
