@@ -41,6 +41,7 @@ class Tx_DfTools_ViewHelpers_AddCssFileViewHelper extends Tx_DfTools_ViewHelpers
 	 * @return void
 	 */
 	public function render($cssFile) {
+		$cssFile = (TYPO3_MODE === 'FE' ? $this->getBaseUrl() : '') . $cssFile;
 		$this->pageRenderer->addCssFile($cssFile, 'stylesheet', 'all', '', FALSE);
 	}
 }

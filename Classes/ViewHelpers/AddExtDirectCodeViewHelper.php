@@ -40,6 +40,10 @@ class Tx_DfTools_ViewHelpers_AddExtDirectCodeViewHelper extends Tx_DfTools_ViewH
 	 * @return void
 	 */
 	public function render() {
+		if (TYPO3_MODE === 'FE') {
+			$this->pageRenderer->addJsFile($this->getBaseUrl() . 't3lib/js/extjs/ux/flashmessages.js');
+		}
+
 		$this->pageRenderer->addExtDirectCode();
 	}
 }

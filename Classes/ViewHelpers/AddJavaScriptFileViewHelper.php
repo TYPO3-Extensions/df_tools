@@ -41,6 +41,7 @@ class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper extends Tx_DfTools_View
 	 * @return void
 	 */
 	public function render($javaScriptFile) {
+		$javaScriptFile = (TYPO3_MODE === 'FE' ? $this->getBaseUrl() : '') . $javaScriptFile;
 		$this->pageRenderer->addJsFile($javaScriptFile);
 	}
 }
