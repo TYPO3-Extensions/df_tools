@@ -48,7 +48,7 @@
 			<label index="tx_dftools_common.testResult.error">Error</label>
 			<label index="tx_dftools_common.testResult.ignore">Ignore</label>
 			<label index="tx_dftools_common.testResult.information">False Positive (Information)</label>
-			<label index="tx_dftools_common.testResult.noTestResult">Not Available Yet!</label>
+			<label index="tx_dftools_common.testResult.noTestResult">Not Tested Yet!</label>
 			<label index="tx_dftools_common.testResult.success">Success</label>
 			<label index="tx_dftools_common.testResult.warning">Warning</label>
 			<label index="tx_dftools_common.update">Update</label>
