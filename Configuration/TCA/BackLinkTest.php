@@ -8,12 +8,12 @@ $TCA['tx_dftools_domain_model_backlinktest'] = array(
 	'ctrl' => $TCA['tx_dftools_domain_model_backlinktest']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
-			test_url, expected_url, test_result, test_message, starttime, endtime',
+			test_url, expected_url, test_result, test_message, comment, starttime, endtime',
 	),
 	'types' => array(
 		'0' => array(
 			'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1,
-				test_url, expected_url, test_result, test_message,
+				test_url, expected_url, test_result, test_message, comment,
 				--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,
 				starttime, endtime'
 		),
@@ -124,6 +124,17 @@ $TCA['tx_dftools_domain_model_backlinktest'] = array(
 					'upper' => 9,
 					'lower' => 0,
 				),
+				'readOnly' => TRUE,
+			),
+		),
+		'comment' => array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.comment',
+			'config' => array(
+				'type' => 'text',
+				'cols' => 40,
+				'rows' => 2,
+				'eval' => 'trim',
 				'readOnly' => TRUE,
 			),
 		),

@@ -34,12 +34,19 @@ Ext.ns('TYPO3.Backend.DfTools', 'TYPO3.DfTools.BackLinkTest');
  */
 TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	/**
+	 * @private
+	 * @type {TYPO3.DfTools.BackLinkTest.PopUpForm}
+	 */
+	popUpForm: null,
+
+	/**
 	 * Initializes the component
 	 *
 	 * @return {void}
 	 */
 	initComponent: function() {
 		this.dataProvider = TYPO3.DfTools.BackLinkTest.DataProvider;
+		this.popUpForm = new TYPO3.DfTools.BackLinkTest.PopUpForm();
 		this.gridStore = new TYPO3.DfTools.BackLinkTest.Store({
 			remoteSort: true,
 			baseParams: {
@@ -110,6 +117,18 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	},
 
 	/**
+	 * Open the edit form pop-up window
+	 *
+	 * @param {TYPO3.DfTools.Grid} grid
+	 * @param {int} rowIndex
+	 * @return {void}
+	 */
+	onEditComment: function(grid, rowIndex) {
+		grid.rowEditorPlugin.stopEditing();
+		this.popUpForm.open(this.categoryStore, grid.getStore().getAt(rowIndex));
+	},
+
+	/**
 	 * Returns the column model for the back link test grid
 	 *
 	 * @private
@@ -176,6 +195,11 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					app: this,
 					items: [{
 							getClass: this.observeTestState
+						}, {
+							iconCls: TYPO3.settings.DfTools.Sprites.comment,
+							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.editComment'],
+							scope: this,
+							handler: this.onEditComment
 						}, {
 							iconCls: TYPO3.settings.DfTools.Sprites.destroy,
 							tooltip: TYPO3.lang['tx_dftools_common.delete'],

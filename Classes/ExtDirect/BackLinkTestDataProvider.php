@@ -60,6 +60,7 @@ class Tx_DfTools_ExtDirect_BackLinkTestDataProvider extends Tx_DfTools_ExtDirect
 				'__identity' => intval($updatedRecord['__identity']),
 				'testUrl' => $updatedRecord['testUrl'],
 				'expectedUrl' => str_replace('\\', '\\\\', $updatedRecord['expectedUrl']),
+				'comment' => $updatedRecord['comment'],
 			)
 		);
 

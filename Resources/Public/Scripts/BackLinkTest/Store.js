@@ -50,6 +50,9 @@ TYPO3.DfTools.BackLinkTest.Model = Ext.data.Record.create([{
 		name: 'testMessage',
 		type: 'string'
 	}, {
+		name: 'comment',
+		type: 'string'
+	}, {
 		name: '__hmac'
 	}
 ]);

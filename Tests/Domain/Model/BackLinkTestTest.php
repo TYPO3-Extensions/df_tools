@@ -96,6 +96,15 @@ class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_Bas
 	 * @test
 	 * @return void
 	 */
+	public function setCommentWorks() {
+		$this->fixture->setComment('FooBar');
+		$this->assertSame('FooBar', $this->fixture->getComment());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
 	public function transformToArrayWorksWithEmptyCategory() {
 		$expected = array(
 			'__identity' => NULL,

@@ -61,20 +61,23 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 		$backLinkTestNormal = new Tx_DfTools_Domain_Model_BackLinkTest();
 		$backLinkTestNormal->setTestUrl('FooBar');
 		$backLinkTestNormal->setExpectedUrl('FooBar');
+		$backLinkTestNormal->setComment('FooBar');
 
-		$backLinkTestWithoutCategory = new Tx_DfTools_Domain_Model_BackLinkTest();
-		$backLinkTestWithoutCategory->setTestUrl('FooBar');
-		$backLinkTestWithoutCategory->setExpectedUrl('FooBar');
-		$backLinkTestWithoutCategory->setTestResult(1);
-		$backLinkTestWithoutCategory->setTestMessage('FooBar');
+		$backLinkTestWithTestResult = new Tx_DfTools_Domain_Model_BackLinkTest();
+		$backLinkTestWithTestResult->setTestUrl('FooBar');
+		$backLinkTestWithTestResult->setExpectedUrl('FooBar');
+		$backLinkTestWithTestResult->setTestResult(1);
+		$backLinkTestWithTestResult->setTestMessage('FooBar');
+		$backLinkTestWithTestResult->setComment('FooBar');
 
 		$backLinkTestWithXSS = new Tx_DfTools_Domain_Model_BackLinkTest();
 		$backLinkTestWithXSS->setTestUrl('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$backLinkTestWithXSS->setExpectedUrl('<script>alert("Ooops!!!");</script>');
 		$backLinkTestWithXSS->setTestMessage('<script>alert("Ooops!!!");</script>');
+		$backLinkTestWithXSS->setComment('<script>alert("Ooops!!!");</script>');
 
 		return array(
-			'normal back link test with category' => array(
+			'normal back link test' => array(
 				$backLinkTestNormal,
 				array(
 					'__identity' => 0,
@@ -82,16 +85,18 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 					'expectedUrl' => 'FooBar',
 					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => '',
+					'comment' => 'FooBar',
 				),
 			),
-			'back link test without category' => array(
-				$backLinkTestWithoutCategory,
+			'back link test with test result' => array(
+				$backLinkTestWithTestResult,
 				array(
 					'__identity' => 0,
 					'testUrl' => 'FooBar',
 					'expectedUrl' => 'FooBar',
 					'testResult' => 1,
 					'testMessage' => 'FooBar',
+					'comment' => 'FooBar',
 				),
 			),
 			'XSS attack' => array(
@@ -102,6 +107,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 					'expectedUrl' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
+					'comment' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 				),
 			)
 		);

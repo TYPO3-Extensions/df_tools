@@ -3,6 +3,7 @@
 	<data type="array">
 		<languageKey index="de" type="array">
 			<label index="tx_dftools_domain_model_backlinktest">Test: Backlink</label>
+			<label index="tx_dftools_domain_model_backlinktest.comment">Kommentar</label>
 			<label index="tx_dftools_domain_model_backlinktest.expected_url">Erwartete URL</label>
 			<label index="tx_dftools_domain_model_backlinktest.test_message">Testmitteilung</label>
 			<label index="tx_dftools_domain_model_backlinktest.test_result">Test war erfolgreich?</label>

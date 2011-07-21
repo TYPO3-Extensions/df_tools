@@ -42,6 +42,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayView extends Tx_DfTools_View_AbstractArr
 				$namespace . '[backLinkTest][__identity]',
 				$namespace . '[backLinkTest][testUrl]',
 				$namespace . '[backLinkTest][expectedUrl]',
+				$namespace . '[backLinkTest][comment]',
 			),
 			'create' => array(
 				$namespace . '[newBackLinkTest][testUrl]',
@@ -69,6 +70,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayView extends Tx_DfTools_View_AbstractArr
 					$record->getTestMessage(), 'df_tools'
 				)
 			),
+			'comment' => htmlspecialchars($record->getComment()),
 		);
 	}
 }

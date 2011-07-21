@@ -63,6 +63,14 @@ class Tx_DfTools_Domain_Model_BackLinkTest extends Tx_Extbase_DomainObject_Abstr
 	protected $testMessage = '';
 
 	/**
+	 * Comment
+	 *
+	 * @validate StringLength(maximum = 65536)
+	 * @var string
+	 */
+	protected $comment = '';
+
+	/**
 	 * Setter for testUrl
 	 *
 	 * @param string $testUrl
@@ -137,6 +145,25 @@ class Tx_DfTools_Domain_Model_BackLinkTest extends Tx_Extbase_DomainObject_Abstr
 	 */
 	public function getTestMessage() {
 		return $this->testMessage;
+	}
+
+	/**
+	 * Setter for comment
+	 *
+	 * @param string $comment
+	 * @return void
+	 */
+	public function setComment($comment) {
+		$this->comment = $comment;
+	}
+
+	/**
+	 * Getter for comment
+	 *
+	 * @return string
+	 */
+	public function getComment() {
+		return $this->comment;
 	}
 
 	/**

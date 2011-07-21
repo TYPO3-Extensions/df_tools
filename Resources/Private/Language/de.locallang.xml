@@ -48,8 +48,11 @@
 			<label index="tx_dftools_common.update">Aktualisieren</label>
 			<label index="tx_dftools_common.updateSuccessful">Die Aktualisierung wurde erfolgreich ausgeführt!</label>
 			<label index="tx_dftools_common.warning">Warnung</label>
+			<label index="tx_dftools_domain_model_backlinktest.comment">Kommentar</label>
+			<label index="tx_dftools_domain_model_backlinktest.commentForm">Kommentar-Formular</label>
 			<label index="tx_dftools_domain_model_backlinktest.create">Backlink-Test anlegen</label>
 			<label index="tx_dftools_domain_model_backlinktest.edit">Backlink-Test bearbeiten</label>
+			<label index="tx_dftools_domain_model_backlinktest.editComment">Anzeigen/Bearbeiten des Kommentars</label>
 			<label index="tx_dftools_domain_model_backlinktest.expected_url">Erwartete URL</label>
 			<label index="tx_dftools_domain_model_backlinktest.runTest">Test starten</label>
 			<label index="tx_dftools_domain_model_backlinktest.runTests">Tests starten</label>

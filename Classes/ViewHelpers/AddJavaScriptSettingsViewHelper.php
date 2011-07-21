@@ -55,6 +55,7 @@ class Tx_DfTools_ViewHelpers_AddJavaScriptSettingsViewHelper extends Tx_DfTools_
 				'hide' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-hide'),
 				'unhide' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-unhide'),
 				'showPage' => t3lib_iconWorks::getSpriteIconClasses('actions-document-view'),
+				'comment' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-localize-status-low'),
 			),
 			'Settings' => array(
 				'destroyWindowFile' => '../' . t3lib_extMgm::siteRelPath('df_tools') .

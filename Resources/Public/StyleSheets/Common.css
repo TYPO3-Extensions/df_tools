@@ -112,7 +112,6 @@
 .tx_dftools-statusInformation,
 .tx_dftools-statusOk {
 	display: none;
-	float: left;
 }
 
 .tx_dftools-grid-row-test-running .tx_dftools-loadingIndicator,

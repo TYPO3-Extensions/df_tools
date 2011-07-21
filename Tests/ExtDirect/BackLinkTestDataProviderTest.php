@@ -95,12 +95,14 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 						'__identity' => 1,
 						'testUrl' => 'fooBar',
 						'expectedUrl' => 'fooBar',
+						'comment' => 'fooBar',
 					)
 				), array(
 					'__hmac' => 'hmac',
 					'__identity' => '1',
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
+					'comment' => 'fooBar',
 				)
 			),
 
@@ -111,12 +113,14 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 						'__identity' => 2,
 						'testUrl' => 'fooBar',
 						'expectedUrl' => 'fooBar',
+						'comment' => 'fooBar',
 					)
 				), array(
 					'__hmac' => 'hmac',
 					'__identity' => 2,
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
+					'comment' => 'fooBar',
 				)
 			),
 
@@ -127,12 +131,14 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 						'__identity' => 2,
 						'testUrl' => 'fooBar',
 						'expectedUrl' => 'http:\\\/\\\/foo.bar',
+						'comment' => 'fooBar',
 					)
 				), array(
 					'__hmac' => 'hmac',
 					'__identity' => 2,
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'http:\/\/foo.bar',
+					'comment' => 'fooBar',
 				)
 			),
 		);

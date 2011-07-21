@@ -150,6 +150,7 @@ CREATE TABLE tx_dftools_domain_model_backlinktest (
 	expected_url varchar(1024) DEFAULT '' NOT NULL,
 	test_result tinyint(1) unsigned DEFAULT '9' NOT NULL,
 	test_message text NOT NULL,
+	comment text NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,
