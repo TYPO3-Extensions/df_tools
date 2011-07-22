@@ -72,7 +72,7 @@ class tx_DfTools_ExtensionManager_FlexForm {
 	 */
 	protected function getDefaultConfiguration() {
 		return array(
-			'excludedTables' => 'tx_dftools_domain_model_redirecttest,tx_dftools_domain_model_linkcheck,tx_dftools_domain_model_contentcomparisontest',
+			'excludedTables' => 'tx_dftools_domain_model_redirecttest,tx_dftools_domain_model_linkcheck,tx_dftools_domain_model_contentcomparisontest,tx_dftools_domain_model_backlinktest',
 		);
 	}
 
