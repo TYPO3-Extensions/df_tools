@@ -87,27 +87,6 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	/**
 	 * Returns the existing raw url data without the record sets!
 	 *
-	 * @return array $array[<test_url>] = <urlData>
-	 */
-	protected function fetchExistingRawUrls() {
-		$enableFields = $this->linkCheckRepository->getPageSelectInstance()->enableFields(
-			'tx_dftools_domain_model_linkcheck', 1,
-			array('starttime' => TRUE, 'endtime' => TRUE, 'fe_group' => TRUE)
-		);
-
-		$urls = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'uid, test_url',
-			'tx_dftools_domain_model_linkcheck',
-			'1=1' . $enableFields,
-			'', '', '', 'test_url'
-		);
-
-		return $urls;
-	}
-
-	/**
-	 * Returns the existing raw url data without the record sets!
-	 *
 	 * @return array $array[<table><field><identifier>] = <recordSetData>
 	 */
 	protected function fetchExistingRawRecordSets() {
@@ -155,23 +134,15 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 			$recordSet->setTableName($table);
 			$recordSet->setIdentifier($identifier);
 			$recordSet->setField($field);
+			$existingRawRecordSets[$index] = $recordSet;
+			$this->recordSetRepository->add($recordSet);
 
-			$aggregateRootObjects = new Tx_Extbase_Persistence_ObjectStorage();
-			$aggregateRootObjects->attach($recordSet);
+		} elseif ($existingRawRecordSets[$index] instanceof Tx_DfTools_Domain_Model_RecordSet) {
+			$recordSet = $existingRawRecordSets[$index];
 
-			$persistenceManager = $this->getPersistenceManager();
-			$backend = $persistenceManager->getBackend();
-			$backend->setAggregateRootObjects($aggregateRootObjects);
-			$backend->commit();
-
-			$existingRawRecordSets[$index] = array(
-				'uid' => $recordSet->getUid(),
-				'table_name' => $table,
-				'field' => $field,
-				'identifier' => $identifier,
-			);
 		} else {
 			$recordSet = $this->recordSetRepository->findByUid($existingRawRecordSets[$index]['uid']);
+			$existingRawRecordSets[$index] = $recordSet;
 		}
 
 		return $recordSet;
@@ -254,8 +225,36 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	}
 
 	/**
-	 * Synchronizes the link check and record set repositories
-	 * with the given raw data.
+	 * Compares the records sets of the url with the raw data of the second parameter.
+	 * Missing ones are added and others are removed.
+	 *
+	 * @param Tx_DfTools_Domain_Model_LinkCheck $record
+	 * @param array $rawUrlData
+	 * @param array $existingRawRecordSets
+	 * @return void
+	 */
+	protected function evaluateRecordSetDataOfUrl(
+		Tx_DfTools_Domain_Model_LinkCheck $record,
+		array &$rawUrlData,
+		array &$existingRawRecordSets
+	) {
+		$recordHasMissingRecordSets = FALSE;
+		$recordHasUnknownRecordSets = $this->removeUnknownRecordSetsFromUrlRecord($rawUrlData, $record);
+		if (count($rawUrlData)) {
+			$recordHasMissingRecordSets = $this->addMissingRecordSetsToUrlRecord(
+				$rawUrlData, $record, $existingRawRecordSets
+			);
+		}
+
+		if ($recordHasUnknownRecordSets || $recordHasMissingRecordSets) {
+			$this->linkCheckRepository->update($record);
+		}
+	}
+
+	/**
+	 * Synchronizes the link check and record set repositories with the given raw data.
+	 * In opposite to the synchronizeGroupOfUrls method this one traversals above all
+	 * existing data.
 	 *
 	 * This means:
 	 * - adding new urls with their related record sets
@@ -266,29 +265,18 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * @return void
 	 */
 	public function synchronize(array $rawUrls) {
-		$existingRawUrls = $this->fetchExistingRawUrls();
+		$existingUrls = $this->linkCheckRepository->findAll();
 		$existingRawRecordSets = $this->fetchExistingRawRecordSets();
 
-		foreach ($existingRawUrls as $url => $urlData) {
-			/** @var $record Tx_DfTools_Domain_Model_LinkCheck */
-			$record = $this->linkCheckRepository->findByUid($urlData['uid']);
-
+		/** @var $record Tx_DfTools_Domain_Model_LinkCheck */
+		foreach ($existingUrls as $record) {
+			$url = $record->getTestUrl();
 			if (!isset($rawUrls[$url])) {
 				$this->linkCheckRepository->remove($record);
 				continue;
 			}
 
-			$recordWasEdited = $this->removeUnknownRecordSetsFromUrlRecord($rawUrls[$url], $record);
-			if (count($rawUrls[$url])) {
-				$recordWasEdited = $this->addMissingRecordSetsToUrlRecord(
-					$rawUrls[$url], $record, $existingRawRecordSets
-				);
-			}
-
-			if ($recordWasEdited) {
-				$this->linkCheckRepository->update($record);
-			}
-
+			$this->evaluateRecordSetDataOfUrl($record, $rawUrls[$url], $existingRawRecordSets);
 			unset($rawUrls[$url]);
 		}
 
