@@ -5,6 +5,15 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE === 'BE') {
+	$extPath = t3lib_extMgm::extPath($_EXTKEY);
+	t3lib_extMgm::addTypoScriptConstants(
+		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_constants.txt')
+	);
+	
+	t3lib_extMgm::addTypoScriptSetup(
+		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_setup.txt')
+	);
+
 		// set global storage pid
 	$dfToolsExtConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools']);
 	$storagePids = Tx_DfTools_Utility_TcaUtility::stripTablePrefixFromGroupDBValues($dfToolsExtConf['storagePid']);
