@@ -120,7 +120,8 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 				afterPageText: TYPO3.lang['tx_dftools_common.pager.ofPages'],
 				beforePageText: TYPO3.lang['tx_dftools_common.pager.page'],
 				displayMsg: TYPO3.lang['tx_dftools_common.pager.displayAmountOfThis'],
-				emptyMsg: TYPO3.lang['tx_dftools_common.pager.noData']
+				emptyMsg: TYPO3.lang['tx_dftools_common.pager.noData'],
+				items: (Ext.isArray(this.bbar) ? this.bbar : [])
 			};
 		}
 
