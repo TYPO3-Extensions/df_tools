@@ -76,6 +76,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.create">Create Content Comparison Test</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.difference">Content Difference</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.edit">Edit Content Comparison Test</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.massUpdateTestContent">Update Test Contents</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTest">Run Test</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTests">Run Tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.description">This task runs the content comparison tests and sends a mail to the responsible persons if something fails.</label>
@@ -83,6 +84,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.mailSubject">Notification about failed content comparison tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.name">Run Content Comparison Tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test.contentMismatch">Content Differs (difference inside row body)</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.testContentProgress">Update test %current from %total</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated">The test content was sucessfully updated!</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_result">Test Result</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_url">Test Url</label>

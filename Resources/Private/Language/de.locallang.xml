@@ -69,6 +69,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.create">Inhaltsvergleich anlegen</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.difference">Inhaltsdifferenz</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.edit">Inhaltsvergleichstest bearbeiten</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.massUpdateTestContent">Testinhalte aktualisieren</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTest">Test starten</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.runTests">Tests starten</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.description">Diese Aufgabe führt die Inhaltsvergleichstests aus und sendet im Fehlerfall eine Benachrichtigungsmail an die Verantwortlichen.</label>
@@ -76,6 +77,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.mailSubject">Benachrichtigung über fehlgeschlagene Inhaltsvergleichstests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.name">Inhaltsvergleichstests ausführen</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test.contentMismatch">Inhaltsunterschiede (Differenz ist im eingeklappten Bereich)</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.testContentProgress">Aktualisiere Test %current von %total</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated">Der Testinhalt wurde erfolgreich aktualisiert!</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_result">Testergebnis</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_url">Test-URL</label>

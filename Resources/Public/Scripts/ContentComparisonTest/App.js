@@ -93,6 +93,24 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 							+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.create'] + '</span>',
 					scope: this,
 					handler: this.onAddRecord
+				}, {
+					xtype: 'tbfill'
+				}, {
+					id: 'tx_dftools-button-massUpdateTestContent',
+					iconCls: '',
+					text: '<span class="' + TYPO3.settings.DfTools.Sprites.refresh + '"></span>'
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.massUpdateTestContent'] + '</span>',
+					scope: this,
+					handler: this.onMassUpdateTestContent
+				}
+			],
+
+			bbar: [{
+					xtype: 'progress',
+					ref: '../progressBar',
+					width: 300,
+					hidden: true
 				}
 			],
 
@@ -160,7 +178,7 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 	},
 
 	/**
-	 * Fires a server that updates the test content
+	 * Handler of an test content update for a single record
 	 *
 	 * @param {TYPO3.DfTools.Grid} grid
 	 * @param {int} rowIndex
@@ -168,18 +186,91 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 	 */
 	onUpdateTestContent: function(grid, rowIndex) {
 		this.closeExpandedRows();
-		var record = grid.getStore().getAt(rowIndex);
-		var id = record.get('__identity');
+		var record = this.grid.getStore().getAt(rowIndex);
+		this.updateTestContent([record], 1, 0);
+	},
 
-		TYPO3.DfTools.ContentComparisonTest.DataProvider.updateTestContent(id, function(response) {
-			if (response.success) {
-				record.data = Ext.apply(record.data, response.data || {});
-				record.commit();
+	/**
+	 * Handler of an test content update of all visible records
+	 *
+	 * @return {void}
+	 */
+	onMassUpdateTestContent: function() {
+		this.closeExpandedRows();
+		if (this.grid.rowEditorPlugin) {
+			this.grid.rowEditorPlugin.stopEditing();
+		}
 
-				var label = TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated'];
-				TYPO3.Flashmessage.display(TYPO3.Severity.ok, TYPO3.lang['tx_dftools_common.info'], label);
+		var records = [];
+		this.gridStore.each(function(record) {
+			if (record.get('testUrl') === record.get('compareUrl')) {
+				records.push(record);
 			}
 		}, this);
+
+		if (records.length) {
+			this.grid.mask();
+			this.grid.progressBar.show();
+			this.updateTestContent(records, records.length, 0);
+		}
+	},
+
+	/**
+	 * Fires a server request that updates the test content
+	 *
+	 * The record is refreshed afterwards with the new data.
+	 *
+	 * @param {array} records
+	 * @param {int} total
+	 * @param {int} current
+	 * @return {void}
+	 */
+	updateTestContent: function(records, total, current) {
+		if (!records.length) {
+			this.grid.progressBar.hide();
+			this.grid.unmask();
+			return;
+		}
+
+		var showFlashMessage = (records.length === 1);
+		var record = records.shift();
+		var id = record.get('__identity');
+		TYPO3.DfTools.ContentComparisonTest.DataProvider.updateTestContent(id, function(response) {
+			this.evaluateUpdateTestContent(response, record, records, total, ++current, showFlashMessage);
+		}, this);
+	},
+
+	/**
+	 * Evaluates the response of the updateTestContent server request
+	 *
+	 * @param {object} response
+	 * @param {Ext.data.Record} record
+	 * @param {array} records
+	 * @param {int} total
+	 * @param {int} current
+	 * @param {boolean} showFlashMessage
+	 * @return {void}
+	 */
+	evaluateUpdateTestContent: function(response, record, records, total, current, showFlashMessage) {
+		var label = '';
+		if (response.success) {
+			record.data = Ext.apply(record.data, response.data || {});
+			record.commit();
+
+			if (showFlashMessage) {
+				label = TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated'];
+				TYPO3.Flashmessage.display(TYPO3.Severity.ok, TYPO3.lang['tx_dftools_common.info'], label);
+			}
+		}
+
+		if (this.grid.progressBar.isVisible) {
+			label = TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.testContentProgress'];
+			label = label.replace('%current', current).replace('%total', total);
+			var progress = (current * 100 / total) / 100;
+			this.grid.progressBar.updateProgress(progress, label);
+		}
+
+		this.updateTestContent(records, total, current);
 	},
 
 	/**
