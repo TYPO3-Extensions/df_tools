@@ -41,6 +41,32 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * Constructor
 	 */
 	public function __construct() {
+		if (TYPO3_MODE === 'FE' && !is_object($GLOBALS['TSFE'])) {
+			$pageId = intval(t3lib_div::_GP('pageId'));
+			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $pageId, 0);
+			$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
+			$GLOBALS['TSFE']->getPageAndRootline();
+			$GLOBALS['TSFE']->initTemplate();
+			$GLOBALS['TSFE']->forceTemplateParsing = TRUE;
+			$GLOBALS['TSFE']->initFEuser();
+			$GLOBALS['TSFE']->initUserGroups();
+			$GLOBALS['TSFE']->getCompressedTCarray();
+
+			$GLOBALS['TSFE']->no_cache = TRUE;
+			$GLOBALS['TSFE']->tmpl->start($GLOBALS['TSFE']->rootLine);
+			$GLOBALS['TSFE']->no_cache = FALSE;
+
+			$GLOBALS['TSFE']->config = array();
+			$GLOBALS['TSFE']->config['config'] = array(
+				'sys_language_uid' => intval(t3lib_div::_GP('L')),
+				'sys_language_mode' => 'content_fallback;0',
+				'sys_language_overlay' => 'hideNonTranslated',
+				'sys_language_softMergeIfNotBlank' => '',
+				'sys_language_softExclude' => '',
+			);
+			$GLOBALS['TSFE']->settingLanguage();
+		}
+
 		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
 		$this->extBaseConnector->setExtensionKey('DfTools');
 		$this->extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
