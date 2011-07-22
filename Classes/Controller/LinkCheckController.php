@@ -41,11 +41,6 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	protected $linkCheckRepository;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_RecordSetRepository
-	 */
-	protected $recordSetRepository;
-
-	/**
 	 * Injects the link check test repository
 	 *
 	 * @param Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository
@@ -53,16 +48,6 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 */
 	public function injectLinkCheckRepository(Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository) {
 		$this->linkCheckRepository = $linkCheckRepository;
-	}
-
-	/**
-	 * Injects the record set repository
-	 *
-	 * @param Tx_DfTools_Domain_Repository_RecordSetRepository $recordSetRepository
-	 * @return void
-	 */
-	public function injectRecordSetRepository(Tx_DfTools_Domain_Repository_RecordSetRepository $recordSetRepository) {
-		$this->recordSetRepository = $recordSetRepository;
 	}
 
 	/**
@@ -146,36 +131,6 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	}
 
 	/**
-	 * Returns the parsed urls of a site
-	 *
-	 * @return array
-	 */
-	protected function fetchRawUrls() {
-		$excludedTables = array();
-		$excludedTablesString = $this->extensionConfiguration['excludedTables'];
-		if ($excludedTablesString !== '') {
-			$excludedTables = explode(',', trim($excludedTablesString, ','));
-		}
-
-		$excludedTableFields = array();
-		$excludedTableFieldsString = $this->extensionConfiguration['excludedTableFields'];
-		if ($excludedTableFieldsString !== '') {
-			$excludedTableFields = explode(',', trim($excludedTableFieldsString, ','));
-		}
-
-		/** @var $tcaParser Tx_DfTools_Service_TcaParserService */
-		$tcaParser = $this->objectManager->get('Tx_DfTools_Service_TcaParserService');
-
-		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
-		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
-		$urlParser->injectTcaParser($tcaParser);
-
-		$rawUrlData = $urlParser->fetchUrls($excludedTables, $excludedTableFields);
-
-		return $rawUrlData;
-	}
-
-	/**
 	 * Synchronizes the whole link check repository
 	 *
 	 * @return void
@@ -183,12 +138,39 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	public function synchronizeAction() {
 		$this->view = NULL;
 
+		/** @var $linkCheckService Tx_DfTools_Service_LinkCheckService */
+		$linkCheckService = $this->objectManager->get('Tx_DfTools_Service_LinkCheckService');
+		$rawUrls = $linkCheckService->fetchAllRawUrlsFromTheDatabase(
+			$this->extensionConfiguration['excludedTables'],
+			$this->extensionConfiguration['excludedTableFields']
+		);
+		
+		/** @var $urlSynchronizationService Tx_DfTools_Service_UrlSynchronizeService */
+		$existingLinkChecks = $this->linkCheckRepository->findAll();
+		$urlSynchronizationService = $this->objectManager->get('Tx_DfTools_Service_UrlSynchronizeService');
+		$urlSynchronizationService->synchronize($rawUrls, $existingLinkChecks);
+	}
+
+	/**
+	 * Synchronizes all urls that are defined in a single record
+	 *
+	 * Note: Record is a list of fields with their values
+	 *
+	 * @param array $record
+	 * @param string $table
+	 * @param int $identity
+	 * @return void
+	 */
+	public function synchronizeUrlsFromASingleRecordAction(array $record, $table, $identity) {
+		$this->view = NULL;
+
+		/** @var $linkCheckService Tx_DfTools_Service_LinkCheckService */
+		$linkCheckService = $this->objectManager->get('Tx_DfTools_Service_LinkCheckService');
+		$rawUrls = $linkCheckService->getUrlsFromSingleRecord($record, $table, $identity);
+
 		/** @var $urlSynchronizationService Tx_DfTools_Service_UrlSynchronizeService */
 		$urlSynchronizationService = $this->objectManager->get('Tx_DfTools_Service_UrlSynchronizeService');
-		$urlSynchronizationService->injectRecordSetRepository($this->recordSetRepository);
-		$urlSynchronizationService->injectLinkCheckRepository($this->linkCheckRepository);
-		$urlSynchronizationService->injectObjectManager($this->objectManager);
-		$urlSynchronizationService->synchronize($this->fetchRawUrls());
+		$urlSynchronizationService->synchronizeGroupOfUrls($rawUrls);
 	}
 
 	/**

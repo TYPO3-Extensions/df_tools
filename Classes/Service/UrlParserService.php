@@ -134,7 +134,7 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	 * @param string $table
 	 * @return array $array[<url>][<table><uid>] = array(<table>, <uid>)
 	 */
-	protected function parseRows(array $rows, $table) {
+	public function parseRows(array $rows, $table) {
 		$urls = array();
 		foreach ((array) $rows as $row) {
 			$foundUrls = array();
@@ -179,25 +179,14 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	}
 
 	/**
-	 * Returns all urls from the link check type of the table pages if they are
-	 * configured to be prefixed by the urlType field.
+	 * Merges the "urltype" and "url" fields into a single url and returns the valid ones afterwards
 	 *
-	 * @return array $array[<url>][<table><uid>] = array(<table>, <uid>)
+	 * @param array $rows
+	 * @return array
 	 */
-	protected function fetchLinkCheckLinkType() {
-		$enableFields = $this->getPageSelectInstance()->enableFields(
-			'pages', 1,
-			array('starttime' => TRUE, 'endtime' => TRUE, 'fe_group' => TRUE)
-		);
-
-		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'uid, url, urltype',
-			'pages',
-			'doktype = 3 && urltype != 3 && urltype != 0' . $enableFields
-		);
-
+	protected function prepareUrlsFromPagesRows(array $rows) {
 		$urls = array();
-		foreach ((array) $rows as $row) {
+		foreach ($rows as $row) {
 			$row['urltype'] = intval($row['urltype']);
 			if ($row['urltype'] === 1) {
 				$row['url'] = 'http://' . $row['url'];
@@ -213,6 +202,33 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 		}
 
 		return $urls;
+	}
+
+	/**
+	 * Returns all urls from the link check type of the table pages if they are
+	 * configured to be prefixed by the urlType field.
+	 *
+	 * @param array|NULL $identities
+	 * @return array $array[<url>][<table><uid>] = array(<table>, <uid>)
+	 */
+	public function fetchLinkCheckLinkType($identities = NULL) {
+		$enableFields = $this->getPageSelectInstance()->enableFields(
+			'pages', 1,
+			array('starttime' => TRUE, 'endtime' => TRUE, 'fe_group' => TRUE)
+		);
+
+		$pageFilter = '';
+		if ($identities !== NULL) {
+			$pageFilter = ' AND uid IN (' . implode(', ', $identities) .  ')';
+		}
+
+		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'uid, url, urltype',
+			'pages',
+			'doktype = 3 && urltype != 3 && urltype != 0' . $enableFields . $pageFilter
+		);
+
+		return $this->prepareUrlsFromPagesRows($rows);
 	}
 }
 

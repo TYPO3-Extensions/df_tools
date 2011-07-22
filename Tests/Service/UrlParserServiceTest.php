@@ -229,8 +229,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function parseRowsCanFetchAllUrls(array $expected, array $rows) {
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($expected, $this->fixture->_call('parseRows', $rows, 'pages'));
+		$this->assertSame($expected, $this->fixture->parseRows($rows, 'pages'));
 	}
 
 	/**
@@ -278,7 +277,44 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 			'https://foo.bar' => array('pagesurl4' => array('pages', 'url', 4)),
 		);
 
-		$this->assertSame($expectedUrls, $this->fixture->_call('fetchLinkCheckLinkType'));
+		$this->assertSame($expectedUrls, $this->fixture->fetchLinkCheckLinkType());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function fetchLinkCheckLinkTypeBuildsUrlsCorrectlyWithRestrictedPageFilter() {
+		$rows = array(
+			array(
+				'uid' => 1,
+				'urltype' => 1,
+				'url' => 'foo.bar'
+			),
+			array(
+				'uid' => 2,
+				'urltype' => 2,
+				'url' => 'foo.bar'
+			),
+		);
+
+		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 ' .
+			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 AND uid IN (1, 2)';
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
+		$GLOBALS['TYPO3_DB'] = $dbMock;
+
+		$dbMock->expects($this->once())->method('exec_SELECTgetRows')
+			->will($this->returnValue($rows))
+			->with('uid, url, urltype', 'pages', $whereClause);
+
+		$expectedUrls = array(
+			'http://foo.bar' => array('pagesurl1' => array('pages', 'url', 1)),
+			'ftp://foo.bar' => array('pagesurl2' => array('pages', 'url', 2)),
+		);
+
+		$this->assertSame($expectedUrls, $this->fixture->fetchLinkCheckLinkType(array(1, 2)));
 	}
 
 	/**

@@ -42,7 +42,7 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
 			'Tx_DfTools_Service_UrlSynchronizeService',
-			array('fetchExistingRawRecordSets', 'fetchExistingRawUrls', 'getPersistenceManager')
+			array('fetchExistingRawRecordSets', 'fetchExistingRawUrls')
 		);
 
 		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
@@ -151,17 +151,16 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	protected function prepareLinkCheckRepository() {
 		/** @var $linkCheckRepository Tx_DfTools_Domain_Repository_LinkCheckRepository */
 		$class = 'Tx_DfTools_Domain_Repository_LinkCheckRepository';
-		$linkCheckRepository = $this->getMock($class, array('add', 'update', 'remove', 'findAll'));
+		$linkCheckRepository = $this->getMock($class, array('add', 'update', 'remove', 'findInListByTestUrl'));
 		$this->fixture->injectLinkCheckRepository($linkCheckRepository);
 
 		return $linkCheckRepository;
 	}
 
 	/**
-	 * @param Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository
-	 * @return Tx_Extbase_Persistence_ObjectStorage
+	 * @return Tx_Extbase_Persistence_QueryResult
 	 */
-	protected function prepareFindAllLinkCheckRepository(Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository) {
+	protected function getExistingUrls() {
 		$relatedRecordSet = new Tx_DfTools_Domain_Model_RecordSet();
 		$relatedRecordSet->setTableName('pages');
 		$relatedRecordSet->setField('url');
@@ -177,15 +176,13 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$testRecord2->setTestUrl('http://bar.foo');
 		$testRecord2->addRecordSet($relatedRecordSet);
 
-		$storage = new Tx_Extbase_Persistence_ObjectStorage();
-		$storage->attach($testRecord1);
-		$storage->attach($testRecord2);
+		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
+		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
+		$queryResult->offsetSet(0, $testRecord1);
+		$queryResult->offsetSet(1, $testRecord2);
 
-		/** @noinspection PhpUndefinedMethodInspection */
-		$linkCheckRepository->expects($this->once())->method('findAll')
-			->will($this->returnValue($storage));
-
-		return $storage;
+		return $queryResult;
 	}
 
 	/**
@@ -194,20 +191,20 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizationLogicRemovesTwoUrls() {
 		$this->prepareTestSynchronizationLogic();
-		$recordSetRepository = $this->prepareRecordSetRepository();
-		$linkCheckRepository = $this->prepareLinkCheckRepository();
-		$this->prepareFindAllLinkCheckRepository($linkCheckRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->never())->method('update');
 		$linkCheckRepository->expects($this->exactly(2))->method('remove');
 
+		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->never())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->never())->method('findByUid');
 
-		$this->fixture->synchronize(array());
+		$queryResult = $this->getExistingUrls();
+		$this->fixture->synchronize(array(), $queryResult);
 	}
 
 	/**
@@ -216,20 +213,20 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizationLogicRemovesOneUrlAndAddsAnotherWithOneNewRecordSetAndOneExisting() {
 		$this->prepareTestSynchronizationLogic();
-		$recordSetRepository = $this->prepareRecordSetRepository();
-		$linkCheckRepository = $this->prepareLinkCheckRepository();
-		$storage = $this->prepareFindAllLinkCheckRepository($linkCheckRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('add');
 		$linkCheckRepository->expects($this->never())->method('update');
 		$linkCheckRepository->expects($this->once())->method('remove');
 
+		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->once())->method('findByUid')
 			->will($this->returnValue(new Tx_DfTools_Domain_Model_RecordSet()));
 
+		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(array(
 			'http://bar.foo' => array(
 				'pagesurl3' => array('pages', 'url', 3),
@@ -238,13 +235,13 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 				'pagessubtitle1' => array('pages', 'subtitle', 1),
 				'be_userstext1' => array('be_users', 'text', 1),
 			),
-		));
+		), $queryResult);
 
 		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
 		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 
-		$storage->rewind();
-		$linkCheck = $storage->current();
+		$queryResult->rewind();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(1, $recordSets->count());
 
@@ -254,8 +251,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$this->assertSame('url', $recordSet->getField());
 		$this->assertSame(3, $recordSet->getIdentifier());
 
-		$storage->next();
-		$linkCheck = $storage->current();
+		$queryResult->next();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(1, $recordSets->count());
 
@@ -272,20 +269,20 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizationLogicEditsAnUrlByRemovingARecordSetAndAddingAnother() {
 		$this->prepareTestSynchronizationLogic();
-		$recordSetRepository = $this->prepareRecordSetRepository();
-		$linkCheckRepository = $this->prepareLinkCheckRepository();
-		$storage = $this->prepareFindAllLinkCheckRepository($linkCheckRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
 		$linkCheckRepository->expects($this->never())->method('remove');
 
+		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->never())->method('findByUid')
 			->will($this->returnValue(new Tx_DfTools_Domain_Model_RecordSet()));
 
+		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(array(
 			'http://foo.bar' => array(
 				'pagesurl3' => array('pages', 'url', 3),
@@ -293,13 +290,13 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			'http://bar.foo' => array(
 				'pagessubtitle4' => array('pages', 'subtitle', 4),
 			),
-		));
+		), $queryResult);
 
 		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
 		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 
-		$storage->rewind();
-		$linkCheck = $storage->current();
+		$queryResult->rewind();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(1, $recordSets->count());
 
@@ -309,8 +306,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$this->assertSame('url', $recordSet->getField());
 		$this->assertSame(3, $recordSet->getIdentifier());
 
-		$storage->next();
-		$linkCheck = $storage->current();
+		$queryResult->next();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(1, $recordSets->count());
 
@@ -327,19 +324,19 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizationLogicAddsARecordSetForAnUrlAndAddsAnotherUrlWithTheSimilarRecordSet() {
 		$this->prepareTestSynchronizationLogic();
-		$recordSetRepository = $this->prepareRecordSetRepository();
-		$linkCheckRepository = $this->prepareLinkCheckRepository();
-		$storage = $this->prepareFindAllLinkCheckRepository($linkCheckRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
 		$linkCheckRepository->expects($this->never())->method('remove');
 
+		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->never())->method('findByUid');
 
+		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(array(
 			'http://foo.bar' => array(
 				'pagesurl3' => array('pages', 'url', 3),
@@ -351,13 +348,13 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			'http://ying.yang' => array(
 				'be_userstext1' => array('be_users', 'text', 1),
 			),
-		));
+		), $queryResult);
 
 		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
 		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 
-		$storage->rewind();
-		$linkCheck = $storage->current();
+		$queryResult->rewind();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(1, $recordSets->count());
 
@@ -367,8 +364,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$this->assertSame('url', $recordSet->getField());
 		$this->assertSame(3, $recordSet->getIdentifier());
 
-		$storage->next();
-		$linkCheck = $storage->current();
+		$queryResult->next();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(2, $recordSets->count());
 
@@ -391,19 +388,19 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizationLogicRemovesARecordSetWithEmptyField() {
 		$this->prepareTestSynchronizationLogic();
-		$recordSetRepository = $this->prepareRecordSetRepository();
-		$linkCheckRepository = $this->prepareLinkCheckRepository();
-		$storage = $this->prepareFindAllLinkCheckRepository($linkCheckRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
 		$linkCheckRepository->expects($this->never())->method('remove');
 
+		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->never())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->never())->method('findByUid');
 
+		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(array(
 			'http://foo.bar' => array(
 				'pagesurl3' => array('pages', 'url', 3),
@@ -411,13 +408,13 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			'http://bar.foo' => array(
 				'pages3' => array('pages', '', 3),
 			),
-		));
+		), $queryResult);
 
 		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
 		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 
-		$storage->rewind();
-		$linkCheck = $storage->current();
+		$queryResult->rewind();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(1, $recordSets->count());
 
@@ -427,10 +424,120 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$this->assertSame('url', $recordSet->getField());
 		$this->assertSame(3, $recordSet->getIdentifier());
 
-		$storage->next();
-		$linkCheck = $storage->current();
+		$queryResult->next();
+		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
 		$this->assertSame(0, $recordSets->count());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function synchronizeGroupOfUrlsWithOneUnknownOneExistingAndOneRemovableLinkTests() {
+		unset($this->fixture);
+		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Service_UrlSynchronizeService', array('synchronize'));
+
+		$rawUrls = array(
+			'http://foo.bar' => array(
+				'pagesurl3' => array('pages', 'url', 3),
+			),
+			'http://bar.foo' => array(
+				'be_userstext1' => array('be_users', 'text', 1),
+			),
+			'http://ying.yang' => array(),
+		);
+
+		/** @var $testRecord1 Tx_DfTools_Domain_Model_LinkCheck */
+		$testRecord1 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		$testRecord1->setTestUrl('http://foo.bar');
+
+		/** @var $testRecord2 Tx_DfTools_Domain_Model_LinkCheck */
+		$testRecord2 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		$testRecord2->setTestUrl('http://ying.yang');
+
+		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
+		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
+		$queryResult->offsetSet(0, $testRecord1);
+		$queryResult->offsetSet(1, $testRecord2);
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$expectedRawUrls = $rawUrls;
+		unset($expectedRawUrls['http://ying.yang']);
+		$expectedQueryResult = clone $queryResult;
+		$expectedQueryResult->offsetUnset(1);
+		$this->fixture->expects($this->once())->method('synchronize')->with($expectedRawUrls, $expectedQueryResult);
+
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
+		$linkCheckRepository->expects($this->once())->method('remove');
+		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
+			->will($this->returnValue($queryResult));
+
+		$this->fixture->synchronizeGroupOfUrls($rawUrls);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function synchronizeGroupOfUrlsWithOneRemovableLinkTest() {
+		unset($this->fixture);
+		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Service_UrlSynchronizeService', array('synchronize'));
+
+		$rawUrls = array(
+			'http://ying.yang' => array(),
+		);
+
+		/** @var $testRecord1 Tx_DfTools_Domain_Model_LinkCheck */
+		$testRecord1 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		$testRecord1->setTestUrl('http://ying.yang');
+
+		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
+		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
+		$queryResult->offsetSet(0, $testRecord1);
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->expects($this->never())->method('synchronize');
+
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
+		$linkCheckRepository->expects($this->once())->method('remove');
+		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
+			->will($this->returnValue($queryResult));
+
+		$this->fixture->synchronizeGroupOfUrls($rawUrls);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function synchronizeGroupOfUrlsWithOneAddedLinkTest() {
+		unset($this->fixture);
+		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Service_UrlSynchronizeService', array('synchronize'));
+
+		$rawUrls = array(
+			'http://bar.foo' => array(
+				'be_userstext1' => array('be_users', 'text', 1),
+			),
+		);
+
+		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
+		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
+		$queryResult->offsetSet(0, NULL);
+		$queryResult->offsetUnset(0);
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->expects($this->once())->method('synchronize')->with($rawUrls, $queryResult);
+
+		$linkCheckRepository = $this->prepareLinkCheckRepository();
+		$linkCheckRepository->expects($this->never())->method('remove');
+		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
+			->will($this->returnValue($queryResult));
+
+		$this->fixture->synchronizeGroupOfUrls($rawUrls);
 	}
 }
 

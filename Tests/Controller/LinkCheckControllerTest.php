@@ -42,6 +42,11 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Tests_Con
 	protected $repository;
 
 	/**
+	 * @var Tx_Extbase_Object_ObjectManager
+	 */
+	protected $objectManager;
+
+	/**
 	 * @var Tx_DfTools_View_LinkCheck_ArrayView
 	 */
 	protected $view;
@@ -50,8 +55,10 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Tests_Con
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Controller_LinkCheckController';
-		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
+		$this->fixture = $this->getAccessibleMock(
+			'Tx_DfTools_Controller_LinkCheckController',
+			array('forward', 'getUrlCheckerService', 'fetchRawUrls', 'getUrlsFromSingleRecord')
+		);
 		$this->fixture->injectObjectManager($this->objectManager);
 
 		/** @var $repository Tx_DfTools_Domain_Repository_LinkCheckRepository */
@@ -61,6 +68,9 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Tests_Con
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRange', 'countAll')
 		);
 		$this->fixture->injectLinkCheckRepository($this->repository);
+
+		$this->objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('get'));
+		$this->fixture->injectObjectManager($this->objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('Tx_DfTools_View_LinkCheck_ArrayView', array('assign'));
@@ -94,20 +104,6 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Tests_Con
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->assertSame($repository, $this->fixture->_get('linkCheckRepository'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRecordSetRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_RecordSetRepository */
-		$class = 'Tx_DfTools_Domain_Repository_RecordSetRepository';
-		$repository = $this->getMock($class, array('dummy'));
-		$this->fixture->injectRecordSetRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('recordSetRepository'));
 	}
 
 	/**

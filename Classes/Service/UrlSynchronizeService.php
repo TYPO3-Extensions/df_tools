@@ -76,15 +76,6 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	}
 
 	/**
-	 * Returns the persistence manager instance
-	 *
-	 * @return Tx_Extbase_Persistence_Manager
-	 */
-	public function getPersistenceManager() {
-		return $this->objectManager->get('Tx_Extbase_Persistence_Manager');
-	}
-
-	/**
 	 * Returns the existing raw url data without the record sets!
 	 *
 	 * @return array $array[<table><field><identifier>] = <recordSetData>
@@ -155,18 +146,18 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * removed from the url record.
 	 *
 	 * @param array $rawUrls by reference
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $record
+	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkTest
 	 * @return bool
 	 */
-	protected function removeUnknownRecordSetsFromUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $record) {
+	protected function removeUnknownRecordSetsFromUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $linkTest) {
 		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 		$recordWasEdited = FALSE;
-		$recordSets = $record->getRecordSets();
+		$recordSets = $linkTest->getRecordSets();
 		foreach ($recordSets as $recordSet) {
 			$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
 			if (!isset($rawUrls[$index]) || $recordSet->getField() === '') {
 				$recordWasEdited = TRUE;
-				$record->removeRecordSet($recordSet);
+				$linkTest->removeRecordSet($recordSet);
 			}
 			unset($rawUrls[$index]);
 		}
@@ -179,11 +170,11 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * a boolean TRUE if a record set was added, otherwise FALSE.
 	 *
 	 * @param array $rawUrls by reference
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $record
+	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkTest
 	 * @param array $existingRawRecordSets by reference
 	 * @return boolean
 	 */
-	protected function addMissingRecordSetsToUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $record, array &$existingRawRecordSets) {
+	protected function addMissingRecordSetsToUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $linkTest, array &$existingRawRecordSets) {
 		$recordWasEdited = FALSE;
 		foreach ($rawUrls as $rawRecordSet) {
 			list($table, $field, $identifier) = $rawRecordSet;
@@ -193,7 +184,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 
 			$recordWasEdited = TRUE;
 			$recordSet = $this->getValidRecordSet($table, $field, $identifier, $existingRawRecordSets);
-			$record->addRecordSet($recordSet);
+			$linkTest->addRecordSet($recordSet);
 		}
 
 		return $recordWasEdited;
@@ -228,26 +219,26 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * Compares the records sets of the url with the raw data of the second parameter.
 	 * Missing ones are added and others are removed.
 	 *
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $record
+	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkTest
 	 * @param array $rawUrlData
 	 * @param array $existingRawRecordSets
 	 * @return void
 	 */
 	protected function evaluateRecordSetDataOfUrl(
-		Tx_DfTools_Domain_Model_LinkCheck $record,
+		Tx_DfTools_Domain_Model_LinkCheck $linkTest,
 		array &$rawUrlData,
 		array &$existingRawRecordSets
 	) {
 		$recordHasMissingRecordSets = FALSE;
-		$recordHasUnknownRecordSets = $this->removeUnknownRecordSetsFromUrlRecord($rawUrlData, $record);
+		$recordHasUnknownRecordSets = $this->removeUnknownRecordSetsFromUrlRecord($rawUrlData, $linkTest);
 		if (count($rawUrlData)) {
 			$recordHasMissingRecordSets = $this->addMissingRecordSetsToUrlRecord(
-				$rawUrlData, $record, $existingRawRecordSets
+				$rawUrlData, $linkTest, $existingRawRecordSets
 			);
 		}
 
 		if ($recordHasUnknownRecordSets || $recordHasMissingRecordSets) {
-			$this->linkCheckRepository->update($record);
+			$this->linkCheckRepository->update($linkTest);
 		}
 	}
 
@@ -262,25 +253,51 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * - remove non-existing urls with their related records sets
 	 *
 	 * @param array $rawUrls
+	 * @param Tx_Extbase_Persistence_QueryResult $existingLinkTests
 	 * @return void
 	 */
-	public function synchronize(array $rawUrls) {
-		$existingUrls = $this->linkCheckRepository->findAll();
+	public function synchronize(array $rawUrls, Tx_Extbase_Persistence_QueryResult $existingLinkTests) {
 		$existingRawRecordSets = $this->fetchExistingRawRecordSets();
 
-		/** @var $record Tx_DfTools_Domain_Model_LinkCheck */
-		foreach ($existingUrls as $record) {
-			$url = $record->getTestUrl();
+		/** @var $linkTest Tx_DfTools_Domain_Model_LinkCheck */
+		foreach ($existingLinkTests as $linkTest) {
+			$url = $linkTest->getTestUrl();
 			if (!isset($rawUrls[$url])) {
-				$this->linkCheckRepository->remove($record);
+				$this->linkCheckRepository->remove($linkTest);
 				continue;
 			}
 
-			$this->evaluateRecordSetDataOfUrl($record, $rawUrls[$url], $existingRawRecordSets);
+			$this->evaluateRecordSetDataOfUrl($linkTest, $rawUrls[$url], $existingRawRecordSets);
 			unset($rawUrls[$url]);
 		}
 
 		$this->addUrlRecords($rawUrls, $existingRawRecordSets);
+	}
+
+	/**
+	 * Synchronizes the record set repositories of the given links. An url is
+	 * removed if no further record sets are assigned to it.
+	 *
+	 * Note: Any link checks with no record sets in their rawUrl counterpart are removed!
+	 *
+	 * @param array $rawUrls
+	 * @return void
+	 */
+	public function synchronizeGroupOfUrls(array $rawUrls) {
+		/** @var $linkTest Tx_DfTools_Domain_Model_LinkCheck */
+		$existingLinkTests = $this->linkCheckRepository->findInListByTestUrl(array_keys($rawUrls));
+		foreach ($existingLinkTests as $index => $linkTest) {
+			$url = $linkTest->getTestUrl();
+			if (!count($rawUrls[$url])) {
+				$this->linkCheckRepository->remove($linkTest);
+				$existingLinkTests->offsetUnset($index);
+				unset($rawUrls[$url]);
+			}
+		}
+
+		if (count($existingLinkTests) || count($rawUrls)) {
+			$this->synchronize($rawUrls, $existingLinkTests);
+		}
 	}
 }
 

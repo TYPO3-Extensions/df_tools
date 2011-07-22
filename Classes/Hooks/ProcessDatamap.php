@@ -24,32 +24,46 @@
  ***************************************************************/
 
 /**
- * Repository for Tx_DfTools_Domain_Model_LinkCheck
+ * Repository for Tx_DfTools_Domain_Model_RedirectTest
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Repository_LinkCheckRepository extends Tx_DfTools_Domain_Repository_AbstractRepository {
+class tx_DfTools_Hooks_ProcessDatamap {
 	/**
-	 * Returns all link checks that matches the given test urls
+	 * BootStrap Instance
 	 *
-	 * @param array $testUrls
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @var Tx_DfTools_Service_ExtBaseConnectorService
 	 */
-	public function findInListByTestUrl(array $testUrls) {
-		$query = $this->createQuery();
-		return $query->matching($query->in('testUrl', $testUrls))->execute();
+	protected $extBaseConnector = NULL;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
+		$this->extBaseConnector->setExtensionKey('DfTools');
+		$this->extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
 	}
 
 	/**
-	 * Returns all link checks that matches the given identity array
+	 * Hook for synchronizing urls after any database operation
 	 *
-	 * @param array $identities
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @param t3lib_tcemain $tceMain
+	 * @return void
 	 */
-	public function findInListByIdentity(array $identities) {
-		$query = $this->createQuery();
-		return $query->matching($query->in('uid', $identities))->execute();
+	public function processDatamap_afterAllOperations($tceMain) {
+		foreach ($tceMain->datamap as $table => $tableData) {
+			foreach ($tableData as $identity => $record) {
+				/** @noinspection PhpUndefinedFieldInspection */
+				$this->extBaseConnector->setParameters(array(
+					'record' => $record,
+					'table' => $table,
+					'identity' => $identity,
+				));
+				$this->extBaseConnector->runControllerAction('LinkCheck', 'synchronizeUrlsFromASingleRecord');
+			}
+		}
 	}
 }
 
