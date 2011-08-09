@@ -110,18 +110,17 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	protected function fetchUrlsFromDatabase($table, array $fields) {
 		$whereClause = array();
 		foreach ($fields as $field) {
-			$whereClause[] = $field . ' REGEXP \'(https|http|ftps|ftp)://\'';
+			$whereClause[] = $field . ' REGEXP \'(https|http|ftp)://\'';
 		}
 
 		$enableFields = $this->getPageSelectInstance()->enableFields(
-			$table, 1,
-			array('starttime' => TRUE, 'endtime' => TRUE, 'fe_group' => TRUE)
+			$table, 1, array('starttime' => TRUE, 'fe_group' => TRUE)
 		);
 
 		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'uid, ' . implode(', ', $fields),
 			$table,
-			'(' . implode(') OR (', $whereClause) . ')' . $enableFields
+			'(' . implode(' OR ', $whereClause) . ')' . $enableFields
 		);
 
 		return $this->parseRows($rows, $table);
@@ -213,8 +212,7 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	 */
 	public function fetchLinkCheckLinkType($identities = NULL) {
 		$enableFields = $this->getPageSelectInstance()->enableFields(
-			'pages', 1,
-			array('starttime' => TRUE, 'endtime' => TRUE, 'fe_group' => TRUE)
+			'pages', 1, array('starttime' => TRUE, 'fe_group' => TRUE)
 		);
 
 		$pageFilter = '';
