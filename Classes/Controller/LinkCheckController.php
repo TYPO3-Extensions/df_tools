@@ -154,19 +154,18 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	/**
 	 * Synchronizes all urls that are defined in a single record
 	 *
-	 * Note: Record is a list of fields with their values
-	 *
-	 * @param array $record
 	 * @param string $table
 	 * @param int $identity
 	 * @return void
 	 */
-	public function synchronizeUrlsFromASingleRecordAction(array $record, $table, $identity) {
+	public function synchronizeUrlsFromASingleRecordAction($table, $identity) {
 		$this->view = NULL;
+
+		// @todo missing unit test
 
 		/** @var $linkCheckService Tx_DfTools_Service_LinkCheckService */
 		$linkCheckService = $this->objectManager->get('Tx_DfTools_Service_LinkCheckService');
-		$rawUrls = $linkCheckService->getUrlsFromSingleRecord($record, $table, $identity);
+		$rawUrls = $linkCheckService->getUrlsFromSingleRecord($table, $identity);
 
 		/** @var $urlSynchronizationService Tx_DfTools_Service_UrlSynchronizeService */
 		$urlSynchronizationService = $this->objectManager->get('Tx_DfTools_Service_UrlSynchronizeService');

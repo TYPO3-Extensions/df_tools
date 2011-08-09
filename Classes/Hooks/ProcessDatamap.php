@@ -24,7 +24,7 @@
  ***************************************************************/
 
 /**
- * Repository for Tx_DfTools_Domain_Model_RedirectTest
+ * Hooks for synchronize urls directly on-the-fly while editing
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
@@ -54,17 +54,37 @@ class tx_DfTools_Hooks_ProcessDatamap {
 	 */
 	public function processDatamap_afterAllOperations($tceMain) {
 		foreach ($tceMain->datamap as $table => $tableData) {
-			foreach ($tableData as $identity => $record) {
+			foreach ($tableData as $identity => $_) {
+				if (strpos($identity, 'NEW') !== FALSE) {
+					$identity = $tceMain->substNEWwithIDs[$identity];
+				}
+
 				/** @noinspection PhpUndefinedFieldInspection */
-				$this->extBaseConnector->setParameters(array(
-					'record' => $record,
-					'table' => $table,
-					'identity' => $identity,
-				));
+				$this->extBaseConnector->setParameters(array('table' => $table, 'identity' => intval($identity)));
 				$this->extBaseConnector->runControllerAction('LinkCheck', 'synchronizeUrlsFromASingleRecord');
 			}
 		}
 	}
+
+	/**
+	 * Hook for synchronizing urls after any command map operation like delete and recover
+	 *
+	 * @param string $command
+	 * @param string $table
+	 * @param int $identity
+	 * @return void
+	 */
+	public function processCmdmap_postProcess($command, $table, $identity) {
+		if (!in_array($command, array('delete', 'undelete'))) {
+			return;
+		}
+
+		/** @noinspection PhpUndefinedFieldInspection */
+		$this->extBaseConnector->setParameters(array('table' => $table, 'identity' => intval($identity)));
+		$this->extBaseConnector->runControllerAction('LinkCheck', 'synchronizeUrlsFromASingleRecord');
+	}
+
+	// @todo missing unit tests (complete file)
 }
 
 ?>

@@ -90,12 +90,13 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	/**
 	 * Returns a list of raw urls defined in the given record
 	 *
-	 * @param array $record
 	 * @param string $table
 	 * @param int $identity
 	 * @return array
 	 */
-	public function getUrlsFromSingleRecord(array $record, $table, $identity) {
+	public function getUrlsFromSingleRecord($table, $identity) {
+		$record = t3lib_BEfunc::getRecord($table, $identity);
+
 		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
 		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
 
@@ -108,6 +109,8 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 		$rawUrls = array_merge_recursive($rawUrls, $urlParser->parseRows(array($record), $table));
 
 		$existingRawUrls = $this->findExistingRawUrlsByTableAndUid($table, $identity);
+		$existingAndFoundRawUrls = $this->findExistingRawUrlsByTestUrls(array_keys($rawUrls));
+		$existingRawUrls = array_merge($existingRawUrls, $existingAndFoundRawUrls);
 		foreach ($existingRawUrls as $url => $recordSets) {
 			if (!isset($rawUrls[$url])) {
 				$rawUrls[$url] = array();
@@ -121,7 +124,40 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 			$rawUrls[$url] = array_merge($recordSets, $rawUrls[$url]);
 		}
 
-		debug(array($existingRawUrls, $rawUrls));
+		return $rawUrls;
+	}
+
+	/**
+	 * Returns an array of raw url data with their record sets from a given bunch of test urls
+	 *
+	 * @param array $urls
+	 * @return array
+	 */
+	protected function findExistingRawUrlsByTestUrls(array $urls) {
+		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+
+		$rawUrls = array();
+		foreach ($urls as $url) {
+			/** @noinspection PhpUndefinedMethodInspection */
+			$linkCheck = $this->linkCheckRepository->findOneByTestUrl($url);
+			if (!$linkCheck) {
+				continue;
+			}
+
+			$recordSets = array();
+			foreach ($linkCheck->getRecordSets() as $recordSet) {
+				$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
+				$recordSets[$index] = array(
+					$recordSet->getTableName(),
+					$recordSet->getField(),
+					$recordSet->getIdentifier(),
+				);
+			}
+
+			$rawUrls[$url] = $recordSets;
+		}
+
 		return $rawUrls;
 	}
 

@@ -22,6 +22,8 @@ if (TYPO3_MODE === 'BE') {
 		// hook registration
 	$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] =
 		'EXT:df_tools/Classes/Hooks/ProcessDatamap.php:tx_DfTools_Hooks_ProcessDatamap';
+	$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass'][] =
+		'EXT:df_tools/Classes/Hooks/ProcessDatamap.php:tx_DfTools_Hooks_ProcessDatamap';
 
 		// Scheduler registration
 	$prefix = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:';
