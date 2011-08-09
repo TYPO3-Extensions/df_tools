@@ -92,9 +92,10 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 
 		$table = 'pages';
 		$fields = array('field1', 'field2');
-		$whereClause = '(field1 REGEXP \'(https|http|ftps|ftp)://\') OR ' .
-			'(field2 REGEXP \'(https|http|ftps|ftp)://\') AND ' .
-			'pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1';
+		$whereClause = '(field1 REGEXP \'(https|http|ftp)://\' OR ' .
+			'field2 REGEXP \'(https|http|ftp)://\') AND ' .
+			'pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 ' .
+			'AND (pages.endtime=0 OR pages.endtime>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock->expects($this->once())->method('exec_SELECTgetRows')
@@ -261,7 +262,8 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		);
 
 		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 ' .
-			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1';
+			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 ' .
+			'AND (pages.endtime=0 OR pages.endtime>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
@@ -299,7 +301,9 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		);
 
 		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 ' .
-			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 AND uid IN (1, 2)';
+			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 ' .
+			'AND (pages.endtime=0 OR pages.endtime>' . $GLOBALS['SIM_ACCESS_TIME'] . ') ' .
+			'AND uid IN (1, 2)';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
