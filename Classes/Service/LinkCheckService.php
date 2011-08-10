@@ -95,18 +95,18 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	 * @return array
 	 */
 	public function getUrlsFromSingleRecord($table, $identity) {
-		$record = t3lib_BEfunc::getRecord($table, $identity);
+		$record = $this->getRecordByTableAndId($table, $identity);
 
 		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
 		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
 
 		$rawUrls = array();
 		if ($table === 'pages') {
-			$rawUrls = array_merge_recursive($rawUrls, $urlParser->fetchLinkCheckLinkType(array($identity)));
+			$rawUrls = $urlParser->fetchLinkCheckLinkType(array($identity));
 		}
 
 		$record['uid'] = $identity;
-		$rawUrls = array_merge_recursive($rawUrls, $urlParser->parseRows(array($record), $table));
+		$rawUrls = array_merge($rawUrls, $urlParser->parseRows(array($record), $table));
 
 		$existingRawUrls = $this->findExistingRawUrlsByTableAndUid($table, $identity);
 		$existingAndFoundRawUrls = $this->findExistingRawUrlsByTestUrls(array_keys($rawUrls));
@@ -128,6 +128,38 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	}
 
 	/**
+	 * Returns a raw database record for the given table and identity
+	 *
+	 * @param string $table
+	 * @param int $identity
+	 * @return array
+	 */
+	protected function getRecordByTableAndId($table, $identity) {
+		return t3lib_BEfunc::getRecord($table, $identity);
+	}
+
+	/**
+	 * Returns the records sets of a link check in a plain array structure
+	 *
+	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkCheck
+	 * @return array
+	 */
+	protected function getRecordSetsAsPlainArray(Tx_DfTools_Domain_Model_LinkCheck $linkCheck) {
+		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+		$recordSets = array();
+		foreach ($linkCheck->getRecordSets() as $recordSet) {
+			$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
+			$recordSets[$index] = array(
+				$recordSet->getTableName(),
+				$recordSet->getField(),
+				$recordSet->getIdentifier(),
+			);
+		}
+
+		return $recordSets;
+	}
+
+	/**
 	 * Returns an array of raw url data with their record sets from a given bunch of test urls
 	 *
 	 * @param array $urls
@@ -135,7 +167,6 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	 */
 	protected function findExistingRawUrlsByTestUrls(array $urls) {
 		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
 
 		$rawUrls = array();
 		foreach ($urls as $url) {
@@ -145,17 +176,7 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 				continue;
 			}
 
-			$recordSets = array();
-			foreach ($linkCheck->getRecordSets() as $recordSet) {
-				$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
-				$recordSets[$index] = array(
-					$recordSet->getTableName(),
-					$recordSet->getField(),
-					$recordSet->getIdentifier(),
-				);
-			}
-
-			$rawUrls[$url] = $recordSets;
+			$rawUrls[$url] = $this->getRecordSetsAsPlainArray($linkCheck);
 		}
 
 		return $rawUrls;
@@ -189,22 +210,10 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 
 			if (count($linkCheckIds)) {
 				/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-				/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
-
 				$linkChecks = $this->linkCheckRepository->findInListByIdentity($linkCheckIds);
 				foreach ($linkChecks as $linkCheck) {
-					$recordSets = array();
-					foreach ($linkCheck->getRecordSets() as $recordSet) {
-						$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
-						$recordSets[$index] = array(
-							$recordSet->getTableName(),
-							$recordSet->getField(),
-							$recordSet->getIdentifier(),
-						);
-					}
-
 					$url = $linkCheck->getTestUrl();
-					$rawUrls[$url] = $recordSets;
+					$rawUrls[$url] = $this->getRecordSetsAsPlainArray($linkCheck);
 				}
 			}
 		}

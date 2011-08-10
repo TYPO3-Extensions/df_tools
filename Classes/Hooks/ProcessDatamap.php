@@ -83,8 +83,6 @@ class tx_DfTools_Hooks_ProcessDatamap {
 		$this->extBaseConnector->setParameters(array('table' => $table, 'identity' => intval($identity)));
 		$this->extBaseConnector->runControllerAction('LinkCheck', 'synchronizeUrlsFromASingleRecord');
 	}
-
-	// @todo missing unit tests (complete file)
 }
 
 ?>
