@@ -68,24 +68,55 @@ if (TYPO3_MODE === 'BE') {
 		'description' => $prefix . 'tx_dftools_domain_model_linkcheck.schedulerSync.description'
 	);
 
-		// Ext.Direct registration
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RedirectTest.DataProvider'] =
-		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/RedirectTestDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestDataProvider';
+	if (t3lib_div::int_from_ver(TYPO3_version) >= 4004004) {
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.DfTools.RedirectTest.DataProvider',
+			$extPath . 'Classes/ExtDirect/RedirectTestDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestDataProvider'
+		);
 
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RedirectTestCategory.DataProvider'] =
-		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/RedirectTestCategoryDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestCategoryDataProvider';
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.DfTools.RedirectTestCategory.DataProvider',
+			$extPath . 'Classes/ExtDirect/RedirectTestCategoryDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestCategoryDataProvider'
+		);
 
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.LinkCheck.DataProvider'] =
-		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/LinkCheckDataProvider.php:Tx_DfTools_ExtDirect_LinkCheckDataProvider';
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.DfTools.LinkCheck.DataProvider',
+			$extPath . 'Classes/ExtDirect/LinkCheckDataProvider.php:Tx_DfTools_ExtDirect_LinkCheckDataProvider'
+		);
 
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RecordSet.DataProvider'] =
-		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/RecordSetDataProvider.php:Tx_DfTools_ExtDirect_RecordSetDataProvider';
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.DfTools.RecordSet.DataProvider',
+			$extPath . 'Classes/ExtDirect/RecordSetDataProvider.php:Tx_DfTools_ExtDirect_RecordSetDataProvider'
+		);
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.BackLinkTest.DataProvider'] =
-		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/BackLinkTestDataProvider.php:Tx_DfTools_ExtDirect_BackLinkTestDataProvider';
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.DfTools.BackLinkTest.DataProvider',
+			$extPath . 'Classes/ExtDirect/BackLinkTestDataProvider.php:Tx_DfTools_ExtDirect_BackLinkTestDataProvider'
+		);
 
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.ContentComparisonTest.DataProvider'] =
-		t3lib_extMgm::extPath($_EXTKEY) . 'Classes/ExtDirect/ContentComparisonTestDataProvider.php:Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider';
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.DfTools.ContentComparisonTest.DataProvider',
+			$extPath . 'Classes/ExtDirect/ContentComparisonTestDataProvider.php:Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider'
+		);
+	} else {
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RedirectTest.DataProvider'] =
+			$extPath . 'Classes/ExtDirect/RedirectTestDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestDataProvider';
+
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RedirectTestCategory.DataProvider'] =
+			$extPath . 'Classes/ExtDirect/RedirectTestCategoryDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestCategoryDataProvider';
+
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.LinkCheck.DataProvider'] =
+			$extPath . 'Classes/ExtDirect/LinkCheckDataProvider.php:Tx_DfTools_ExtDirect_LinkCheckDataProvider';
+
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.RecordSet.DataProvider'] =
+			$extPath . 'Classes/ExtDirect/RecordSetDataProvider.php:Tx_DfTools_ExtDirect_RecordSetDataProvider';
+
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.BackLinkTest.DataProvider'] =
+			$extPath . 'Classes/ExtDirect/BackLinkTestDataProvider.php:Tx_DfTools_ExtDirect_BackLinkTestDataProvider';
+
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.DfTools.ContentComparisonTest.DataProvider'] =
+			$extPath . 'Classes/ExtDirect/ContentComparisonTestDataProvider.php:Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider';
+	}
 }
 
 ?>
