@@ -68,7 +68,7 @@ if (TYPO3_MODE === 'BE') {
 		'description' => $prefix . 'tx_dftools_domain_model_linkcheck.schedulerSync.description'
 	);
 
-	if (t3lib_div::int_from_ver(TYPO3_version) >= 4004004) {
+	if (t3lib_div::int_from_ver(TYPO3_version) >= 4005004) {
 		t3lib_extMgm::registerExtDirectComponent(
 			'TYPO3.DfTools.RedirectTest.DataProvider',
 			$extPath . 'Classes/ExtDirect/RedirectTestDataProvider.php:Tx_DfTools_ExtDirect_RedirectTestDataProvider'
