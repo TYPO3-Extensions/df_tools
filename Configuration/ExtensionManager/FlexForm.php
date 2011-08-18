@@ -92,6 +92,12 @@ class tx_DfTools_ExtensionManager_FlexForm {
 	 * @return string HTML wizard
 	 */
 	public function display() {
+		if (!is_object($GLOBALS['SOBE']->doc)) {
+			$configurationUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$configurationUrl .= 'typo3/mod.php?id=0&M=tools_em&SET[function]=installed_list&CMD[showExt]=df_tools&SET[singleDetails]=info';
+			return '<iframe style="width: 110%; height: 600px;" src="' . $configurationUrl . '"></iframe>';
+		}
+
 		if (t3lib_div::_GP('form_submitted')) {
 			$this->processData();
 		}
