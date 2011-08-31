@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -25,6 +25,7 @@
 
 /**
  * Abstract ExtDirect Data Provider
+ *
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
@@ -67,9 +68,34 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 			$GLOBALS['TSFE']->settingLanguage();
 		}
 
+		/** @var $extBaseConnector Tx_DfTools_Service_ExtBaseConnectorService */
+		$key = 'tools_DfToolsRecordlog';
 		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
 		$this->extBaseConnector->setExtensionKey('DfTools');
-		$this->extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
+		$this->extBaseConnector->setModuleOrPluginKey($key);
+	}
+
+	/**
+	 * Returns true if we are running in frontend context mode
+	 *
+	 * @return bool
+	 */
+	public function isInFrontendMode() {
+		return TYPO3_MODE === 'FE';
+	}
+
+	/**
+	 * Checks the access rights for using Ext.Direct calls
+	 *
+	 * @throws Exception if the user has no rights to proceed
+	 * @return bool
+	 */
+	public function hasAccess() {
+		if ($this->isInFrontendMode() && !$GLOBALS['TSFE']->fe_user->user['uid']) {
+			throw new Exception('Please login first to gain access!');
+		}
+
+		return TRUE;
 	}
 
 	/**
@@ -86,6 +112,8 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * @return array
 	 */
 	public function update($updatedRecords) {
+		$this->hasAccess();
+
 		/** @noinspection PhpUndefinedFieldInspection */
 		$updatedRecords = $updatedRecords->records;
 		if (!is_array($updatedRecords)) {
@@ -98,7 +126,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 			);
 
 			foreach ($updatedRecords as $updatedRecord) {
-				$record = $this->updateRecord((array)$updatedRecord);
+				$record = $this->updateRecord((array) $updatedRecord);
 				if (is_array($record['records'])) {
 					$data['records'] = array_merge_recursive($data['records'], $record['records']);
 				}
@@ -121,8 +149,9 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * @return array
 	 */
 	public function create($newRecord) {
-		/** @noinspection PhpUndefinedFieldInspection */
-		return $this->createRecord((array)$newRecord->records);
+		$this->hasAccess();
+
+		return $this->createRecord((array) $newRecord->records);
 	}
 
 	/**
@@ -135,18 +164,29 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * @return array
 	 */
 	public function destroy($identifiers) {
-		/** @noinspection PhpUndefinedFieldInspection */
+		$this->hasAccess();
+
 		$identifiers = $identifiers->records;
 		if (!is_array($identifiers)) {
 			$identifiers = array($identifiers);
 		}
 
-		$this->destroyRecords($identifiers);
+		try {
+			$this->destroyRecords($identifiers);
+			$data = array(
+				'success' => TRUE,
+				'records' => array()
+			);
 
-		return array(
-			'success' => TRUE,
-			'records' => array()
-		);
+		} catch (Exception $exception) {
+			$data = array(
+				'success' => FALSE,
+				'message' => $exception->getMessage(),
+				'records' => array(),
+			);
+		}
+
+		return $data;
 	}
 
 	/**

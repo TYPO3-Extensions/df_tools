@@ -40,15 +40,12 @@ class Tx_DfTools_Hooks_ProcessDatamapTest extends Tx_DfTools_ExtBaseConnectorTes
 	 * @return void
 	 */
 	public function setUp() {
+		parent::setUp();
+
+		/** @noinspection PhpUndefinedMethodInspection */
 		$class = 'tx_DfTools_Hooks_ProcessDatamap';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
-	}
-
-	/**
-	 * @return void
-	 */
-	public function tearDown() {
-		unset($this->fixture);
+		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
 
 	/**

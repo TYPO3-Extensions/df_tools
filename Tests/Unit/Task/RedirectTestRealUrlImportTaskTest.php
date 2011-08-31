@@ -24,8 +24,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-$schedulerPath = t3lib_extMgm::extPath('scheduler');
-require_once($schedulerPath . 'class.tx_scheduler_task.php');
+require_once(t3lib_extMgm::extPath('scheduler') . 'class.tx_scheduler_task.php');
 
 /**
  * Test case for class Tx_DfTools_Task_RedirectTestRealUrlImportTask.
@@ -33,7 +32,7 @@ require_once($schedulerPath . 'class.tx_scheduler_task.php');
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Task_RedirectTestRealUrlImportTaskTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class Tx_DfTools_Task_RedirectTestRealUrlImportTaskTest extends Tx_DfTools_ExtBaseConnectorTestCase {
 	/**
 	 * @var Tx_DfTools_Task_RedirectTestRealUrlImportTask
 	 */
@@ -43,13 +42,17 @@ class Tx_DfTools_Task_RedirectTestRealUrlImportTaskTest extends Tx_Extbase_Tests
 	 * @return void
 	 */
 	public function setUp() {
+		parent::setUp();
+
 			// only solution to test the scheduler stuff, because they include mod1/index.php
 			// that is directly executed
 		t3lib_autoloader::unregisterAutoloader();
 
-		$proxy = $this->buildAccessibleProxy('Tx_DfTools_Task_RedirectTestRealUrlImportTask');
-		$this->fixture = $this->getMockBuilder($proxy)
-			->setMethods(array('getExtBaseConnector'))->disableOriginalConstructor()->getMock();
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture = $this->getMockBuilder($this->buildAccessibleProxy('Tx_DfTools_Task_RedirectTestRealUrlImportTask'))
+			->setMethods(array('sendMail', 'getExtBaseConnector'))->disableOriginalConstructor()->getMock();
+		$this->fixture->expects($this->once())->method('getExtBaseConnector')
+			->will($this->returnValue($this->extBaseConnector));
 	}
 
 	/**
@@ -58,24 +61,8 @@ class Tx_DfTools_Task_RedirectTestRealUrlImportTaskTest extends Tx_Extbase_Tests
 	public function tearDown() {
 		t3lib_autoloader::registerAutoloader();
 		unset($this->fixture);
-	}
 
-	/**
-	 * Adds the call to the mocked extbase connector
-	 *
-	 * @param string $controller
-	 * @param string $action
-	 * @param mixed $returnValue
-	 * @return void
-	 */
-	protected function addMockedExtBaseConnector($controller, $action, $returnValue = array()) {
-		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_Service_ExtBaseConnectorService';
-		$mockExtBaseConnector = $this->getMock($class, array('runControllerAction', 'setParameters'));
-		$mockExtBaseConnector->expects($this->once())->method('runControllerAction')
-			->with($controller, $action)->will($this->returnValue($returnValue));
-		$this->fixture->expects($this->once())->method('getExtBaseConnector')
-			->will($this->returnValue($mockExtBaseConnector));
+		parent::tearDown();
 	}
 
 	/**

@@ -40,15 +40,12 @@ class Tx_DfTools_ExtBaseConnector_RecordSetDataProviderTest extends Tx_DfTools_E
 	 * @return void
 	 */
 	public function setUp() {
+		parent::setUp();
+
+		/** @noinspection PhpUndefinedMethodInspection */
 		$class = 'Tx_DfTools_ExtDirect_RecordSetDataProvider';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
-	}
-
-	/**
-	 * @return void
-	 */
-	public function tearDown() {
-		unset($this->fixture);
+		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
 
 	/**

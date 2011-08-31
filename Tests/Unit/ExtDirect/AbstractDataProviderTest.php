@@ -3,7 +3,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -37,21 +37,50 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	protected $fixture;
 
 	/**
+	 * @var tslib_tsfe
+	 */
+	protected $backupTSFE;
+
+	/**
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_ExtDirect_AbstractDataProvider';
-		$this->fixture = $this->getAccessibleMock(
-			$class,
-			array('updateRecord', 'createRecord', 'destroyRecords', 'runTestForRecord')
-		);
+		$this->backupTSFE = $GLOBALS['TSFE'];
+
+		$proxy = $this->buildAccessibleProxy('Tx_DfTools_ExtDirect_AbstractDataProvider');
+		$this->fixture = $this->getMockBuilder($proxy)
+			->setMethods(array('updateRecord', 'createRecord', 'destroyRecords', 'isInFrontendMode', 'runTestForRecord'))
+			->disableOriginalConstructor()->getMock();
 	}
 
 	/**
 	 * @return void
 	 */
 	public function tearDown() {
+		$GLOBALS['TSFE'] = $this->backupTSFE;
 		unset($this->fixture);
+	}
+
+	/**
+	 * @test
+	 * @expectedException Exception
+	 * @return void
+	 */
+	public function accessCheckFailsIfNoFrontendUserIsLoggedInIfCalledInFrontendMode() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->expects($this->once())->method('isInFrontendMode')->will($this->returnValue(TRUE));
+		$this->fixture->hasAccess();
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function accessCheckSucceedsIfFrontendUserIsLoggedInIfCalledInFrontendMode() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->expects($this->once())->method('isInFrontendMode')->will($this->returnValue(TRUE));
+		$GLOBALS['TSFE']->fe_user->user['uid'] = 1;
+		$this->fixture->hasAccess();
 	}
 
 	/**
@@ -59,8 +88,8 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	 * @return void
 	 */
 	public function updateCanHandleASingleRecord() {
-		$record = (object)array(
-			'records' => (object)array(
+		$record = (object) array(
+			'records' => (object) array(
 				'__hmac' => 'hmac',
 				'__identity' => 1
 			)
@@ -79,12 +108,12 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	 * @return void
 	 */
 	public function updateCanHandleMultipleRecords() {
-		$record = (object)array(
+		$record = (object) array(
 			'records' => array(
-				(object)array(
+				(object) array(
 					'__hmac' => 'hmac',
 					'__identity' => 1
-				), (object)array(
+				), (object) array(
 					'__hmac' => 'hmac',
 					'__identity' => 2
 				),
@@ -106,7 +135,7 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	public function createAddsANewRecord() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('createRecord')->with(array('FooBar'));
-		$this->fixture->create((object)array('records' => 'FooBar'));
+		$this->fixture->create((object) array('records' => 'FooBar'));
 	}
 
 	/**
@@ -116,7 +145,7 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	public function destroyCallsActionExpectableWithOnlyOneIdentifier() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('destroyRecords')->with(array(2));
-		$records = (object)array('records' => array(2));
+		$records = (object) array('records' => array(2));
 		$this->fixture->destroy($records);
 	}
 
@@ -127,7 +156,7 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	public function destroyCallsActionExpectableWithMultipleIdentifiers() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('destroyRecords')->with(array(2, 5, 10));
-		$records = (object)array('records' => array(2, 5, 10));
+		$records = (object) array('records' => array(2, 5, 10));
 		$this->fixture->destroy($records);
 	}
 

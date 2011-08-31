@@ -37,14 +37,26 @@ abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit
 	protected $fixture;
 
 	/**
+	 * @var Tx_DfTools_Service_ExtBaseConnectorService
+	 */
+	protected $extBaseConnector;
+
+	/**
 	 * @return void
 	 */
-	public function tearDown() {
-		unset($this->fixture);
+	public function setUp() {
+		$this->extBaseConnector = $this->getMock('Tx_DfTools_Service_ExtBaseConnectorService');
 	}
 
 	/**
-	 * Adds the call to the mocked extbase connector
+	 * @return void
+	 */
+	public function tearDown() {
+		unset($this->fixture, $this->extBaseConnector);
+	}
+
+	/**
+	 * Adds the call to the mocked ExtBase connector
 	 *
 	 * @param string $controller
 	 * @param string $action
@@ -54,13 +66,8 @@ abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit
 	 * @return void
 	 */
 	protected function addMockedExtBaseConnector($controller, $action, array $parameters = array(), $returnValue = NULL, $exception = NULL) {
-		$mockExtBaseConnector = $this->getMock(
-			'Tx_DfTools_Service_ExtBaseConnectorService',
-			array('runControllerAction', 'setParameters')
-		);
-
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockedMethod = $mockExtBaseConnector->expects($this->once())->method('runControllerAction');
+		$mockedMethod = $this->extBaseConnector->expects($this->once())->method('runControllerAction');
 		$mockedMethod->with($controller, $action);
 
 		if ($returnValue !== NULL) {
@@ -73,10 +80,8 @@ abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit
 
 		if (count($parameters)) {
 			/** @noinspection PhpUndefinedMethodInspection */
-			$mockExtBaseConnector->expects($this->once())->method('setParameters')->with($parameters);
+			$this->extBaseConnector->expects($this->once())->method('setParameters')->with($parameters);
 		}
-
-		$this->fixture->_set('extBaseConnector', $mockExtBaseConnector);
 	}
 }
 
