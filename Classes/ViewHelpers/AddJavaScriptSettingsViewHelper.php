@@ -63,7 +63,7 @@ class Tx_DfTools_ViewHelpers_AddJavaScriptSettingsViewHelper extends Tx_DfTools_
 			),
 		);
 
-		$this->pageRenderer->addInlineSettingArray('DfTools', $settings);
+		$this->getPageRenderer()->addInlineSettingArray('DfTools', $settings);
 
 	}
 }
