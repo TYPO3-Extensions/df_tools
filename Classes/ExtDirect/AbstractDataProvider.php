@@ -69,7 +69,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 		}
 
 		/** @var $extBaseConnector Tx_DfTools_Service_ExtBaseConnectorService */
-		$key = 'tools_DfToolsRecordlog';
+		$key = 'tools_DfToolsTools';
 		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
 		$this->extBaseConnector->setExtensionKey('DfTools');
 		$this->extBaseConnector->setModuleOrPluginKey($key);
