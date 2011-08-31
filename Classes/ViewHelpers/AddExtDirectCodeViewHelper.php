@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -27,8 +27,8 @@
  * View helper to add the necessary Ext.Direct code
  *
  * Example:
- * {namespace df=Tx_DfTools_ViewHelpers}
- * <df:addExtDirectCode />
+ * {namespace rs=Tx_DfTools_ViewHelpers}
+ * <rs:addExtDirectCode />
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
@@ -40,11 +40,12 @@ class Tx_DfTools_ViewHelpers_AddExtDirectCodeViewHelper extends Tx_DfTools_ViewH
 	 * @return void
 	 */
 	public function render() {
+		$pageRenderer = $this->getPageRenderer();
 		if (TYPO3_MODE === 'FE') {
-			$this->pageRenderer->addJsFile($this->getBaseUrl() . 't3lib/js/extjs/ux/flashmessages.js');
+			$pageRenderer->addJsFile($this->getBaseUrl() . 't3lib/js/extjs/ux/flashmessages.js');
 		}
 
-		$this->pageRenderer->addExtDirectCode();
+		$pageRenderer->addExtDirectCode();
 	}
 }
 

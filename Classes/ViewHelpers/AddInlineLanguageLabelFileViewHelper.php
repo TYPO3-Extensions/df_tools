@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -27,15 +27,15 @@
  * View helper to add languages labels for the usage on the client side with javascript
  *
  * Example:
- * {namespace df=Tx_DfTools_ViewHelpers}
- * <df:addInlineLanguageLabelFile file="Private/Language/locallang.xml" />
+ * {namespace rs=Tx_DfTools_ViewHelpers}
+ * <rs:addInlineLanguageLabelFile file="Private/Language/locallang.xml" />
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
 class Tx_DfTools_ViewHelpers_AddInlineLanguageLabelFileViewHelper extends Tx_DfTools_ViewHelpers_AbstractViewHelper {
 	/**
-	 * Adds the Language Labels as a json array
+	 * Adds the language labels as a JSON array
 	 *
 	 * @param string $file
 	 * @param string $extensionKey
@@ -47,7 +47,7 @@ class Tx_DfTools_ViewHelpers_AddInlineLanguageLabelFileViewHelper extends Tx_DfT
 		}
 
 		$file = 'EXT:' . t3lib_div::camelCaseToLowerCaseUnderscored($extensionKey) . '/Resources/' . $file;
-		$this->pageRenderer->addInlineLanguageLabelFile($file);
+		$this->getPageRenderer()->addInlineLanguageLabelFile($file);
 	}
 }
 

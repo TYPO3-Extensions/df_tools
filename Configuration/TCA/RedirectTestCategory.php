@@ -1,8 +1,10 @@
 <?php
+
 if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
+	die('Access denied.');
 }
 
+/** @noinspection PhpUndefinedVariableInspection */
 $TCA['tx_dftools_domain_model_redirecttestcategory'] = array(
 	'ctrl' => $TCA['tx_dftools_domain_model_redirecttestcategory']['ctrl'],
 	'interface' => array(

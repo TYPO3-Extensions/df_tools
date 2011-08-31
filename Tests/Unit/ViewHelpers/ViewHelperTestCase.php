@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -9,7 +10,7 @@
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
+ *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,26 +24,45 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('fluid') . 'Tests/Unit/ViewHelpers/ViewHelperBaseTestcase.php');
+
 /**
- * View helper to add custom javascript files
- *
- * Example:
- * {namespace rs=Tx_DfTools_ViewHelpers}
- * <rs:addCssFile cssFile="{f:uri.resource(path: 'Scripts/dfpdm.js')}" />
+ * Special Test Case For View Helpers
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper extends Tx_DfTools_ViewHelpers_AbstractViewHelper {
+abstract class Tx_DfTools_ViewHelpers_ViewHelperTestCase extends Tx_Fluid_ViewHelpers_ViewHelperBaseTestcase {
 	/**
-	 * Adds a custom javascript file
+	 * @var object
+	 */
+	protected $fixture;
+
+	/**
+	 * Page Renderer
 	 *
-	 * @param string $javaScriptFile
+	 * @var t3lib_PageRenderer
+	 */
+	protected $pageRenderer = NULL;
+
+	/**
 	 * @return void
 	 */
-	public function render($javaScriptFile) {
-		$javaScriptFile = (TYPO3_MODE === 'FE' ? $this->getBaseUrl() : '') . $javaScriptFile;
-		$this->getPageRenderer()->addJsFile($javaScriptFile);
+	public function setUp() {
+		parent::setUp();
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->pageRenderer = $this->getMockBuilder('t3lib_PageRenderer')->disableOriginalConstructor()->getMock();
+		$this->fixture->expects($this->once())->method('getPageRenderer')
+			->will($this->returnValue($this->pageRenderer));
+		$this->injectDependenciesIntoViewHelper($this->fixture);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function tearDown() {
+		unset($this->fixture, $this->pageRenderer);
 	}
 }
 

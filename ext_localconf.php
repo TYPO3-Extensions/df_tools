@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE === 'BE') {
+	/** @noinspection PhpUndefinedVariableInspection */
 	$extPath = t3lib_extMgm::extPath($_EXTKEY);
 	t3lib_extMgm::addTypoScriptConstants(
 		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_constants.txt')

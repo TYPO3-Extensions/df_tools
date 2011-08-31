@@ -50,7 +50,7 @@ final class Tx_DfTools_Utility_HttpUtility {
 				if (!is_object($GLOBALS['TSFE']) || !is_array($GLOBALS['TSFE']->config)) {
 					self::initTSFE();
 				}
-				
+
 				if (trim($GLOBALS['TSFE']->baseUrl) !== '') {
 					$locationUrl = $GLOBALS['TSFE']->baseUrl;
 				} elseif (trim($GLOBALS['TSFE']->absRefPrefix) !== '') {

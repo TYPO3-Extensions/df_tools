@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -9,7 +10,7 @@
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
+ *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -24,25 +25,34 @@
  ***************************************************************/
 
 /**
- * View helper to add custom javascript files
- *
- * Example:
- * {namespace rs=Tx_DfTools_ViewHelpers}
- * <rs:addCssFile cssFile="{f:uri.resource(path: 'Scripts/dfpdm.js')}" />
+ * Test case for class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper.
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper extends Tx_DfTools_ViewHelpers_AbstractViewHelper {
+class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelperTest extends Tx_DfTools_ViewHelpers_ViewHelperTestCase {
 	/**
-	 * Adds a custom javascript file
-	 *
-	 * @param string $javaScriptFile
+	 * @var Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper
+	 */
+	protected $fixture = NULL;
+
+	/**
 	 * @return void
 	 */
-	public function render($javaScriptFile) {
-		$javaScriptFile = (TYPO3_MODE === 'FE' ? $this->getBaseUrl() : '') . $javaScriptFile;
-		$this->getPageRenderer()->addJsFile($javaScriptFile);
+	public function setUp() {
+		$class = 'Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper';
+		$this->fixture = $this->getMock($class, array('getPageRenderer'));
+		parent::setUp();
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function javascriptFileCanBeAdded() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->pageRenderer->expects($this->once())->method('addJsFile')->with('this/is/my/file.js');
+		$this->fixture->render('this/is/my/file.js');
 	}
 }
 

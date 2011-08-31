@@ -21,8 +21,9 @@ return array(
 	'tx_dftools_task_linkchecksynchronizetask' => $extensionPath . 'Classes/Task/LinkCheckSynchronizeTask.php',
 	'tx_dftools_task_redirecttestrealurlimporttask' => $extensionPath . 'Classes/Task/RedirectTestRealUrlImportTask.php',
 
-	'tx_dftools_tests_extbaseconnectortestcase' => $extensionPath . 'Tests/ExtBaseConnectorTestCase.php',
-	'tx_dftools_tests_controllertestcase' => $extensionPath . 'Tests/ControllerTestCase.php',
+	'tx_dftools_extbaseconnectortestcase' => $extensionPath . 'Tests/Unit/ExtBaseConnectorTestCase.php',
+	'tx_dftools_controller_controllertestcase' => $extensionPath . 'Tests/Unit/Controller/ControllerTestCase.php',
+	'tx_dftools_viewhelpers_viewhelpertestcase' => $extensionPath . 'Tests/Unit/ViewHelpers/ViewHelperTestCase.php',
 );
 
 ?>

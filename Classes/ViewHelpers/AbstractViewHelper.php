@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -31,31 +31,18 @@
  */
 abstract class Tx_DfTools_ViewHelpers_AbstractViewHelper extends Tx_Fluid_ViewHelpers_Be_AbstractBackendViewHelper {
 	/**
-	 * Page Renderer
+	 * Returns an instance of the page renderer
 	 *
-	 * @var t3lib_PageRenderer
+	 * @return t3lib_PageRenderer
 	 */
-	protected $pageRenderer = NULL;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
+	public function getPageRenderer() {
 		if (TYPO3_MODE === 'BE') {
-			$this->injectPageRenderer($this->getDocInstance()->getPageRenderer());
+			$pageRenderer = $this->getDocInstance()->getPageRenderer();
 		} else {
-			$this->injectPageRenderer($GLOBALS['TSFE']->getPageRenderer());
+			$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
 		}
-	}
 
-	/**
-	 * Sets the page renderer
-	 *
-	 * @param t3lib_PageRenderer $pageRenderer
-	 * @return void
-	 */
-	public function injectPageRenderer(t3lib_PageRenderer $pageRenderer) {
-		$this->pageRenderer = $pageRenderer;
+		return $pageRenderer;
 	}
 
 	/**

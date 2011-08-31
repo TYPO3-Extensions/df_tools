@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE === 'BE') {
+	/** @noinspection PhpUndefinedVariableInspection */
 	Tx_Extbase_Utility_Extension::registerModule(
 		$_EXTKEY,
 		'tools',
@@ -31,6 +32,7 @@ if (TYPO3_MODE === 'BE') {
 	t3lib_SpriteManager::addSingleIcons($icons, $_EXTKEY);
 }
 
+/** @noinspection PhpUndefinedVariableInspection */
 t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_redirecttest');
 $TCA['tx_dftools_domain_model_redirecttest'] = array(
 	'ctrl' => array(
