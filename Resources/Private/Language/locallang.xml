@@ -83,6 +83,8 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.mailBody">The following content comparisons failed:</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.mailSubject">Notification about failed content comparison tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.name">Run Content Comparison Tests</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.description">This task updates the contents of the content comparison tests with equal urls.</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.name">Update Contents Of Content Comparison Tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test.contentMismatch">Content Differs (difference inside row body)</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentProgress">Update test %current from %total</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated">The test content was sucessfully updated!</label>
@@ -103,7 +105,7 @@
 			<label index="tx_dftools_domain_model_linkcheck.scheduler.mailBody">The following urls may be wrong. You can ignore any wrongly shown results in the backend module.</label>
 			<label index="tx_dftools_domain_model_linkcheck.scheduler.mailSubject">Notification about failed url availability tests</label>
 			<label index="tx_dftools_domain_model_linkcheck.scheduler.name">Run Link Checks</label>
-			<label index="tx_dftools_domain_model_linkcheck.schedulerSync.description">his task synchronizes the used urls on your site with the already collected ones for availability tests.</label>
+			<label index="tx_dftools_domain_model_linkcheck.schedulerSync.description">This task synchronizes the used urls on your site with the already collected ones for availability tests.</label>
 			<label index="tx_dftools_domain_model_linkcheck.schedulerSync.name">Synchronize Link Checks</label>
 			<label index="tx_dftools_domain_model_linkcheck.synchronizationSuccessful">The synchronization was executed without any errors!</label>
 			<label index="tx_dftools_domain_model_linkcheck.synchronize">Synchronize Data</label>

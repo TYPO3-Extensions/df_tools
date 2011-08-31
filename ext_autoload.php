@@ -16,6 +16,7 @@ return array(
 	'tx_dftools_task_backlinktestfields' => $extensionPath . 'Classes/Task/BackLinkTestFields.php',
 	'tx_dftools_task_contentcomparisontesttask' => $extensionPath . 'Classes/Task/ContentComparisonTestTask.php',
 	'tx_dftools_task_contentcomparisontestfields' => $extensionPath . 'Classes/Task/ContentComparisonTestFields.php',
+	'tx_dftools_task_contentcomparisontestsynchronizetask' => $extensionPath . 'Classes/Task/ContentComparisonTestSynchronizeTask.php',
 	'tx_dftools_task_linkchecktask' => $extensionPath . 'Classes/Task/LinkCheckTask.php',
 	'tx_dftools_task_linkcheckfields' => $extensionPath . 'Classes/Task/LinkCheckFields.php',
 	'tx_dftools_task_linkchecksynchronizetask' => $extensionPath . 'Classes/Task/LinkCheckSynchronizeTask.php',

@@ -49,6 +49,12 @@ if (TYPO3_MODE === 'BE') {
 		'additionalFields' => 'tx_DfTools_Task_ContentComparisonTestFields'
 	);
 
+	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['Tx_DfTools_Task_ContentComparisonTestSynchronizeTask'] = array(
+		'extension' => $_EXTKEY,
+		'title' => $prefix . 'tx_dftools_domain_model_contentcomparisontest.schedulerSync.name',
+		'description' => $prefix . 'tx_dftools_domain_model_contentcomparisontest.schedulerSync.description'
+	);
+
 	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['Tx_DfTools_Task_BackLinkTestTask'] = array(
 		'extension' => $_EXTKEY,
 		'title' => $prefix . 'tx_dftools_domain_model_backlinktest.scheduler.name',

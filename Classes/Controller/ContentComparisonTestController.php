@@ -130,6 +130,22 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	}
 
 	/**
+	 * Updates all test contents
+	 *
+	 * @return void
+	 */
+	public function updateAllTestContentsAction() {
+		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
+		$contentComparisonTests = $this->contentComparisonTestRepository->findAll();
+		$urlCheckerService = $this->getUrlCheckerService();
+		foreach ($contentComparisonTests as $contentComparisonTest) {
+			$contentComparisonTest->updateTestContent($urlCheckerService);
+			$this->contentComparisonTestRepository->update($contentComparisonTest);
+		}
+		$this->view->assign('records', $contentComparisonTests);
+	}
+
+	/**
 	 * Updates the test content of an action
 	 *
 	 * @param int $identity

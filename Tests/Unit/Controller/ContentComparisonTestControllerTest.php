@@ -170,6 +170,34 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 	 * @test
 	 * @return void
 	 */
+	public function updateAllTestContentsWorks() {
+		$contentComparisonTest1 = $this->getContentComparisonTest();
+		$contentComparisonTest2 = $this->getContentComparisonTest();
+
+		$testCollection = new Tx_Extbase_Persistence_ObjectStorage();
+		$testCollection->attach($contentComparisonTest1);
+		$testCollection->attach($contentComparisonTest2);
+
+		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
+		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->repository->expects($this->once())->method('findAll')
+			->will($this->returnValue($testCollection));
+		$this->view->expects($this->once())->method('assign')
+			->with('records', $this->isInstanceOf('Tx_Extbase_Persistence_ObjectStorage'));
+		$this->fixture->expects($this->once())->method('getUrlCheckerService')
+			->will($this->returnValue($urlCheckerService));
+		$contentComparisonTest1->expects($this->once())->method('updateTestContent')->with($urlCheckerService);
+		$contentComparisonTest2->expects($this->once())->method('updateTestContent')->with($urlCheckerService);
+		$this->fixture->updateAllTestContentsAction();
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
 	public function runTestWorks() {
 		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
 		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';

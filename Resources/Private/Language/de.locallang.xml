@@ -76,6 +76,8 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.mailBody">Die folgenden Inhaltsvergleiche schlugen fehl:</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.mailSubject">Benachrichtigung über fehlgeschlagene Inhaltsvergleichstests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.scheduler.name">Inhaltsvergleichstests ausführen</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.description">Diese Aufgabe aktualisiert die Inhalte von Inhaltsvergleichstests mit identischen URLs.</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.name">Aktualisiere Inhalte der Inhaltsvergleichstests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test.contentMismatch">Inhaltsunterschiede (Differenz ist im eingeklappten Bereich)</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentProgress">Aktualisiere Test %current von %total</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated">Der Testinhalt wurde erfolgreich aktualisiert!</label>
