@@ -312,10 +312,17 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function updateTestContent(Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService) {
-		$testUrl = $this->getTestUrl();
-		$testUrl = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($testUrl);
-		$report = $urlCheckerService->setUrl($testUrl)->resolveURL();
-		$this->setTestContent($report['content']);
+		$testUrl = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($this->getTestUrl());
+
+		try {
+			$report = $urlCheckerService->setUrl($testUrl)->resolveURL();
+			$this->setTestContent($report['content']);
+
+		} catch (Exception $exception) {
+			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+			$this->setTestMessage($exception->getMessage());
+			$this->setDifference('');
+		}
 	}
 }
 
