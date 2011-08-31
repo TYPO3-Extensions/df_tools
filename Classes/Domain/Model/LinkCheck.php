@@ -278,7 +278,10 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 			$this->setHttpStatusCode($report['http_code']);
 
 		} catch (Exception $exception) {
-			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+			if ($testResult !== Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO) {
+				$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+			}
+
 			$this->setTestMessage($exception->getMessage());
 		}
 	}
