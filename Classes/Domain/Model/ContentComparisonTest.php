@@ -128,7 +128,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function setCompareContent($compareContent) {
-		$this->compareContent = $compareContent;
+		$this->compareContent = Tx_DfTools_Utility_CompressorUtility::compressContent($compareContent);
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return string
 	 */
 	public function getCompareContent() {
-		return $this->compareContent;
+		return Tx_DfTools_Utility_CompressorUtility::decompressContent($this->compareContent);
 	}
 
 	/**
@@ -147,7 +147,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function setTestContent($testContent) {
-		$this->testContent = $testContent;
+		$this->testContent = Tx_DfTools_Utility_CompressorUtility::compressContent($testContent);
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return string
 	 */
 	public function getTestContent() {
-		return $this->testContent;
+		return Tx_DfTools_Utility_CompressorUtility::decompressContent($this->testContent);
 	}
 
 	/**
@@ -166,7 +166,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function setDifference($difference) {
-		$this->difference = $difference;
+		$this->difference = Tx_DfTools_Utility_CompressorUtility::compressContent($difference);
 	}
 
 	/**
@@ -175,7 +175,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return string
 	 */
 	public function getDifference() {
-		return $this->difference;
+		return Tx_DfTools_Utility_CompressorUtility::decompressContent($this->difference);
 	}
 
 	/**

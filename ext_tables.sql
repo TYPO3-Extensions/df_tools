@@ -185,9 +185,9 @@ CREATE TABLE tx_dftools_domain_model_contentcomparisontest (
 	
 	test_url varchar(1024) DEFAULT '' NOT NULL,
 	compare_url varchar(1024) DEFAULT '' NOT NULL,
-	test_content longtext NOT NULL,
-	compare_content longtext NOT NULL,
-	difference longtext NOT NULL,
+	test_content longblob NOT NULL,
+	difference longblob NOT NULL,
+	compare_content longblob NOT NULL,
 	test_result tinyint(1) unsigned DEFAULT '9' NOT NULL,
 	test_message text NOT NULL,
 
