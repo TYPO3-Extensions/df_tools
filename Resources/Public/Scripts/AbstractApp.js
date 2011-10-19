@@ -100,14 +100,22 @@ TYPO3.DfTools.AbstractApp = Ext.extend(Ext.Component, {
 	 * @return {void}
 	 */
 	onRunTests: function() {
-		this.grid.mask();
-
-		var records = [];
-		this.gridStore.each(function(record) {
-			records.push(record);
+		var records = new Ext.util.MixedCollection();
+		this.gridStore.each(function(record, index) {
+			records.add(index, record);
 		});
 
-		this.runTest(records, null, 0);
+		if (records.getCount()) {
+			this.grid.mask();
+			if (this.grid.rowEditorPlugin) {
+				this.grid.rowEditorPlugin.stopEditing();
+			}
+			var threads = this.getThreadsFromRecords(records, true);
+			for (var threadIndex in threads) {
+				var thread = threads[threadIndex];
+				this.runTest.defer(1, this, [thread.records, thread.indices]);
+			}
+		}
 	},
 
 	/**
@@ -134,6 +142,38 @@ TYPO3.DfTools.AbstractApp = Ext.extend(Ext.Component, {
 	},
 
 	/**
+	 * Returns an object that consists of single objects with
+	 * an records and indices array on each of them. The indices array
+	 * is the position of the item inside the store.
+	 *
+	 * @param {Ext.util.MixedCollection} records
+	 * @param {Boolean} useRecordIndex instead to calculcate the position inside the grid
+	 * @return {Object} threads object
+	 */
+	getThreadsFromRecords: function(records, useRecordIndex) {
+		var counter = 0,
+			threads = {};
+		records.each(function(record, index) {
+			var currentThread = (counter++ % 5);
+			if (!threads[currentThread]) {
+				threads[currentThread] = {
+					records: [],
+					indices: []
+				};
+			}
+
+			threads[currentThread].records.push(record);
+			if (!useRecordIndex) {
+				threads[currentThread].indices.push(this.gridStore.indexOf(record));
+			} else {
+				threads[currentThread].indices.push(index);
+			}
+		}, this);
+
+		return threads;
+	},
+
+	/**
 	 * Runs tests for all entries inside a group
 	 *
 	 * Note: The grid will be disabled until the tests are finished!
@@ -148,11 +188,6 @@ TYPO3.DfTools.AbstractApp = Ext.extend(Ext.Component, {
 		var callback = this.getRecordsByGroupValue.createDelegate(this, [groupField, groupValue], true);
 		var records = this.gridStore.queryBy(callback);
 
-		var indices = [];
-		records.each(function(record) {
-			indices.push(this.gridStore.indexOf(record));
-		}, this);
-
 		if (records.getCount()) {
 			grid.mask();
 			grid.getView().toggleGroup(groupId, true);
@@ -160,12 +195,16 @@ TYPO3.DfTools.AbstractApp = Ext.extend(Ext.Component, {
 				grid.rowEditorPlugin.stopEditing();
 			}
 
-			this.runTest(records.getRange(0, records.getCount()), indices);
+			var threads = this.getThreadsFromRecords(records, false);
+			for (var threadIndex in threads) {
+				var thread = threads[threadIndex];
+				this.runTest.defer(1, this, [thread.records, thread.indices]);
+			}
 		}
 	},
 
 	/**
-	 * Runs one test after another until the identifiers array is empty
+	 * Runs one test after another until the records array is empty
 	 *
 	 * @param {Array} records
 	 * @param {Array} indices
