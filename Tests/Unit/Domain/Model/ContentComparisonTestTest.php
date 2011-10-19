@@ -40,6 +40,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	 * @return void
 	 */
 	public function setUp() {
+		$GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'] = -1;
 		$this->fixture = new Tx_DfTools_Domain_Model_ContentComparisonTest();
 		$this->fixture->setTestUrl('FooBar');
 		$this->fixture->setCompareUrl('FooBar');
@@ -169,7 +170,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	public function runTestWithEqualUrlsAtFirstRun() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->setTestContent('');
-		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf'));
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf', 'http_code' => 200));
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
@@ -184,7 +185,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	public function runTestWithEqualUrlsAtSecondRunWithoutDifference() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->setTestContent('Foo; Bar; Narf');
-		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf'));
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf', 'http_code' => 200));
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
@@ -218,7 +219,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		';
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$urlCheckerService = $this->getUrlCheckerService(array('content' => $returns));
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => $returns, 'http_code' => 200));
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
@@ -233,7 +234,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	public function runTestWithEqualUrlsAtSecondRunWithDifference() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->setTestContent('Foo; Bar;');
-		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf'));
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf', 'http_code' => 200));
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
@@ -245,10 +246,26 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	 * @test
 	 * @return void
 	 */
+	public function runTestWithEqualUrlsThrows404() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->setTestContent('Foo; Bar;');
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf', 'http_code' => 404));
+		$this->fixture->test($urlCheckerService);
+
+		$result = $this->fixture->getTestResult();
+		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR, $result);
+		echo($this->fixture->getDifference());
+		$this->assertSame('', $this->fixture->getDifference());
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
 	public function runTestWithDifferentUrlsWithoutDifference() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->setCompareUrl('BarFoo');
-		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf'));
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'Foo; Bar; Narf', 'http_code' => 200));
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
@@ -260,7 +277,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	 * @return void
 	 */
 	public function updateTestContentWorks() {
-		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'FooBar'));
+		$urlCheckerService = $this->getUrlCheckerService(array('content' => 'FooBar', 'http_code' => 200));
 		$this->fixture->updateTestContent($urlCheckerService);
 		$this->assertSame('FooBar', $this->fixture->getTestContent());
 	}

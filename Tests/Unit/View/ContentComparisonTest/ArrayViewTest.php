@@ -40,6 +40,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function setUp() {
+		$GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'] = -1;
 		$class = $this->buildAccessibleProxy('Tx_DfTools_View_ContentComparisonTest_ArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('dummy'))
@@ -58,6 +59,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
+		$GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'] = -1;
 		$contentComparisonTestNormal = new Tx_DfTools_Domain_Model_ContentComparisonTest();
 		$contentComparisonTestNormal->setTestUrl('FooBar');
 		$contentComparisonTestNormal->setCompareUrl('FooBar');
@@ -70,7 +72,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 		$contentComparisonTestWithXSS->setTestMessage('<script>alert("Ooops!!!");</script>');
 
 		return array(
-			'normal redirect test with category' => array(
+			'normal content comparison test with category' => array(
 				$contentComparisonTestNormal,
 				array(
 					'__identity' => 0,

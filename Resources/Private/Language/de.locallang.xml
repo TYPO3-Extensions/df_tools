@@ -80,6 +80,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.description">Diese Aufgabe aktualisiert die Inhalte von Inhaltsvergleichstests mit identischen URLs.</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.name">Aktualisiere Inhalte der Inhaltsvergleichstests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test.contentMismatch">Inhaltsunterschiede (Differenz ist im eingeklappten Bereich)</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.test.httpCodeMismatch">Erwarteter HTTP-Code: %1$s&lt;br /&gt;Erhaltener HTTP-Code: %2$s</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentProgress">Aktualisiere Test %current von %total</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated">Der Testinhalt wurde erfolgreich aktualisiert!</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_result">Testergebnis</label>

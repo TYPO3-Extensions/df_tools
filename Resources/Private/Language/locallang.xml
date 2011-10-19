@@ -87,6 +87,7 @@
 			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.description">This task updates the contents of the content comparison tests with equal urls.</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.schedulerSync.name">Update Contents Of Content Comparison Tests</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test.contentMismatch">Content Differs (difference inside row body)</label>
+			<label index="tx_dftools_domain_model_contentcomparisontest.test.httpCodeMismatch">Expected HTTP Code: %1$s&lt;br /&gt;Fetched HTTP Code: %2$s</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentProgress">Update test %current from %total</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.testContentWasUpdated">The test content was sucessfully updated!</label>
 			<label index="tx_dftools_domain_model_contentcomparisontest.test_result">Test Result</label>

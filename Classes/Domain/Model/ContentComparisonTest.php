@@ -274,6 +274,28 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	}
 
 	/**
+	 * Returns the url test report or NULL if the http code was invalid (not in [200, 301 or 302])
+	 *
+	 * @param string $url
+	 * @param Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService
+	 * @return array|NULL
+	 */
+	protected function resolveUrl($url, Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService) {
+		$report = $urlCheckerService->setUrl($url)->resolveURL();
+		if (!in_array($report['http_code'], array(200, 301, 302))) {
+			$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+				'tx_dftools_domain_model_contentcomparisontest.test.httpCodeMismatch',
+				array('[200, 301, 302]', $report['http_code'])
+			);
+			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR);
+			$this->setTestMessage($message);
+			$report = NULL;
+		}
+
+		return $report;
+	}
+
+	/**
 	 * Tests and evaluates the model
 	 *
 	 * @param Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService
@@ -284,9 +306,12 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 		$compareUrl = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($this->getCompareUrl());
 
 		try {
-			$compareUrlReport = $urlCheckerService->setUrl($compareUrl)->resolveURL();
-			$this->setCompareContent($compareUrlReport['content']);
+			$compareUrlReport = $this->resolveUrl($compareUrl, $urlCheckerService);
+			if ($compareUrlReport === NULL) {
+				return;
+			}
 
+			$this->setCompareContent($compareUrlReport['content']);
 			if ($testUrl === $compareUrl) {
 				$testContent = $this->getTestContent();
 				if ($testContent === '') {
@@ -294,7 +319,10 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 					$testContent = $compareUrlReport['content'];
 				}
 			} else {
-				$testUrlReport = $urlCheckerService->setUrl($testUrl)->resolveURL();
+				$testUrlReport = $this->resolveUrl($testUrl, $urlCheckerService);
+				if ($testUrlReport === NULL) {
+					return;
+				}
 				$this->setTestContent($testUrlReport['content']);
 				$testContent = $testUrlReport['content'];
 			}
