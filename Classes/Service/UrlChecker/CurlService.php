@@ -78,6 +78,7 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 			CURLOPT_USERAGENT => $this->userAgent,
 			CURLOPT_HTTPHEADER => array('Expect:'),
 			CURLOPT_COOKIEJAR => tempnam('/tmp', 'CURLCOOKIE'),
+			CURLOPT_FORBID_REUSE => TRUE,
 
 			CURLOPT_CONNECTTIMEOUT => $this->timeout,
 			CURLOPT_TIMEOUT => $this->timeout,
