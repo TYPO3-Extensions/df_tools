@@ -368,6 +368,7 @@ TYPO3.DfTools.AbstractApp = Ext.extend(Ext.Component, {
 Ext.onReady(function() {
 	Ext.QuickTips.init();
 	Ext.apply(Ext.QuickTips.getQuickTip(), {
-		maxWidth: 500
+		maxWidth: 500,
+		dismissDelay: 0
 	});
 });
