@@ -64,7 +64,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Test Message
 	 *
-	 * @validate StringLength(maximum = 300)
+	 * @validate StringLength(maximum = 65536)
 	 * @var string
 	 */
 	protected $testMessage = '';

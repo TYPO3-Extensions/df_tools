@@ -65,7 +65,7 @@ class Tx_DfTools_Domain_Model_RedirectTest extends Tx_Extbase_DomainObject_Abstr
 	/**
 	 * Test Message
 	 *
-	 * @validate StringLength(maximum = 300)
+	 * @validate StringLength(maximum = 65536)
 	 * @var string
 	 */
 	protected $testMessage = '';
