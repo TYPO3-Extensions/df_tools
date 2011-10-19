@@ -239,15 +239,15 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * Checks the differences of the saved contents inside the content comparison test
 	 * and updates the instance accordingly
 	 *
+	 * @param string $compareContent
+	 * @param string $testContent
 	 * @return void
 	 */
-	protected function checkDifferences() {
+	protected function checkDifferences($compareContent, $testContent) {
 		/** @var $diffRenderer t3lib_diff */
 		$diffRenderer = t3lib_div::makeInstance('t3lib_diff');
 
-		$testContent = $this->getTestContent();
 		$testContentParts = Tx_DfTools_Utility_HtmlUtility::getTypo3SearchBlocksFromContent($testContent);
-		$compareContent = $this->getCompareContent();
 		$compareContentParts = Tx_DfTools_Utility_HtmlUtility::getTypo3SearchBlocksFromContent($compareContent);
 
 		$differences = array();
@@ -288,15 +288,18 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 			$this->setCompareContent($compareUrlReport['content']);
 
 			if ($testUrl === $compareUrl) {
-				if ($this->getTestContent() === '') {
+				$testContent = $this->getTestContent();
+				if ($testContent === '') {
 					$this->setTestContent($compareUrlReport['content']);
+					$testContent = $compareUrlReport['content'];
 				}
 			} else {
 				$testUrlReport = $urlCheckerService->setUrl($testUrl)->resolveURL();
 				$this->setTestContent($testUrlReport['content']);
+				$testContent = $testUrlReport['content'];
 			}
 
-			$this->checkDifferences();
+			$this->checkDifferences($compareUrlReport['content'], $testContent);
 
 		} catch (Exception $exception) {
 			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
