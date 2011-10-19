@@ -36,6 +36,7 @@
 			<label index="tx_dftools_common.function.redirectTestOverview.help">Note: The http status code check uses the last received http code. Usually this is either a &quot;200 OK&quot; or &quot;404 Not Found&quot;.</label>
 			<label index="tx_dftools_common.generic">An error occurred while trying to call %1$s -&gt; %2$s&lt;br /&gt;&lt;br /&gt;</label>
 			<label index="tx_dftools_common.generic.help">Did you know that you can write just the url path with a leading slash? While testing, it's automatically be completed by using the current URI. If the tests are executed in scheduler mode, the tool uses the baseUrl or absRefPrefix setting.</label>
+			<label index="tx_dftools_common.help">Help</label>
 			<label index="tx_dftools_common.info">Information</label>
 			<label index="tx_dftools_common.item">Item</label>
 			<label index="tx_dftools_common.items">Items</label>

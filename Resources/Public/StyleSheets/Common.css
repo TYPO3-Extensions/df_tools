@@ -133,6 +133,14 @@
 	margin-bottom: 10px
 }
 
+#tx_dftools-helpContent {
+	display: none;
+}
+
+#tx_dftools-help {
+	margin-bottom: 10px;
+}
+
 /* overview action */
 #typo3-docbody dl {
 	margin: 0 0 0 2em;

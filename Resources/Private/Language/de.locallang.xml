@@ -29,6 +29,7 @@
 			<label index="tx_dftools_common.function.redirectTestOverview.help">Anmerkung: Der HTTP-Status-Code-Check benutzt den zuletzt erhaltenen HTTP-Code. Üblicherweise ist dieser entweder ein &quot;200 OK&quot; oder ein &quot;404 Not Found&quot;.</label>
 			<label index="tx_dftools_common.generic">Ein Fehler ist aufgetreten während dem Aufruf von %1$s -&gt; %2$s&lt;br /&gt;&lt;br /&gt;</label>
 			<label index="tx_dftools_common.generic.help">Wussten Sie, dass auch einfach nur der URL-Pfad mit führendem Slash genutzt werden kann? Während der Laufzeit wird die URL auf Basis der verwendeten URI vervollständigt. Im Scheduler-Modus wird die base-URL bzw. absRefPrefix-Einstellung verwendet.</label>
+			<label index="tx_dftools_common.help">Hilfe</label>
 			<label index="tx_dftools_common.info">Information</label>
 			<label index="tx_dftools_common.item">Eintrag</label>
 			<label index="tx_dftools_common.items">Einträge</label>

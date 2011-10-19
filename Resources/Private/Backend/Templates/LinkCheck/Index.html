@@ -4,6 +4,7 @@
 
 <f:section name="main">
 	{namespace df=Tx_DfTools_ViewHelpers}
+	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/HelpPanel.js')}" />
 	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/RecordSet/Store.js')}" />
 	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/LinkCheck/Store.js')}" />
 	<df:addJavaScriptFile javaScriptFile="{f:uri.resource(path:'Scripts/LinkCheck/App.js')}" />
@@ -13,9 +14,12 @@
 	</h3>
 
 	<f:flashMessages renderMode="div" />
-	<p class="help">
-		<f:translate key="tx_dftools_common.function.linkCheckOverview.help" htmlEscape="false" />
-	</p>
+	<div id="tx_dftools-helpContent">
+		<p class="help">
+			<f:translate key="tx_dftools_common.function.linkCheckOverview.help" htmlEscape="false" />
+		</p>
+	</div>
 
+	<div id="tx_dftools-help"></div>
 	<div id="tx_dftools"></div>
 </f:section>
