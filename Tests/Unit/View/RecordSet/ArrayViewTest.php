@@ -58,12 +58,16 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
-		$recordSetNormal = new Tx_DfTools_Domain_Model_RecordSet();
+		/** @var $recordSetNormal Tx_DfTools_Domain_Model_RecordSet */
+		$recordSetNormal = $this->getMockBuilder('Tx_DfTools_Domain_Model_RecordSet')
+			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$recordSetNormal->setTableName('FooBar');
 		$recordSetNormal->setField('FooBar');
 		$recordSetNormal->setIdentifier('12');
 
-		$recordSetWithXSS = new Tx_DfTools_Domain_Model_RecordSet();
+		/** @var $recordSetWithXSS Tx_DfTools_Domain_Model_RecordSet */
+		$recordSetWithXSS = $this->getMockBuilder('Tx_DfTools_Domain_Model_RecordSet')
+			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$recordSetWithXSS->setTableName('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$recordSetWithXSS->setField('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$recordSetWithXSS->setIdentifier(500);

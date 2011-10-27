@@ -36,10 +36,25 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	protected $requestHashService;
 
 	/**
+	 * @var Tx_Extbase_Object_ObjectManager
+	 */
+	protected $objectManager;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
 		$this->initializeObject();
+	}
+
+	/**
+	 * Injects the object manager
+	 *
+	 * @param Tx_Extbase_Object_ObjectManager $objectManager
+	 * @return void
+	 */
+	public function injectObjectManager(Tx_Extbase_Object_ObjectManager $objectManager) {
+		$this->objectManager = $objectManager;
 	}
 
 	/**
@@ -78,7 +93,15 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 		$extensionName = $request->getControllerExtensionName();
 		$pluginName = $request->getPluginName();
 
-		return Tx_Extbase_Utility_Extension::getPluginNamespace($extensionName, $pluginName);
+		if (t3lib_div::compat_version('4.6')) {
+			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
+			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
+			$namespace = $extensionService->getPluginNamespace($extensionName, $pluginName);
+		} else {
+			$namespace = Tx_Extbase_Utility_Extension::getPluginNamespace($extensionName, $pluginName);
+		}
+
+		return $namespace;
 	}
 
 	/**

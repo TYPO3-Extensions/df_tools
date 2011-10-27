@@ -45,11 +45,12 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 * @return void
 	 */
 	public function setUp() {
+		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Task_AbstractFields', array('dummy'));
+		$this->fixture->setFieldPrefix('FieldPrefix');
+
 			// only solution to test the scheduler stuff, because they include mod1/index.php
 			// that is directly executed
 		t3lib_autoloader::unregisterAutoloader();
-		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Task_AbstractFields', array('dummy'));
-		$this->fixture->setFieldPrefix('FieldPrefix');
 	}
 
 	/**

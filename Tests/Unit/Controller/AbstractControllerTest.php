@@ -84,6 +84,12 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 		/** @noinspection PhpUndefinedMethodInspection */
 		$mockMappingResults = $this->getMock('Tx_Extbase_Property_MappingResults', array('dummy'));
 		$this->fixture->_set('argumentsMappingResults', $mockMappingResults);
+		
+		$arguments = $this->getMock('Tx_Extbase_MVC_Controller_Arguments', array('dummy'));
+		$this->fixture->_set('arguments', $arguments);
+		$configuratioManager = $this->getMock('Tx_Extbase_Configuration_ConfigurationManager');
+		$this->fixture->_set('configurationManager', $configuratioManager);
+		
 		$this->fixture->errorAction();
 	}
 

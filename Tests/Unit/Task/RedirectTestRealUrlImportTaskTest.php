@@ -44,15 +44,15 @@ class Tx_DfTools_Task_RedirectTestRealUrlImportTaskTest extends Tx_DfTools_ExtBa
 	public function setUp() {
 		parent::setUp();
 
-			// only solution to test the scheduler stuff, because they include mod1/index.php
-			// that is directly executed
-		t3lib_autoloader::unregisterAutoloader();
-
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture = $this->getMockBuilder($this->buildAccessibleProxy('Tx_DfTools_Task_RedirectTestRealUrlImportTask'))
 			->setMethods(array('sendMail', 'getExtBaseConnector'))->disableOriginalConstructor()->getMock();
 		$this->fixture->expects($this->once())->method('getExtBaseConnector')
 			->will($this->returnValue($this->extBaseConnector));
+
+			// only solution to test the scheduler stuff, because they include mod1/index.php
+			// that is directly executed
+		t3lib_autoloader::unregisterAutoloader();
 	}
 
 	/**

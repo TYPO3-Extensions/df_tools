@@ -53,23 +53,37 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	 */
 	public function errorAction() {
 		$message = Tx_Extbase_Utility_Localization::translate(
-			'tx_dftools_common.generic',
-			'df_tools',
+			'tx_rsfetsy_common.generic',
+			'rs_fetsy',
 			array(get_class($this), $this->actionMethodName)
 		);
 
-		/** @var $error Tx_Extbase_Error_Error */
-		foreach ((array) $this->argumentsMappingResults->getErrors() as $error) {
-			$message .= '<strong>' .
-				Tx_Extbase_Utility_Localization::translate('tx_dftools_common.error', 'df_tools') .
-				':</strong>   ' . $error->getMessage() . '<br />';
-		}
+		if (t3lib_div::compat_version('4.6') &&
+			$this->configurationManager->isFeatureEnabled('rewrittenPropertyMapper')
+		) {
+			foreach ($this->arguments->getValidationResults()->getFlattenedErrors() as $errors) {
+				/** @var $error Tx_Extbase_Error_Error */
+				foreach ($errors as $error) {
+					$message .= '<strong>' .
+						Tx_Extbase_Utility_Localization::translate('tx_rsfetsy_common.error', 'rs_fetsy') .
+						':</strong>   ' . $error->getMessage() . '<br />';
+				}
+			}
 
-		/** @var $warning Tx_Extbase_Error_Error */
-		foreach ((array) $this->argumentsMappingResults->getWarnings() as $warning) {
-			$message .= '<strong>' .
-				Tx_Extbase_Utility_Localization::translate('tx_dftools_common.warning', 'df_tools') .
-				':</strong> ' . $warning . '<br />';
+		} else {
+			/** @var $error Tx_Extbase_Error_Error */
+			foreach ((array) $this->argumentsMappingResults->getErrors() as $error) {
+				$message .= '<strong>' .
+					Tx_Extbase_Utility_Localization::translate('tx_dftools_common.error', 'df_tools') .
+					':</strong>   ' . $error->getMessage() . '<br />';
+			}
+
+			/** @var $warning Tx_Extbase_Error_Error */
+			foreach ((array) $this->argumentsMappingResults->getWarnings() as $warning) {
+				$message .= '<strong>' .
+					Tx_Extbase_Utility_Localization::translate('tx_dftools_common.warning', 'df_tools') .
+					':</strong> ' . $warning . '<br />';
+			}
 		}
 
 		throw new RuntimeException($message);

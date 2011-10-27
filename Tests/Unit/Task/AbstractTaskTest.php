@@ -43,14 +43,14 @@ class Tx_DfTools_Task_AbstractTaskTest extends Tx_Extbase_Tests_Unit_BaseTestCas
 	 * @return void
 	 */
 	public function setUp() {
-			// only solution to test the scheduler stuff, because they include mod1/index.php
-			// that is directly executed
-		t3lib_autoloader::unregisterAutoloader();
-
 		$proxy = $this->buildAccessibleProxy('Tx_DfTools_Task_AbstractTask');
 		$this->fixture = $this->getMockBuilder($proxy)
 			->setMethods(array('execute', 'sendNotificationEmail'))
 			->disableOriginalConstructor()->getMock();
+
+			// only solution to test the scheduler stuff, because they include mod1/index.php
+			// that is directly executed
+		t3lib_autoloader::unregisterAutoloader();
 	}
 
 	/**

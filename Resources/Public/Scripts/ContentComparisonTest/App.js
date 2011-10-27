@@ -220,7 +220,7 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 	 *
 	 * The record is refreshed afterwards with the new data.
 	 *
-	 * @param {array} records
+	 * @param {Array} records
 	 * @param {int} total
 	 * @param {int} current
 	 * @return {void}
@@ -245,7 +245,7 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 	 *
 	 * @param {object} response
 	 * @param {Ext.data.Record} record
-	 * @param {array} records
+	 * @param {Array} records
 	 * @param {int} total
 	 * @param {int} current
 	 * @param {boolean} showFlashMessage

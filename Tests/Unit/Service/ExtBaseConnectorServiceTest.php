@@ -184,7 +184,6 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 		/** @var $mockBootStrap Tx_Extbase_Core_Bootstrap */
 		$mockBootStrap = $this->getMock('Tx_Extbase_Core_Bootstrap', array('run'));
 		$this->fixture->injectBootStrap($mockBootStrap);
-
 		$this->fixture->runControllerAction($controller, $action);
 	}
 
@@ -193,6 +192,8 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function parametersCanBeSet() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->_set('objectManager', $this->getMock('Tx_Extbase_Object_ObjectManager', array('dummy')));
 		$parameters = array('foo' => 'bar', 'my' => 'cat');
 		$this->fixture->setParameters($parameters);
 		$this->assertSame($_POST['tx_foo_tools_footools'], $parameters);
@@ -203,6 +204,8 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function multipleSetParametersCallUnsetThePostInformation() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->_set('objectManager', $this->getMock('Tx_Extbase_Object_ObjectManager', array('dummy')));
 		$parameters = array('foo' => 'bar');
 		$parameters2 = array('my' => 'cat');
 		$this->fixture->setParameters($parameters);

@@ -52,11 +52,20 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	protected $bootStrap = NULL;
 
 	/**
+	 * Object Manager
+	 *
+	 * @var Tx_Extbase_Object_ObjectManager
+	 */
+	protected $objectManager = NULL;
+
+	/**
 	 * Initializes the instance
 	 */
 	public function __construct() {
+		$this->objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+
 		/** @var $bootStrap Tx_Extbase_Core_Bootstrap */
-		$bootStrap = t3lib_div::makeInstance('Tx_Extbase_Core_Bootstrap');
+		$bootStrap = $this->objectManager->create('Tx_Extbase_Core_Bootstrap');
 		$this->injectBootstrap($bootStrap);
 	}
 
@@ -115,10 +124,16 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 * @return void
 	 */
 	public function setParameters(array $parameters) {
-		$parameterNamespace = Tx_Extbase_Utility_Extension::getPluginNamespace(
-			$this->extensionKey,
-			$this->moduleOrPluginKey
-		);
+		if (t3lib_div::compat_version('4.6')) {
+			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
+			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
+			$parameterNamespace = $extensionService->getPluginNamespace($this->extensionKey, $this->moduleOrPluginKey);
+		} else {
+			$parameterNamespace = Tx_Extbase_Utility_Extension::getPluginNamespace(
+				$this->extensionKey,
+				$this->moduleOrPluginKey
+			);
+		}
 
 		$_POST[$parameterNamespace] = $parameters;
 	}
