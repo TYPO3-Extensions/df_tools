@@ -66,6 +66,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 				'sys_language_softExclude' => '',
 			);
 			$GLOBALS['TSFE']->settingLanguage();
+			$GLOBALS['TSFE']->newCObj();
 		}
 
 		/** @var $extBaseConnector Tx_DfTools_Service_ExtBaseConnectorService */

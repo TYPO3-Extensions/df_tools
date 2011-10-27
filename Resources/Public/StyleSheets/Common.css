@@ -9,7 +9,15 @@
 }
 
 .ext-webkit .x-small-editor .x-form-text {
-	padding-top: 1px;
+	padding-top: 0;
+}
+
+.ext-strict #tx_dftools .x-small-editor .x-form-text {
+	height: 17px !important;
+}
+
+.x-panel-nofooter .x-panel-bc {
+	height: 2px;
 }
 
 .x-grid3-col-actions img {
@@ -122,9 +130,17 @@
 	display: inline-block;
 }
 
+.x-panel-tbar {
+	padding-bottom: 5px;
+}
+
+.x-panel-header-text {
+	line-height: 15px;
+}
+
 /* special styles */
 #tx_dftools-button-runTest {
-	margin: 0 10px 0 0;
+	margin-right: 10px;
 }
 
 #typo3-inner-docbody .diff,
