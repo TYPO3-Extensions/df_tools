@@ -8,11 +8,11 @@ if (TYPO3_MODE === 'BE') {
 	/** @var $_EXTKEY string */
 	$extPath = t3lib_extMgm::extPath($_EXTKEY);
 	t3lib_extMgm::addTypoScriptConstants(
-		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_constants.txt')
+		file_get_contents($extPath . 'Configuration/TypoScript/Backend/constants.txt')
 	);
 	
 	t3lib_extMgm::addTypoScriptSetup(
-		file_get_contents($extPath . 'Configuration/TypoScript/Backend/ext_typoscript_setup.txt')
+		file_get_contents($extPath . 'Configuration/TypoScript/Backend/setup.txt')
 	);
 
 		// set global storage pid

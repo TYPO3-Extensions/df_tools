@@ -23,4 +23,8 @@ module.tx_dftools {
 
 	settings {
 	}
+
+	features {
+		rewrittenPropertyMapper = 1
+	}
 }

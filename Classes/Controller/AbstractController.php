@@ -48,7 +48,7 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	/**
 	 * Error Handler
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
 	 * @return void
 	 */
 	public function errorAction() {
