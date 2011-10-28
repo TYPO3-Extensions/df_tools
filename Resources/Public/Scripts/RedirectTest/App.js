@@ -362,7 +362,10 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 							iconCls: TYPO3.settings.DfTools.Sprites.edit,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_redirecttest.edit'],
 							scope: this,
-							handler: this.onEditRecord
+							handler: function() {
+								this.changeVisibilityOfCategoryColumn(false);
+								this.onEditRecord.apply(this, arguments);
+							}
 						}
 					]
 				}
