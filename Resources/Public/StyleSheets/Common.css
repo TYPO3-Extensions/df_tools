@@ -1,7 +1,12 @@
 /* common styles */
 .tx_dftools-button-text {
-	padding: 0 3px 0 5px;
-	vertical-align: middle;
+	padding: 2px 3px 0 5px;
+	vertical-align: top;
+	display: inline-block;
+}
+
+button span.t3-icon {
+	vertical-align: top;
 }
 
 .x-grid-group-hd div.x-grid-group-title {
@@ -13,6 +18,10 @@
 }
 
 .ext-strict #tx_dftools .x-small-editor .x-form-text {
+	height: 16px !important;
+}
+
+.ext-strict .ext-webkit #tx_dftools .x-small-editor .x-form-text {
 	height: 17px !important;
 }
 

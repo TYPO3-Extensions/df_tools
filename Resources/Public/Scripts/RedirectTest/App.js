@@ -340,7 +340,7 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					hideable: false,
 					menuDisabled: true,
 					editable: false,
-					width: 55,
+					width: 65,
 					align: 'right',
 
 					app: this,
