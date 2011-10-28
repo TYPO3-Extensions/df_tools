@@ -53,8 +53,8 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	 */
 	public function errorAction() {
 		$message = Tx_Extbase_Utility_Localization::translate(
-			'tx_rsfetsy_common.generic',
-			'rs_fetsy',
+			'tx_dftools_common.generic',
+			'df_tools',
 			array(get_class($this), $this->actionMethodName)
 		);
 
@@ -65,7 +65,7 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 				/** @var $error Tx_Extbase_Error_Error */
 				foreach ($errors as $error) {
 					$message .= '<strong>' .
-						Tx_Extbase_Utility_Localization::translate('tx_rsfetsy_common.error', 'rs_fetsy') .
+						Tx_Extbase_Utility_Localization::translate('tx_dftools_common.error', 'df_tools') .
 						':</strong>   ' . $error->getMessage() . '<br />';
 				}
 			}
