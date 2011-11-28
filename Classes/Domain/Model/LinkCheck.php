@@ -49,7 +49,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	 * HTTP Status Code
 	 *
 	 * @validate NumberRange(startRange = 0, endRange = 1000)
-	 * @var integer
+	 * @var int
 	 */
 	protected $httpStatusCode = 0;
 
@@ -125,7 +125,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Setter for httpStatusCode
 	 *
-	 * @param integer $httpStatusCode
+	 * @param int $httpStatusCode
 	 * @return void
 	 */
 	public function setHttpStatusCode($httpStatusCode) {
@@ -135,7 +135,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Getter for httpStatusCode
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getHttpStatusCode() {
 		return $this->httpStatusCode;

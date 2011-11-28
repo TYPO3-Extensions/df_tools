@@ -87,10 +87,7 @@ class Tx_DfTools_Controller_RedirectTestCategoryController extends Tx_DfTools_Co
 	public function deleteUnusedCategoriesAction() {
 		/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
 		$categories = $this->redirectTestCategoryRepository->findAllUnusedCategories();
-		foreach ($categories
-			as
-			$category)
-		{
+		foreach ($categories as $category) {
 			$this->redirectTestCategoryRepository->remove($category);
 		}
 	}

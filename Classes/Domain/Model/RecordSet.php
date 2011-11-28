@@ -51,7 +51,7 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	 *
 	 * @validate NotEmpty
 	 * @validate Integer
-	 * @var integer $identifier
+	 * @var int $identifier
 	 */
 	protected $identifier = 0;
 
@@ -96,7 +96,7 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Setter for identifier
 	 *
-	 * @param integer $identifier
+	 * @param int $identifier
 	 * @return void
 	 */
 	public function setIdentifier($identifier) {
@@ -106,7 +106,7 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Getter for identifier
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getIdentifier() {
 		return $this->identifier;

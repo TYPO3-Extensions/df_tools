@@ -40,7 +40,7 @@ class Tx_DfTools_Domain_Model_RedirectTestCategory extends Tx_Extbase_DomainObje
 	 * @validate NotEmpty
 	 * @var string $category
 	 */
-	protected $category = '';
+	protected $category;
 
 	/**
 	 * Setter for category
