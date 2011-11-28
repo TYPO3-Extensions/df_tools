@@ -33,7 +33,7 @@ class Tx_DfTools_Controller_OverviewController extends Tx_DfTools_Controller_Abs
 	/**
 	 * Displays an module overview
 	 *
-	 * @param Boolean $doStateRedirect
+	 * @param bool $doStateRedirect
 	 * @return void
 	 */
 	public function indexAction($doStateRedirect = TRUE) {
