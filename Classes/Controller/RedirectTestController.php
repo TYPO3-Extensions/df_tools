@@ -202,7 +202,7 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 		/** @var $redirectTest Tx_DfTools_Domain_Model_RedirectTest */
 		$redirectTest = $this->redirectTestRepository->findByUid($identity);
 		$redirectTest->test($this->getUrlCheckerService());
-		$this->forward('saveTest', NULL, NULL, array('redirectTest' => $redirectTest->toArray()));
+		$this->forward('saveTest', NULL, NULL, array('redirectTest' => $redirectTest));
 	}
 
 	/**

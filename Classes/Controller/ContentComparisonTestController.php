@@ -186,8 +186,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
 		$contentComparisonTest = $this->contentComparisonTestRepository->findByUid($identity);
 		$contentComparisonTest->test($this->getUrlCheckerService());
-		$arguments = array('contentComparisonTest' => $contentComparisonTest->toArray());
-		$this->forward('saveTest', NULL, NULL, $arguments);
+		$this->forward('saveTest', NULL, NULL, array('contentComparisonTest' => $contentComparisonTest));
 	}
 
 	/**

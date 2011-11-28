@@ -248,7 +248,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
 		$linkCheck = $this->linkCheckRepository->findByUid($identity);
 		$linkCheck->test($this->getUrlCheckerService());
-		$this->forward('saveTest', NULL, NULL, array('linkCheck' => $linkCheck->toArray()));
+		$this->forward('saveTest', NULL, NULL, array('linkCheck' => $linkCheck));
 	}
 
 	/**

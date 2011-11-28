@@ -155,7 +155,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 		/** @var $backLinkTest Tx_DfTools_Domain_Model_BackLinkTest */
 		$backLinkTest = $this->backLinkTestRepository->findByUid($identity);
 		$backLinkTest->test($this->getUrlCheckerService());
-		$this->forward('saveTest', NULL, NULL, array('backLinkTest' => $backLinkTest->toArray()));
+		$this->forward('saveTest', NULL, NULL, array('backLinkTest' => $backLinkTest));
 	}
 
 	/**
