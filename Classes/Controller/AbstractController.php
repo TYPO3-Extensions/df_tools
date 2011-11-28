@@ -58,7 +58,7 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 			array(get_class($this), $this->actionMethodName)
 		);
 
-		if (t3lib_div::compat_version('4.6') &&
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000  &&
 			$this->configurationManager->isFeatureEnabled('rewrittenPropertyMapper')
 		) {
 			foreach ($this->arguments->getValidationResults()->getFlattenedErrors() as $errors) {

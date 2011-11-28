@@ -124,7 +124,7 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 * @return void
 	 */
 	public function setParameters(array $parameters) {
-		if (t3lib_div::compat_version('4.6')) {
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
 			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
 			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
 			$parameterNamespace = $extensionService->getPluginNamespace($this->extensionKey, $this->moduleOrPluginKey);
