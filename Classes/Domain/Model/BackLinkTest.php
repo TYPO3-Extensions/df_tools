@@ -71,6 +71,15 @@ class Tx_DfTools_Domain_Model_BackLinkTest extends Tx_Extbase_DomainObject_Abstr
 	protected $comment = '';
 
 	/**
+	 * Just an empty constructor that is needed by the property mapper
+	 */
+	public function __construct() {
+		if (is_callable('parent::__construct')) {
+			parent::__construct();
+		}
+	}
+
+	/**
 	 * Setter for testUrl
 	 *
 	 * @param string $testUrl

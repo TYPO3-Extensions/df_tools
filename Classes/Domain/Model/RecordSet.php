@@ -56,6 +56,15 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	protected $identifier = 0;
 
 	/**
+	 * Just an empty constructor that is needed by the property mapper
+	 */
+	public function __construct() {
+		if (is_callable('parent::__construct')) {
+			parent::__construct();
+		}
+	}
+
+	/**
 	 * Setter for tableName
 	 *
 	 * @param string $tableName

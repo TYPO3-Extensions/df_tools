@@ -82,6 +82,10 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	 */
 	public function __construct() {
 		$this->recordSets = new Tx_Extbase_Persistence_ObjectStorage();
+
+		if (is_callable('parent::__construct')) {
+			parent::__construct();
+		}
 	}
 
 	/**

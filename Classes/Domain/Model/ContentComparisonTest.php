@@ -84,6 +84,15 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	protected $testMessage = '';
 
 	/**
+	 * Just an empty constructor that is needed by the property mapper
+	 */
+	public function __construct() {
+		if (is_callable('parent::__construct')) {
+			parent::__construct();
+		}
+	}
+
+	/**
 	 * Setter for testUrl
 	 *
 	 * @param string $testUrl

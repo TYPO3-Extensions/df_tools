@@ -30,8 +30,16 @@
  * @package df_tools
  */
 interface Tx_DfTools_Domain_Model_TestableInterface {
+	/**
+	 * @abstract
+	 * @return void
+	 */
 	public function getTestResult();
 
+	/**
+	 * @abstract
+	 * @return void
+	 */
 	public function getTestMessage();
 }
 

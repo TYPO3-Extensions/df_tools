@@ -43,6 +43,15 @@ class Tx_DfTools_Domain_Model_RedirectTestCategory extends Tx_Extbase_DomainObje
 	protected $category;
 
 	/**
+	 * Just an empty constructor that is needed by the property mapper
+	 */
+	public function __construct() {
+		if (is_callable('parent::__construct')) {
+			parent::__construct();
+		}
+	}
+
+	/**
 	 * Setter for category
 	 *
 	 * @param string $category
