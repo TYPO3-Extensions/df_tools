@@ -71,7 +71,6 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 		return $this->notificationEmailAddress;
 	}
 
-
 	/**
 	 * Converts html line breaks to newlines
 	 *

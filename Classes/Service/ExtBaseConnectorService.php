@@ -29,55 +29,27 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
+class Tx_DfTools_Service_ExtBaseConnectorService extends Tx_Extbase_Core_Bootstrap {
 	/**
 	 * Extension Key
 	 *
 	 * @var string
 	 */
-	protected $extensionKey = '';
+	protected $extensionKey;
 
 	/**
 	 * Module Key
 	 *
 	 * @var string
 	 */
-	protected $moduleOrPluginKey = '';
+	protected $moduleOrPluginKey;
 
 	/**
-	 * ExtBase Bootstrap Instance
+	 * Parameters
 	 *
-	 * @var Tx_Extbase_Core_Bootstrap
+	 * @var array
 	 */
-	protected $bootStrap = NULL;
-
-	/**
-	 * Object Manager
-	 *
-	 * @var Tx_Extbase_Object_ObjectManager
-	 */
-	protected $objectManager = NULL;
-
-	/**
-	 * Initializes the instance
-	 */
-	public function __construct() {
-		$this->objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-
-		/** @var $bootStrap Tx_Extbase_Core_Bootstrap */
-		$bootStrap = $this->objectManager->create('Tx_Extbase_Core_Bootstrap');
-		$this->injectBootstrap($bootStrap);
-	}
-
-	/**
-	 * Initialize the bootstrap
-	 *
-	 * @param Tx_Extbase_Core_Bootstrap $bootStrap
-	 * @return void
-	 */
-	public function injectBootStrap(Tx_Extbase_Core_Bootstrap $bootStrap) {
-		$this->bootStrap = $bootStrap;
-	}
+	protected $parameters;
 
 	/**
 	 * Setter for the extension key
@@ -87,15 +59,6 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 */
 	public function setExtensionKey($extensionKey) {
 		$this->extensionKey = $extensionKey;
-	}
-
-	/**
-	 * Getter for the extension key
-	 *
-	 * @return string
-	 */
-	public function getExtensionKey() {
-		return $this->extensionKey;
 	}
 
 	/**
@@ -109,33 +72,13 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	}
 
 	/**
-	 * Getter for the module or plugin key
-	 *
-	 * @return string
-	 */
-	public function getModuleOrPluginKey() {
-		return $this->moduleOrPluginKey;
-	}
-
-	/**
 	 * Sets the parameters for the configured module/plugin
 	 *
 	 * @param array $parameters
 	 * @return void
 	 */
 	public function setParameters(array $parameters) {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
-			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
-			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
-			$parameterNamespace = $extensionService->getPluginNamespace($this->extensionKey, $this->moduleOrPluginKey);
-		} else {
-			$parameterNamespace = Tx_Extbase_Utility_Extension::getPluginNamespace(
-				$this->extensionKey,
-				$this->moduleOrPluginKey
-			);
-		}
-
-		$_POST[$parameterNamespace] = $parameters;
+		$this->parameters = $parameters;
 	}
 
 	/**
@@ -148,18 +91,41 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 */
 	public function runControllerAction($controller, $action) {
 		if ($controller === '' || $action === '') {
-			throw new InvalidArgumentException('ExtDirect (Tx_DfTools): Invalid Controller/Action Combination!');
+			throw new InvalidArgumentException('Invalid Controller/Action Combination!');
 		}
 
-		$response = $this->bootStrap->run('', array(
+		$configuration = array(
 			'extensionName' => $this->extensionKey,
 			'pluginName' => $this->moduleOrPluginKey,
 			'switchableControllerActions' => array(
 				$controller => array($action)
 			),
-		));
+		);
 
-		return $response;
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
+			$this->initialize($configuration);
+
+			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
+			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
+			$parameterNamespace = $extensionService->getPluginNamespace($this->extensionKey, $this->moduleOrPluginKey);
+		} else {
+			$parameterNamespace = Tx_Extbase_Utility_Extension::getPluginNamespace(
+				$this->extensionKey,
+				$this->moduleOrPluginKey
+			);
+		}
+
+		if (is_array($this->parameters)) {
+			$_POST[$parameterNamespace] = $this->parameters;
+		}
+
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
+			$content =  $this->handleWebRequest();
+		} else {
+			$content = $this->run('', $configuration);
+		}
+
+		return $content;
 	}
 }
 

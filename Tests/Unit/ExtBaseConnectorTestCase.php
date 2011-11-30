@@ -66,15 +66,14 @@ abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit
 	 * @return void
 	 */
 	protected function addMockedExtBaseConnector($controller, $action, array $parameters = array(), $returnValue = NULL, $exception = NULL) {
+		/** @var $mockedMethod PHPUnit_Framework_MockObject_Builder_InvocationMocker */
 		/** @noinspection PhpUndefinedMethodInspection */
 		$mockedMethod = $this->extBaseConnector->expects($this->once())->method('runControllerAction');
 		$mockedMethod->with($controller, $action);
 
 		if ($returnValue !== NULL) {
-			/** @noinspection PhpUndefinedMethodInspection */
 			$mockedMethod->will($this->returnValue($returnValue));
 		} elseif ($exception !== NULL) {
-			/** @noinspection PhpUndefinedMethodInspection */
 			$mockedMethod->will($this->throwException($exception));
 		}
 

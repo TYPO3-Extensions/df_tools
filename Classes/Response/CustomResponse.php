@@ -24,12 +24,12 @@
  ***************************************************************/
 
 /**
- * Response class for Ext.Direct / Ajax calls
+ * Custom response class with array output
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Response_AjaxResponse extends Tx_Extbase_MVC_Web_Response {
+class Tx_DfTools_Response_CustomResponse extends Tx_Extbase_MVC_Web_Response {
 	/**
 	 * Appends content to the already existing content.
 	 *

@@ -40,12 +40,8 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function setUp() {
-		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_ExtBaseConnectorService');
-		$this->fixture = $this->getMockBuilder($proxyClass)
-			->setMethods(array('dummy'))
-			->disableOriginalConstructor()
-			->getMock();
+		$class = 'Tx_DfTools_Service_ExtBaseConnectorService';
+		$this->fixture = $this->getAccessibleMock($class, array('initialize', 'handleWebRequest'));
 
 		$this->fixture->setExtensionKey('Foo');
 		$this->fixture->setModuleOrPluginKey('tools_FooTools');
@@ -59,65 +55,14 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	}
 
 	/**
-	 * Returns a fake bootstrap
-	 *
-	 * @param string $controller
-	 * @param string $action
-	 * @param mixed $returnValue
-	 * @return void
-	 */
-	protected function injectFakeBootStrap($controller, $action, $returnValue) {
-		/** @var $mockBootStrap Tx_Extbase_Core_Bootstrap */
-		$mockBootStrap = $this->getMock('Tx_Extbase_Core_Bootstrap', array('run'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$mockBootStrap->expects($this->once())
-			->method('run')
-			->will($this->returnValue($returnValue))
-			->with('', array(
-				'extensionName' => 'Foo',
-				'pluginName' => 'tools_FooTools',
-				'switchableControllerActions' => array(
-					$controller => array($action)
-				)
-			)
-		);
-
-		$this->fixture->injectBootStrap($mockBootStrap);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function objectCanBeInitialized() {
-		/** @var $fixture Tx_DfTools_Service_ExtBaseConnectorService */
-		$fixture = $this->getAccessibleMock('Tx_DfTools_Service_ExtBaseConnectorService', array('dummy'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertInstanceOf('Tx_Extbase_Core_Bootstrap', $fixture->_get('bootStrap'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectBootStrap() {
-		/** @var $bootStrap Tx_Extbase_Core_Bootstrap */
-		$bootStrap = $this->getMock('Tx_Extbase_Core_Bootstrap', array('dummy'));
-		$this->fixture->injectBootStrap($bootStrap);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($bootStrap, $this->fixture->_get('bootStrap'));
-	}
-
-	/**
 	 * @test
 	 * @return void
 	 */
 	public function setExtensionKeyWorks() {
 		$this->fixture->setExtensionKey('FooBar');
-		$this->assertSame('FooBar', $this->fixture->getExtensionKey());
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->assertSame('FooBar', $this->fixture->_get('extensionKey'));
 	}
 
 	/**
@@ -126,7 +71,35 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 */
 	public function setModuleOrPluginKeyWorks() {
 		$this->fixture->setModuleOrPluginKey('FooBar');
-		$this->assertSame('FooBar', $this->fixture->getModuleOrPluginKey());
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->assertSame('FooBar', $this->fixture->_get('moduleOrPluginKey'));
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function setParametersWorks() {
+		$this->fixture->setParameters(array('FooBar'));
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->assertSame(array('FooBar'), $this->fixture->_get('parameters'));
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function prepareRunControllerAndActionTests() {
+		$extensionService = $this->getMock('Tx_Extbase_Service_ExtensionService');
+		$extensionService->expects($this->once())->method('getPluginNamespace')
+			->will($this->returnValue('tx_foo_tools_footools'));
+
+		$objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager');
+		$objectManager->expects($this->once())->method('get')->will($this->returnValue($extensionService));
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->_set('objectManager', $objectManager);
 	}
 
 	/**
@@ -134,29 +107,17 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function testExecutionOfControllerAndAction() {
-		$controller = 'TestController';
-		$action = 'TestAction';
-		$returnValue = array('foo', 'bar');
+		$this->prepareRunControllerAndActionTests();
 
-		$this->injectFakeBootStrap($controller, $action, $returnValue);
-		$response = $this->fixture->runControllerAction($controller, $action);
-
-		$this->assertSame($response, $returnValue);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testExecutionOfControllerAndActionWithNonArrayResponse() {
-		$controller = 'TestController';
-		$action = 'TestAction';
-		$returnValue = TRUE;
-
-		$this->injectFakeBootStrap($controller, $action, $returnValue);
-		$response = $this->fixture->runControllerAction($controller, $action);
-
-		$this->assertSame($response, $returnValue);
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->expects($this->once())->method('initialize')->with(array(
+			'extensionName' => 'Foo',
+			'pluginName' => 'tools_FooTools',
+			'switchableControllerActions' => array(
+				'TestController' => array('TestAction')
+			),
+		));
+		$this->fixture->runControllerAction('TestController', 'TestAction');
 	}
 
 	/**
@@ -181,9 +142,6 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function testExecutionOfControllerAndActionWithIncorrectParameters($controller, $action) {
-		/** @var $mockBootStrap Tx_Extbase_Core_Bootstrap */
-		$mockBootStrap = $this->getMock('Tx_Extbase_Core_Bootstrap', array('run'));
-		$this->fixture->injectBootStrap($mockBootStrap);
 		$this->fixture->runControllerAction($controller, $action);
 	}
 
@@ -192,25 +150,12 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function parametersCanBeSet() {
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->_set('objectManager', $this->getMock('Tx_Extbase_Object_ObjectManager', array('dummy')));
+		$this->prepareRunControllerAndActionTests();
 		$parameters = array('foo' => 'bar', 'my' => 'cat');
 		$this->fixture->setParameters($parameters);
-		$this->assertSame($_POST['tx_foo_tools_footools'], $parameters);
-	}
 
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function multipleSetParametersCallUnsetThePostInformation() {
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->_set('objectManager', $this->getMock('Tx_Extbase_Object_ObjectManager', array('dummy')));
-		$parameters = array('foo' => 'bar');
-		$parameters2 = array('my' => 'cat');
-		$this->fixture->setParameters($parameters);
-		$this->fixture->setParameters($parameters2);
-		$this->assertSame($_POST['tx_foo_tools_footools'], $parameters2);
+		$this->fixture->runControllerAction('Foo', 'Bar');
+		$this->assertSame($_POST['tx_foo_tools_footools'], $parameters);
 	}
 }
 
