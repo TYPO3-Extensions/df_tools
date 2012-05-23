@@ -107,7 +107,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx
 	}
 
 	/**
-	 * @expectedException Exception
+	 * @expectedException Tx_DfTools_Exception_GenericException
 	 * @test
 	 * @return void
 	 */
@@ -115,7 +115,6 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx
 		$objectCollection = new Tx_Extbase_Persistence_ObjectStorage();
 		$objectCollection->attach(new stdClass(''));
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('findByCategory')
 			->will($this->returnValue($objectCollection));
 

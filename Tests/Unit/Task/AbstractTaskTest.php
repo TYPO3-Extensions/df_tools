@@ -24,9 +24,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-$schedulerPath = t3lib_extMgm::extPath('scheduler');
-require_once($schedulerPath . 'class.tx_scheduler_task.php');
-
 /**
  * Test case for class Tx_DfTools_Task_AbstractTask.
  *
@@ -47,17 +44,12 @@ class Tx_DfTools_Task_AbstractTaskTest extends Tx_Extbase_Tests_Unit_BaseTestCas
 		$this->fixture = $this->getMockBuilder($proxy)
 			->setMethods(array('execute', 'sendNotificationEmail'))
 			->disableOriginalConstructor()->getMock();
-
-			// only solution to test the scheduler stuff, because they include mod1/index.php
-			// that is directly executed
-		t3lib_autoloader::unregisterAutoloader();
 	}
 
 	/**
 	 * @return void
 	 */
 	public function tearDown() {
-		t3lib_autoloader::registerAutoloader();
 		unset($this->fixture);
 	}
 

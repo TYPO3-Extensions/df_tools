@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011-2012 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
  *
  *  All rights reserved
  *
@@ -85,7 +85,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 	/**
 	 * Checks if the given category name is already assigned
 	 *
-	 * @throws Exception if the category already exists
+	 * @throws Tx_DfTools_Exception_GenericException if the category already exists
 	 * @param string $category
 	 * @return bool
 	 */
@@ -96,7 +96,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 		if ($result !== NULL && $result->count()) {
 			$label = 'tx_dftools_domain_model_redirecttestcategory.categoryExists';
 			$errorMessage = Tx_Extbase_Utility_Localization::translate($label, 'df_tools', array($category));
-			throw new Exception($errorMessage);
+			throw new Tx_DfTools_Exception_GenericException($errorMessage);
 		}
 	}
 

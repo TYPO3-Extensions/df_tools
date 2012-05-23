@@ -63,11 +63,10 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 
 	/**
 	 * @test
-	 * @expectedException Exception
+	 * @expectedException Tx_DfTools_Exception_GenericException
 	 * @return void
 	 */
 	public function accessCheckFailsIfNoFrontendUserIsLoggedInIfCalledInFrontendMode() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('isInFrontendMode')->will($this->returnValue(TRUE));
 		$this->fixture->hasAccess();
 	}
@@ -77,7 +76,6 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	 * @return void
 	 */
 	public function accessCheckSucceedsIfFrontendUserIsLoggedInIfCalledInFrontendMode() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('isInFrontendMode')->will($this->returnValue(TRUE));
 		$GLOBALS['TSFE']->fe_user->user['uid'] = 1;
 		$this->fixture->hasAccess();

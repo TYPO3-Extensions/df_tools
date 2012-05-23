@@ -49,7 +49,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_UrlParserService');
-		$this->fixture = $this->getMock($proxyClass, array('dummy'));
+		$this->fixture = $this->getMock($proxyClass, array('getPageSelectInstance'));
 	}
 
 	/**
@@ -58,15 +58,6 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	public function tearDown() {
 		$GLOBALS['TYPO3_DB'] = $this->savedDB;
 		unset($this->fixture);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function getPageSelectInstanceReturnsAValidObject() {
-		$this->assertInstanceOf('t3lib_pageSelect', $this->fixture->_call('getPageSelectInstance'));
-		$this->assertInstanceOf('t3lib_pageSelect', $this->fixture->_call('getPageSelectInstance'));
 	}
 
 	/**
@@ -89,12 +80,16 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
 		$GLOBALS['TYPO3_DB'] = $dbMock;
 
+		$pageSelect = $this->getMock('t3lib_pageSelect');
+		$pageSelect->expects($this->once())->method('enableFields')
+			->will($this->returnValue(((' AND 1=1'))));
+		$this->fixture->expects($this->once())->method('getPageSelectInstance')
+			->will($this->returnValue($pageSelect));
+
 		$table = 'pages';
 		$fields = array('field1', 'field2');
 		$whereClause = '(field1 REGEXP \'(https|http|ftp)://\' OR ' .
-			'field2 REGEXP \'(https|http|ftp)://\') AND ' .
-			'pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 ' .
-			'AND (pages.endtime=0 OR pages.endtime>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
+			'field2 REGEXP \'(https|http|ftp)://\') AND 1=1';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock->expects($this->once())->method('exec_SELECTgetRows')
@@ -260,9 +255,13 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 			),
 		);
 
-		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 ' .
-			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 ' .
-			'AND (pages.endtime=0 OR pages.endtime>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
+		$pageSelect = $this->getMock('t3lib_pageSelect');
+		$pageSelect->expects($this->once())->method('enableFields')
+			->will($this->returnValue(((' AND 1=1'))));
+		$this->fixture->expects($this->once())->method('getPageSelectInstance')
+			->will($this->returnValue($pageSelect));
+
+		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 AND 1=1';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
@@ -299,10 +298,13 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 			),
 		);
 
-		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 ' .
-			'AND pages.deleted=0 AND pages.t3ver_state<=0 AND pages.pid!=-1 ' .
-			'AND (pages.endtime=0 OR pages.endtime>' . $GLOBALS['SIM_ACCESS_TIME'] . ') ' .
-			'AND uid IN (1, 2)';
+		$pageSelect = $this->getMock('t3lib_pageSelect');
+		$pageSelect->expects($this->once())->method('enableFields')
+			->will($this->returnValue(((' AND 1=1'))));
+		$this->fixture->expects($this->once())->method('getPageSelectInstance')
+			->will($this->returnValue($pageSelect));
+
+		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 AND 1=1 AND uid IN (1, 2)';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));

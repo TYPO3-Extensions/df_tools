@@ -24,8 +24,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('scheduler') . 'class.tx_scheduler_task.php');
-
 /**
  * Test case for class Tx_DfTools_Task_RedirectTestTask.
  *
@@ -49,17 +47,12 @@ class Tx_DfTools_Task_RedirectTestTaskTest extends Tx_DfTools_ExtBaseConnectorTe
 			->setMethods(array('sendMail', 'getExtBaseConnector'))->disableOriginalConstructor()->getMock();
 		$this->fixture->expects($this->once())->method('getExtBaseConnector')
 			->will($this->returnValue($this->extBaseConnector));
-
-			// only solution to test the scheduler stuff, because they include mod1/index.php
-			// that is directly executed
-		t3lib_autoloader::unregisterAutoloader();
 	}
 
 	/**
 	 * @return void
 	 */
 	public function tearDown() {
-		t3lib_autoloader::registerAutoloader();
 		unset($this->fixture);
 
 		parent::tearDown();

@@ -88,12 +88,12 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	/**
 	 * Checks the access rights for using Ext.Direct calls
 	 *
-	 * @throws Exception if the user has no rights to proceed
+	 * @throws Tx_DfTools_Exception_GenericException if the user has no rights to proceed
 	 * @return bool
 	 */
 	public function hasAccess() {
 		if ($this->isInFrontendMode() && !$GLOBALS['TSFE']->fe_user->user['uid']) {
-			throw new Exception('Please login first to gain access!');
+			throw new Tx_DfTools_Exception_GenericException('Please login first to gain access!');
 		}
 
 		return TRUE;

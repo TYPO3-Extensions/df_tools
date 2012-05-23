@@ -24,11 +24,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-$schedulerPath = t3lib_extMgm::extPath('scheduler');
-require_once($schedulerPath . 'interfaces/interface.tx_scheduler_additionalfieldprovider.php');
-require_once($schedulerPath . 'class.tx_scheduler_task.php');
-require_once(PATH_t3lib . 'class.t3lib_flashmessage.php');
-
 /**
  * Test case for class Tx_DfTools_Task_AbstractFields.
  *
@@ -47,17 +42,12 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Task_AbstractFields', array('dummy'));
 		$this->fixture->setFieldPrefix('FieldPrefix');
-
-			// only solution to test the scheduler stuff, because they include mod1/index.php
-			// that is directly executed
-		t3lib_autoloader::unregisterAutoloader();
 	}
 
 	/**
 	 * @return void
 	 */
 	public function tearDown() {
-		t3lib_autoloader::registerAutoloader();
 		unset($this->fixture);
 	}
 
@@ -224,7 +214,7 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 			->setMethods(array('execute', 'sendNotificationEmail'))->disableOriginalConstructor()->getMock();
 		$submittedData = array('FieldPrefixNotificationEmailAddress' => 'mail@example.org');
 		$this->fixture->saveAdditionalFields($submittedData, $task);
-		
+
 		$this->assertSame('mail@example.org', $task->getNotificationEmailAddress());
 	}
 }
