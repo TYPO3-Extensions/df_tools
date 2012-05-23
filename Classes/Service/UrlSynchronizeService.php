@@ -253,7 +253,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * - remove non-existing urls with their related records sets
 	 *
 	 * @param array $rawUrls
-	 * @param Tx_Extbase_Persistence_QueryResult $existingLinkTests
+	 * @param Tx_Extbase_Persistence_QueryResultInterface $existingLinkTests
 	 * @return void
 	 */
 	public function synchronize(array $rawUrls, $existingLinkTests) {

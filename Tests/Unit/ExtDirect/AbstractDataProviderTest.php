@@ -37,7 +37,7 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	protected $fixture;
 
 	/**
-	 * @var tslib_tsfe
+	 * @var tslib_fe
 	 */
 	protected $backupTSFE;
 

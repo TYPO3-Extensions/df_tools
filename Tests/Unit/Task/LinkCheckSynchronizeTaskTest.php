@@ -44,7 +44,6 @@ class Tx_DfTools_Task_LinkCheckSynchronizeTaskTest extends Tx_DfTools_ExtBaseCon
 	public function setUp() {
 		parent::setUp();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture = $this->getMockBuilder($this->buildAccessibleProxy('Tx_DfTools_Task_LinkCheckSynchronizeTask'))
 			->setMethods(array('getExtBaseConnector'))->disableOriginalConstructor()->getMock();
 		$this->fixture->expects($this->once())->method('getExtBaseConnector')

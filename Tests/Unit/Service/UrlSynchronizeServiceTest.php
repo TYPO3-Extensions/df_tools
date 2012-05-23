@@ -89,7 +89,6 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 * @return void
 	 */
 	protected function prepareTestSynchronizationLogic() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$existingRawRecordSets = array(
 			'pagessubtitle1' => array(
 				'uid' => 1,
@@ -117,6 +116,7 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			),
 		);
 
+		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('fetchExistingRawRecordSets')
 			->will($this->returnValue($existingRawRecordSets));
 
@@ -129,6 +129,7 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			)
 		);
 		$persistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($backend));
+		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->any())->method('getPersistenceManager')
 			->will($this->returnValue($persistenceManager));
 	}
@@ -198,7 +199,6 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	public function synchronizationLogicRemovesTwoUrls() {
 		$this->prepareTestSynchronizationLogic();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->never())->method('update');
@@ -220,7 +220,6 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	public function synchronizationLogicRemovesOneUrlAndAddsAnotherWithOneNewRecordSetAndOneExisting() {
 		$this->prepareTestSynchronizationLogic();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('add');
 		$linkCheckRepository->expects($this->never())->method('update');
@@ -276,7 +275,6 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	public function synchronizationLogicEditsAnUrlByRemovingARecordSetAndAddingAnother() {
 		$this->prepareTestSynchronizationLogic();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
@@ -331,7 +329,6 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	public function synchronizationLogicAddsARecordSetForAnUrlAndAddsAnotherUrlWithTheSimilarRecordSet() {
 		$this->prepareTestSynchronizationLogic();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
@@ -395,7 +392,6 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	public function synchronizationLogicRemovesARecordSetWithEmptyField() {
 		$this->prepareTestSynchronizationLogic();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
@@ -468,11 +464,11 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$queryResult->offsetSet(0, $testRecord1);
 		$queryResult->offsetSet(1, $testRecord2);
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$expectedRawUrls = $rawUrls;
 		unset($expectedRawUrls['http://ying.yang']);
 		$expectedQueryResult = clone $queryResult;
 		$expectedQueryResult->offsetUnset(1);
+		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('synchronize')->with($expectedRawUrls, $expectedQueryResult);
 
 		$linkCheckRepository = $this->prepareLinkCheckRepository();

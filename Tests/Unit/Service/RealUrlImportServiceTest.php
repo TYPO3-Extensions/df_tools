@@ -167,7 +167,7 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	 * @return void
 	 */
 	public function importFromRealUrlWithoutAnExistingCategoryAndAlreadySyncedRedirects() {
-		/** @noinspection PhpUndefinedMethodInspection */
+		/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
 		$category = $this->getMockBuilder('Tx_DfTools_Domain_Model_RedirectTestCategory')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$category->setCategory('RealUrl');

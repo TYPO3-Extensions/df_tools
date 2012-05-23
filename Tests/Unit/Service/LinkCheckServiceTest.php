@@ -109,7 +109,6 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function allRawUrlsFromTheDatabaseCanBeFetched() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$excludedTablesString = 'tt_content,pages';
 		$excludedTableFieldsString = 'field1,field2,field3';
 		$preparedExcludedTablesString = array('tt_content', 'pages');
@@ -118,6 +117,7 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$urlParserService = $this->getMock('Tx_DfTools_Service_UrlParserService');
 		$urlParserService->expects($this->once())->method('fetchUrls')
 			->with($preparedExcludedTablesString, $preparedExcludedTableFieldsString);
+		/** @noinspection PhpUndefinedMethodInspection */
 		$this->objectManager->expects($this->once())->method('get')
 			->will($this->returnValue($urlParserService));
 

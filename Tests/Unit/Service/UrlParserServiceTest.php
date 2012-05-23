@@ -65,7 +65,6 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function getPageSelectInstanceReturnsAValidObject() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->assertInstanceOf('t3lib_pageSelect', $this->fixture->_call('getPageSelectInstance'));
 		$this->assertInstanceOf('t3lib_pageSelect', $this->fixture->_call('getPageSelectInstance'));
 	}
@@ -335,7 +334,6 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$tcaParser = $this->getMock('Tx_DfTools_Service_TcaParserService', array('findFields'));
 		$this->fixture->injectTcaParser($tcaParser);
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$tableFields = array('pages' => array('field1', 'field2'), 'tt_content' => array('field1'));
 		$tcaParser->expects($this->once())->method('findFields')->will($this->returnValue($tableFields));
 

@@ -147,7 +147,7 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	 *
 	 * @abstract
 	 * @param Tx_Extbase_DomainObject_AbstractDomainObject $record
-	 * @return void
+	 * @return void|array
 	 */
 	abstract protected function getPlainRecord($record);
 

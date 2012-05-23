@@ -48,8 +48,8 @@ final class Tx_DfTools_Utility_HtmlUtility {
 		foreach ($parts as $part) {
 			$finalParts = explode('<!--TYPO3SEARCH_end-->', $part);
 			array_pop($finalParts);
-			foreach ($finalParts as $part) {
-				$searchParts[] = trim($part);
+			foreach ($finalParts as $innerPart) {
+				$searchParts[] = trim($innerPart);
 			}
 		}
 

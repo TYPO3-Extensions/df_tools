@@ -127,13 +127,13 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 
 	refreshFields: function() {
 		this.initFields();
-		this.verifyLayout();
+		this.verifyLayout(false);
 	},
 
 	isDirty: function() {
-		var dirty;
+		var dirty = false;
 		this.items.each(function(f) {
-			if (String(this.values[f.id]) !== String(f.getValue())) {
+			if (String(this.fieldValues[f.id]) !== String(f.getValue())) {
 				dirty = true;
 				return false;
 			}
@@ -157,7 +157,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 
 			this.record = record;
 			this.rowIndex = rowIndex;
-			this.values = {};
+			this.fieldValues = {};
 			if (!this.rendered) {
 				this.render(view.getEditorParent());
 			}
@@ -171,7 +171,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 				val = this.preEditValue(record, cm.getDataIndex(i));
 				f = fields[i];
 				f.setValue(val);
-				this.values[f.id] = Ext.isEmpty(val) ? '' : val;
+				this.fieldValues[f.id] = Ext.isEmpty(val) ? '' : val;
 			}
 			this.verifyLayout(true);
 			if (!this.isVisible()) {
@@ -208,7 +208,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 				var dindex = cm.getDataIndex(i);
 				if (!Ext.isEmpty(dindex)) {
 					var oldValue = r.data[dindex],
-							value = this.postEditValue(fields[i].getValue(), oldValue, r, dindex);
+						value = this.postEditValue(fields[i].getValue());
 					if (String(oldValue) !== String(value)) {
 						changes[dindex] = value;
 						hasChange = true;

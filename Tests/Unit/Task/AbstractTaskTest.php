@@ -181,7 +181,6 @@ class Tx_DfTools_Task_AbstractTaskTest extends Tx_Extbase_Tests_Unit_BaseTestCas
 	 * @return void
 	 */
 	public function getPreparedNotificationMailAddressesWorks($input, array $expected) {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->setNotificationEmailAddress($input);
 		$result = $this->fixture->_call('getNotificationEmailAddressesForSwift');
 		$this->assertSame($expected, $result);

@@ -39,6 +39,7 @@ final class Tx_DfTools_Utility_HttpUtility {
 	 * requests.
 	 *
 	 * @static
+	 * @throws RuntimeException if the current site url could not be determined
 	 * @param string $string
 	 * @return string
 	 */

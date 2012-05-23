@@ -227,14 +227,14 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	/**
 	 * @abstract
 	 * @param array $updatedRecord
-	 * @return void
+	 * @return void|array
 	 */
 	abstract protected function updateRecord(array $updatedRecord);
 
 	/**
 	 * @abstract
 	 * @param array $newRecord
-	 * @return void
+	 * @return void|array
 	 */
 	abstract protected function createRecord(array $newRecord);
 

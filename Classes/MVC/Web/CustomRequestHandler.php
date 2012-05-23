@@ -92,6 +92,7 @@ class Tx_DfTools_MVC_Web_CustomRequestHandler extends Tx_Extbase_MVC_Web_Abstrac
 	protected function isCacheable($controllerName, $actionName) {
 		$isCachable = TRUE;
 		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
+			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
 			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
 			$isCachable = $extensionService->isActionCacheable(NULL, NULL, $controllerName, $actionName);
 

@@ -44,7 +44,6 @@ class Tx_DfTools_Task_RedirectTestRealUrlImportTaskTest extends Tx_DfTools_ExtBa
 	public function setUp() {
 		parent::setUp();
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture = $this->getMockBuilder($this->buildAccessibleProxy('Tx_DfTools_Task_RedirectTestRealUrlImportTask'))
 			->setMethods(array('sendMail', 'getExtBaseConnector'))->disableOriginalConstructor()->getMock();
 		$this->fixture->expects($this->once())->method('getExtBaseConnector')

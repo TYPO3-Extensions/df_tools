@@ -136,7 +136,7 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 	 */
 	addRecord: function(record) {
 		if (this.useRowEditor) {
-			this.rowEditorPlugin.stopEditing();
+			this.rowEditorPlugin.stopEditing(false);
 		}
 
 		this.getStore().insert(0, record);
@@ -157,7 +157,7 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 	 */
 	deleteRecord: function(grid, rowIndex) {
 		if (this.useRowEditor) {
-			this.rowEditorPlugin.stopEditing();
+			this.rowEditorPlugin.stopEditing(false);
 		}
 
 		new TYPO3.Dialog.QuestionDialog({

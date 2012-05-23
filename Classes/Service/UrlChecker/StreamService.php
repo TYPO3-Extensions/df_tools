@@ -145,7 +145,7 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 			);
 			fclose($stream);
 
-		} catch (Exception $exception) {
+		} catch (RuntimeException $exception) {
 			if (is_resource($stream)) {
 				fclose($stream);
 			}

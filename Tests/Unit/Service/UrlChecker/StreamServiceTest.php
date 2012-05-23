@@ -144,8 +144,8 @@ class Tx_DfTools_Service_UrlChecker_StreamServiceTest extends Tx_Extbase_Tests_U
 			'FooBar'
 		);
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->setUrl('http://example.org');
+		/** @noinspection PhpUndefinedMethodInspection */
 		$url = $this->fixture->_call('getLastUrl', $headers);
 		$this->assertSame('http://example.org/FooBar/bla', $url);
 	}

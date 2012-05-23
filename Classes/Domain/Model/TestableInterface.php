@@ -38,7 +38,7 @@ interface Tx_DfTools_Domain_Model_TestableInterface {
 
 	/**
 	 * @abstract
-	 * @return void
+	 * @return string
 	 */
 	public function getTestMessage();
 }

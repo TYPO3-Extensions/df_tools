@@ -117,14 +117,11 @@ class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Contro
 	 * @return void
 	 */
 	public function updateActionUpdatesData() {
-		/** @var $category Tx_DfTools_Domain_Model_BackLinkTestCategory */
 		$backLinkTest = $this->getBackLinkTest();
-		$category = $this->getMockBuilder('Tx_DfTools_Domain_Model_BackLinkTestCategory')
-			->disableOriginalClone()->getMock();
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->repository->expects($this->once())->method('update')->with($backLinkTest);
-		$this->fixture->updateAction($backLinkTest, $category);
+		$this->fixture->updateAction($backLinkTest);
 	}
 
 	/**
