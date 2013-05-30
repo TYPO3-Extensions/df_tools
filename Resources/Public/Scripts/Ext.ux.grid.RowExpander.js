@@ -126,7 +126,6 @@ Ext.ux.grid.RowExpander = Ext.extend(Ext.util.Observable, {
 
 		view.enableRowBody = true;
 
-
 		grid.on('render', this.onRender, this);
 		grid.on('destroy', this.onDestroy, this);
 	},

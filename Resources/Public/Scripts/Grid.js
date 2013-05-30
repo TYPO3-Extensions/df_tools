@@ -74,7 +74,6 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 		this.groupActionsPlugin = this.getGroupActionsPlugin();
 
 		var defaultPlugins = [
-			new Ext.ux.plugins.FitToParent(),
 			this.groupActionsPlugin
 		];
 
@@ -90,7 +89,8 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 			border: false,
 			view: (configuration.view || this.getViewInstance(configuration.viewConfiguration)),
 			plugins: defaultPlugins,
-			useRowEditor: true
+			useRowEditor: true,
+			useFitToParent: true
 		}, configuration);
 
 		if (configuration.useRowEditor) {
@@ -98,7 +98,11 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 			configuration.plugins.push(this.rowEditorPlugin);
 		}
 
-		TYPO3.DfTools.Grid.superclass.constructor.call(this, configuration);
+		if (configuration.useFitToParent) {
+			configuration.plugins.push(new Ext.ux.plugins.FitToParent());
+		}
+
+		TYPO3.RsFetsy.Grid.superclass.constructor.call(this, configuration);
 	},
 
 	/**
@@ -206,6 +210,8 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 				if (Ext.isFunction(scope.fetchRowClass)) {
 					return scope.fetchRowClass.apply(scope, arguments);
 				}
+
+				return '';
 			},
 
 			emptyGroupText: TYPO3.lang['tx_dftools_common.emptyGroup'],

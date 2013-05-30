@@ -58,6 +58,16 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	}
 
 	/**
+	 * Inject a request hash service
+	 *
+	 * @param Tx_Extbase_Security_Channel_RequestHashService $requestHashService
+	 * @return void
+	 */
+	public function injectRequestHashService(Tx_Extbase_Security_Channel_RequestHashService $requestHashService) {
+		$this->requestHashService = $requestHashService;
+	}
+
+	/**
 	 * Initializes the object
 	 *
 	 * @return void
@@ -74,16 +84,6 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	}
 
 	/**
-	 * Inject a request hash service
-	 *
-	 * @param Tx_Extbase_Security_Channel_RequestHashService $requestHashService
-	 * @return void
-	 */
-	public function injectRequestHashService(Tx_Extbase_Security_Channel_RequestHashService $requestHashService) {
-		$this->requestHashService = $requestHashService;
-	}
-
-	/**
 	 * Returns the current parameter namespace
 	 *
 	 * @return string
@@ -93,15 +93,9 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 		$extensionName = $request->getControllerExtensionName();
 		$pluginName = $request->getPluginName();
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
 			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
 			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
-			$namespace = $extensionService->getPluginNamespace($extensionName, $pluginName);
-		} else {
-			$namespace = Tx_Extbase_Utility_Extension::getPluginNamespace($extensionName, $pluginName);
-		}
-
-		return $namespace;
+		return $extensionService->getPluginNamespace($extensionName, $pluginName);
 	}
 
 	/**

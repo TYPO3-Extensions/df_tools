@@ -22,7 +22,7 @@ if (TYPO3_MODE === 'BE') {
 		array(
 			'access' => 'user,group',
 			'icon' => 'EXT:df_tools/ext_icon.gif',
-			'labels' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tools.xml',
+			'labels' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tools.xlf',
 		)
 	);
 

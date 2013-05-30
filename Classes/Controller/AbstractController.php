@@ -52,15 +52,15 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	 * @return void
 	 */
 	public function errorAction() {
+		$this->clearCacheOnError();
+
 		$message = Tx_Extbase_Utility_Localization::translate(
 			'tx_dftools_common.generic',
 			'df_tools',
 			array(get_class($this), $this->actionMethodName)
 		);
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000  &&
-			$this->configurationManager->isFeatureEnabled('rewrittenPropertyMapper')
-		) {
+		if ($this->configurationManager->isFeatureEnabled('rewrittenPropertyMapper')) {
 			foreach ($this->arguments->getValidationResults()->getFlattenedErrors() as $errors) {
 				/** @var $error Tx_Extbase_Error_Error */
 				foreach ($errors as $error) {

@@ -39,6 +39,7 @@ abstract class Tx_DfTools_ViewHelpers_AbstractViewHelper extends Tx_Fluid_ViewHe
 		if (TYPO3_MODE === 'BE') {
 			$pageRenderer = $this->getDocInstance()->getPageRenderer();
 		} else {
+			/** @noinspection PhpUndefinedMethodInspection */
 			$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
 		}
 

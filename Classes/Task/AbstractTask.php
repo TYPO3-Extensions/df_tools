@@ -41,7 +41,7 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 	 * @return Tx_DfTools_Service_ExtBaseConnectorService
 	 */
 	protected function getExtBaseConnector() {
-			// this must be set for cronjobs or extbase will fail
+			// this must be set for CronJobs or ExtBase will fail
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
 		/** @var $extBaseConnector Tx_DfTools_Service_ExtBaseConnectorService */

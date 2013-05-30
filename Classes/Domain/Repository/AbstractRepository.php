@@ -62,6 +62,31 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 	}
 
 	/**
+	 * Adds a range limiter and a sorting information to the given query
+	 *
+	 * @param Tx_Extbase_Persistence_Query $query
+	 * @param int $offset
+	 * @param int $limit
+	 * @param array $sortingInformation
+	 * @return Tx_Extbase_Persistence_Query
+	 */
+	protected function addSortedAndRangeToQuery($query, $offset, $limit, array $sortingInformation) {
+		$query->setOffset(intval($offset));
+		$query->setLimit(intval($limit));
+
+		if (count($sortingInformation)) {
+			foreach ($sortingInformation as $field => $direction) {
+				$sortingInformation[$field] = ($direction ?
+					Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING :
+					Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING);
+			}
+			$query->setOrderings($sortingInformation);
+		}
+
+		return $query;
+	}
+
+	/**
 	 * Finds a range of records sorted by the given information's
 	 *
 	 * Note: The sortingInformation array consists of an undefined amount of
@@ -79,19 +104,7 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 	public function findSortedAndInRange($offset, $limit, array $sortingInformation) {
 		/** @var $query Tx_Extbase_Persistence_Query */
 		$query = $this->createQuery();
-		$query->setOffset(intval($offset));
-		$query->setLimit(intval($limit));
-
-		if (count($sortingInformation)) {
-			foreach ($sortingInformation as $field => $direction) {
-				$sortingInformation[$field] = ($direction ?
-					Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING :
-					Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING);
-			}
-			$query->setOrderings($sortingInformation);
-		}
-
-		return $query->execute();
+		return $this->addSortedAndRangeToQuery($query, $offset, $limit, $sortingInformation)->execute();
 	}
 }
 

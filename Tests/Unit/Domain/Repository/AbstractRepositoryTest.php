@@ -63,12 +63,10 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	}
 
 	/**
-	 * @return Tx_Extbase_Persistence_Query
+	 * @return Tx_Extbase_Persistence_Query|PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected function prepareFindSortedInRangeTests() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockQuery = $this->getMockBuilder('Tx_Extbase_Persistence_Query')
-			->setMethods(array('execute', 'setOrderings'))
 			->disableOriginalConstructor()
 			->getMock();
 		$this->fixture->expects($this->once())->method('createQuery')->will($this->returnValue($mockQuery));
@@ -80,7 +78,6 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function findSortedInRangeWithNonIntegerRangeThrowsNoException() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings');
 		$this->fixture->findSortedAndInRange('10', '20', array('field1' => TRUE));
@@ -91,7 +88,6 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function findSortedInRangeWithEmptySortingInformation() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->never())->method('setOrderings');
 		$this->fixture->findSortedAndInRange(0, 200, array());
@@ -102,7 +98,6 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function findSortedInRangeWithValidValues() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
 			->with(array('field1' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING));
@@ -114,7 +109,6 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function findSortedInRangeWithDescendingSortingDirection() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
 			->with(array('field1' => Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING));
@@ -126,7 +120,6 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function findSortedInRangeWithMultipleSorters() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
 			->with(array(

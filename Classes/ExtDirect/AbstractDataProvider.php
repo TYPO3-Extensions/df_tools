@@ -43,27 +43,37 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 */
 	public function __construct() {
 		if (TYPO3_MODE === 'FE' && !is_object($GLOBALS['TSFE'])) {
+			/** @noinspection PhpUnusedLocalVariableInspection */
+			global $TCA, $PAGES_TYPES, $FILEICONS; // because the include file inherits the local function scope (!)
+			require_once(TYPO3_tables_script ? PATH_typo3conf . TYPO3_tables_script : PATH_t3lib . 'stddb/tables.php');
+
 			$pageId = intval(t3lib_div::_GP('pageId'));
 			t3lib_div::_GETset(intval(t3lib_div::_GP('L')), 'L');
-			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $pageId, 0);
-			$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
-			$GLOBALS['TSFE']->getPageAndRootline();
-			$GLOBALS['TSFE']->initTemplate();
-			$GLOBALS['TSFE']->forceTemplateParsing = TRUE;
-			$GLOBALS['TSFE']->initFEuser();
-			$GLOBALS['TSFE']->initUserGroups();
-			$GLOBALS['TSFE']->getCompressedTCarray();
 
-			$GLOBALS['TSFE']->no_cache = TRUE;
-			$GLOBALS['TSFE']->tmpl->start($GLOBALS['TSFE']->rootLine);
-			$GLOBALS['TSFE']->no_cache = FALSE;
+			/** @var $tsfe tslib_fe */
+			$GLOBALS['TSFE'] = $tsfe = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $pageId, 0);
+			$tsfe->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
+			$tsfe->getPageAndRootline();
+			$tsfe->initTemplate();
 
-			$GLOBALS['TSFE']->getConfigArray();
-			$GLOBALS['TSFE']->settingLanguage();
-			$GLOBALS['TSFE']->newCObj();
+			$tsfe->forceTemplateParsing = TRUE;
+			$tsfe->getConfigArray();
+			$GLOBALS['LANG'] = t3lib_div::makeInstance('language');
+			/** @noinspection PhpUndefinedMethodInspection */
+			$GLOBALS['LANG']->init($GLOBALS['TSFE']->config['config']['language']);
+
+			$tsfe->initFEuser();
+			$tsfe->initUserGroups();
+			$tsfe->getCompressedTCarray();
+
+			$tsfe->no_cache = TRUE;
+			$tsfe->tmpl->start($GLOBALS['TSFE']->rootLine);
+			$tsfe->no_cache = FALSE;
+
+			$tsfe->settingLanguage();
+			$tsfe->newCObj();
 		}
 
-		/** @var $extBaseConnector Tx_DfTools_Service_ExtBaseConnectorService */
 		$key = 'tools_DfToolsTools';
 		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
 		$this->extBaseConnector->setExtensionKey('DfTools');
@@ -76,7 +86,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * @return bool
 	 */
 	public function isInFrontendMode() {
-		return TYPO3_MODE === 'FE';
+		return (TYPO3_MODE === 'FE');
 	}
 
 	/**
