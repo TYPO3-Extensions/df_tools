@@ -2,6 +2,7 @@
 <T3locallangExt>
 	<data type="array">
 		<languageKey index="de" type="array">
+			<label index="tx_dftools.disableAutoLinkSynchronizationFeature">Deaktiviere die automatische Link-Synchronisation (im Link-Checker genutzt; deaktiviert die TCEMain-Hooks)</label>
 			<label index="tx_dftools.excludedTableFields">Ausgeschlossene Tabellenfelder (nur Linkprüfer)</label>
 			<label index="tx_dftools.excludedTables">Ausgeschlossene Tabellen (nur Linkprüfer)</label>
 			<label index="tx_dftools.storagePid">Speicherort für Datensätze</label>

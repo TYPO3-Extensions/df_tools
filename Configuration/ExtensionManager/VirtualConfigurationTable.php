@@ -10,19 +10,19 @@ $TCA['tx_dftools_configuration'] = array(
 		'dividers2tabs' => TRUE,
 	),
 	'types' => array(
-		'0' => array(
-			'showitem' => 'storagePid,excludedTables,excludedTableFields',
+		0 => array(
+			'showitem' => 'storagePid,excludedTables,excludedTableFields,disableAutoLinkSynchronizationFeature',
 		),
 	),
 	'palettes' => array(
-		'0' => array(
+		0 => array(
 			'showitem' => ''
 		),
 	),
 	'columns' => array(
 		'storagePid' => array(
-			'label'   => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.storagePid',
-			'config'  => array(
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.storagePid',
+			'config' => array(
 				'type' => 'group',
 				'internal_type' => 'db',
 				'allowed' => 'pages',
@@ -33,24 +33,30 @@ $TCA['tx_dftools_configuration'] = array(
 			),
 		),
 		'excludedTables' => array(
-			'label'   => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTables',
-			'config'  => array(
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTables',
+			'config' => array(
 				'type' => 'select',
 				'itemsProcFunc' => 'EXT:df_tools/Configuration/ExtensionManager/Helper.php:tx_DfTools_ExtensionManager_Helper->getAllTables',
-				'minitems' => '0',
-				'maxitems' => '9999',
-				'size' => '6',
+				'minitems' => 0,
+				'maxitems' => 9999,
+				'size' => 6,
 			),
 		),
 		'excludedTableFields' => array(
-			'label'   => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTableFields',
-			'config'  => array(
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTableFields',
+			'config' => array(
 				'type' => 'select',
 				'itemsProcFunc' => 'EXT:df_tools/Configuration/ExtensionManager/Helper.php:tx_DfTools_ExtensionManager_Helper->getAllTableFields',
-				'minitems' => '0',
-				'maxitems' => '9999',
-				'size' => '6',
+				'minitems' => 0,
+				'maxitems' => 9999,
+				'size' => 6,
 			),
+		),
+		'disableAutoLinkSynchronizationFeature' => array(
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.disableAutoLinkSynchronizationFeature',
+			'config' => array(
+				'type' => 'check',
+			)
 		),
 	),
 );

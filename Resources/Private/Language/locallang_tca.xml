@@ -8,11 +8,13 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="tx_dftools.disableAutoLinkSynchronizationFeature">Disable the automatic link synchronization (used for the link check tool; disables the TCEMain hooks)</label>
 			<label index="tx_dftools.excludedTableFields">Exclude Table Fields (only linkchecker)</label>
 			<label index="tx_dftools.excludedTables">Excluded Tables (only linkchecker)</label>
 			<label index="tx_dftools.storagePid">Record Storage Page</label>
 			<label index="tx_dftools.urlCheckService">URL Check Service</label>
 		</languageKey>
+		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
 		<languageKey index="bs"></languageKey>
 		<languageKey index="bg"></languageKey>
