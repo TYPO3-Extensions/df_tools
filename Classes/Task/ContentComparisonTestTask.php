@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Task;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,7 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Scheduler task to execute the content comparison tests
@@ -29,7 +33,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Task_ContentComparisonTestTask extends Tx_DfTools_Task_AbstractTask {
+class ContentComparisonTestTask extends AbstractTask {
 	/**
 	 * Calls the ExtBase controller to execute the tests
 	 *
@@ -47,12 +51,13 @@ class Tx_DfTools_Task_ContentComparisonTestTask extends Tx_DfTools_Task_Abstract
 	 * @return void
 	 */
 	protected function sendNotificationEmail(array $failedRecords) {
+		/** @var LanguageService $language */
+		$language = $GLOBALS['LANG'];
 		$sLPrefix = 'LLL:EXT:df_tools/Resources/Private/Language/locallang.xml:';
 		$subject = 'tx_dftools_domain_model_contentcomparisontest.scheduler.mailSubject';
 		$message = 'tx_dftools_domain_model_contentcomparisontest.scheduler.mailBody';
-		$subject = $GLOBALS['LANG']->sL($sLPrefix . $subject);
-		$message = $GLOBALS['LANG']->sL($sLPrefix . $message) .
-			PHP_EOL . PHP_EOL;
+		$subject = $language->sL($sLPrefix . $subject);
+		$message = $language->sL($sLPrefix . $message) . PHP_EOL . PHP_EOL;
 
 		foreach ($failedRecords as $failedRecord) {
 			$message .= $failedRecord['testUrl'] . PHP_EOL;

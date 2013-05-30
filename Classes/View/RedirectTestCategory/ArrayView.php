@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\View\RedirectTestCategory;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,8 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\View\AbstractArrayView;
 
 /**
  * Custom View
@@ -29,7 +34,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_RedirectTestCategory_ArrayView extends Tx_DfTools_View_AbstractArrayView {
+class ArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -53,7 +58,7 @@ class Tx_DfTools_View_RedirectTestCategory_ArrayView extends Tx_DfTools_View_Abs
 	/**
 	 * Renders a redirect test into a plain array
 	 *
-	 * @param Tx_DfTools_Domain_Model_RedirectTestCategory $record
+	 * @param RedirectTestCategory $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {

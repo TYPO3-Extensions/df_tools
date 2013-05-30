@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,15 +26,24 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Dbal\Database\DatabaseConnection;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Extensionmanager\Utility\DatabaseUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Repository for Tx_DfTools_Domain_Model_RedirectTest
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Domain_Repository_AbstractRepository {
+class RedirectTestRepository extends AbstractRepository {
 	/**
-	 * @var Tx_Extbase_Persistence_Mapper_DataMapper
+	 * @var DataMapper
 	 */
 	protected $dataMapper;
 
@@ -44,17 +56,17 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Dom
 		parent::initializeObject();
 
 		$this->setDefaultOrderings(
-			array('category' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING)
+			array('category' => QueryInterface::ORDER_ASCENDING)
 		);
 	}
 
 	/**
 	 * Injects the DataMapper to map nodes to objects
 	 *
-	 * @param Tx_Extbase_Persistence_Mapper_DataMapper $dataMapper
+	 * @param DataMapper $dataMapper
 	 * @return void
 	 */
-	public function injectDataMapper(Tx_Extbase_Persistence_Mapper_DataMapper $dataMapper) {
+	public function injectDataMapper(DataMapper $dataMapper) {
 		$this->dataMapper = $dataMapper;
 	}
 
@@ -71,11 +83,13 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Dom
 	 * @param int $offset
 	 * @param int $limit
 	 * @param array $sortingInformation
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	public function findSortedAndInRangeByCategory($offset, $limit, array $sortingInformation) {
-		/** @var $pageSelect t3lib_pageSelect */
+		/** @var $pageSelect PageRepository */
 		$pageSelect = $this->getPageSelectInstance();
+		/** @var $dbConnection DatabaseConnection */
+		$dbConnection = $GLOBALS['TYPO3_DB'];
 		$categoryEnableFields = $pageSelect->enableFields('tx_dftools_domain_model_redirecttestcategory');
 		$enableFields = $pageSelect->enableFields('tx_dftools_domain_model_redirecttest');
 
@@ -85,25 +99,26 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepository extends Tx_DfTools_Dom
 			if ($field === 'categoryId') {
 				$orderings[0] = 'tx_dftools_domain_model_redirecttestcategory.category ' . $direction;
 			} else {
-				$class = 'Tx_DfTools_Domain_Model_RedirectTest';
+				$class = 'SGalinski\DfTools\Domain\Model\RedirectTest';
 				$field = $this->dataMapper->convertPropertyNameToColumnName($field, $class);
-				$field = $GLOBALS['TYPO3_DB']->fullQuoteStr($field, 'Tx_DfTools_Domain_Model_RedirectTest');
+				$field = $dbConnection->fullQuoteStr($field, 'SGalinski\DfTools\Domain\Model\RedirectTest');
 				$orderings[] = trim($field, '\'') . ' ' . $direction;
 			}
 		}
 
-		/** @var $query Tx_Extbase_Persistence_Query */
+		/** @var $query Query */
 		$query = $this->createQuery();
 		$query->statement(
 			'SELECT tx_dftools_domain_model_redirecttest.* ' .
 			'FROM tx_dftools_domain_model_redirecttest ' .
-				'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
-					'ON tx_dftools_domain_model_redirecttest.category = ' .
-						'tx_dftools_domain_model_redirecttestcategory.uid' .
-						$categoryEnableFields .
+			'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
+			'ON tx_dftools_domain_model_redirecttest.category = ' .
+			'tx_dftools_domain_model_redirecttestcategory.uid' .
+			$categoryEnableFields .
 			' WHERE 1=1' . $enableFields .
 			' ORDER BY ' . implode(', ', $orderings) .
-			' LIMIT ' . intval($offset) . ', ' . intval($limit));
+			' LIMIT ' . intval($offset) . ', ' . intval($limit)
+		);
 
 		return $query->execute();
 	}

@@ -5,16 +5,37 @@ if (!defined('TYPO3_MODE')) {
 }
 
 /** @var $TCA array */
-$TCA['tx_dftools_domain_model_backlinktest'] = array(
-	'ctrl' => $TCA['tx_dftools_domain_model_backlinktest']['ctrl'],
+$TCA['tx_dftools_domain_model_redirecttestcategory'] = array(
+	'ctrl' => array(
+		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttestcategory',
+		'label' => 'category',
+		'dividers2tabs' => true,
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'versioningWS' => 2,
+		'versioning_followPages' => TRUE,
+		'searchFields' =>  'category',
+		'origUid' => 't3_origuid',
+		'languageField' => 'sys_language_uid',
+		'transOrigPointerField' => 'l10n_parent',
+		'transOrigDiffSourceField' => 'l10n_diffsource',
+		'delete' => 'deleted',
+		'enablecolumns' => array(
+			'disabled' => 'hidden',
+			'starttime' => 'starttime',
+			'endtime' => 'endtime',
+		),
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('df_tools') .
+		'Resources/Public/Icons/tx_dftools_domain_model_redirecttestcategory.gif'
+	),
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
-			test_url, expected_url, test_result, test_message, comment, starttime, endtime',
+			category, starttime, endtime',
 	),
 	'types' => array(
 		'0' => array(
 			'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1,
-				test_url, expected_url, test_result, test_message, comment,
+				category,
 				--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,
 				starttime, endtime'
 		),
@@ -47,9 +68,9 @@ $TCA['tx_dftools_domain_model_backlinktest'] = array(
 				'items' => array(
 					array('', 0),
 				),
-				'foreign_table' => 'tx_dftools_domain_model_backlinktest',
-				'foreign_table_where' => 'AND tx_dftools_domain_model_backlinktest.pid=###CURRENT_PID### ' .
-					' AND tx_dftools_domain_model_backlinktest.sys_language_uid IN (-1,0)',
+				'foreign_table' => 'tx_dftools_domain_model_redirecttestcategory',
+				'foreign_table_where' => 'AND tx_dftools_domain_model_redirecttestcategory.pid=###CURRENT_PID### ' .
+					' AND tx_dftools_domain_model_redirecttestcategory.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l10n_diffsource' => array(
@@ -94,63 +115,15 @@ $TCA['tx_dftools_domain_model_backlinktest'] = array(
 				'default' => 0,
 			)
 		),
-		'test_url' => array(
+		'category' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.test_url',
+			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttestcategory.category',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
-				'eval' => 'trim,required'
-			),
-		),
-		'expected_url' => array(
-			'exclude' => 0,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.expected_url',
-			'config' => array(
-				'type' => 'input',
-				'size' => 30,
-				'eval' => 'trim,required'
-			),
-		),
-		'test_result' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.test_result',
-			'config' => array(
-				'type' => 'input',
-				'size' => 1,
-				'max' => 1,
-				'eval' => 'int',
-				'default' => 9,
-				'range' => array(
-					'upper' => 9,
-					'lower' => 0,
-				),
-				'readOnly' => TRUE,
-			),
-		),
-		'comment' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.comment',
-			'config' => array(
-				'type' => 'text',
-				'cols' => 40,
-				'rows' => 2,
-				'eval' => 'trim',
-				'readOnly' => TRUE,
-			),
-		),
-		'test_message' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest.test_message',
-			'config' => array(
-				'type' => 'text',
-				'cols' => 40,
-				'rows' => 2,
-				'eval' => 'trim',
-				'readOnly' => TRUE,
+				'eval' => 'trim,required,unique'
 			),
 		),
 	),
 );
-
 ?>

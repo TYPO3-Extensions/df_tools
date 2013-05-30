@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -23,6 +26,12 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Url Parser Service
  *
@@ -32,14 +41,14 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
+class UrlParserService implements SingletonInterface {
 	/**
-	 * @var Tx_DfTools_Service_TcaParserService
+	 * @var \SGalinski\DfTools\Service\TcaParserService
 	 */
 	protected $tcaParser = NULL;
 
 	/**
-	 * @var t3lib_pageSelect
+	 * @var \TYPO3\CMS\Frontend\Page\PageRepository
 	 */
 	protected $pageSelect = NULL;
 
@@ -47,21 +56,21 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	 * Returns an instance of t3lib_pageSelect to call the enableFields method
 	 * for self-made queries.
 	 *
-	 * @return t3lib_pageSelect
+	 * @return PageRepository
 	 */
 	protected function getPageSelectInstance() {
 		if ($this->pageSelect === NULL) {
-			$this->pageSelect = t3lib_div::makeInstance('t3lib_pageSelect');
+			$this->pageSelect = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
 		}
 
 		return $this->pageSelect;
 	}
 
 	/**
-	 * @param Tx_DfTools_Service_TcaParserService $tcaParser
+	 * @param TcaParserService $tcaParser
 	 * @return void
 	 */
-	public function injectTcaParser(Tx_DfTools_Service_TcaParserService $tcaParser) {
+	public function injectTcaParser(TcaParserService $tcaParser) {
 		$this->tcaParser = $tcaParser;
 	}
 
@@ -73,24 +82,24 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 	 * @return array
 	 */
 	public function fetchUrls(array $excludedTables = array(), array $excludedTableFields = array()) {
-		$tablesWithFields = Tx_DfTools_Utility_TcaUtility::getTextFields(
+		$tablesWithFields = TcaUtility::getTextFields(
 			$this->tcaParser,
 			$excludedTables,
 			$excludedTableFields
 		);
 
 		$urls = array();
-		foreach ((array)$tablesWithFields as $table => $fields) {
+		foreach ((array) $tablesWithFields as $table => $fields) {
 			$fetchedUrls = $this->fetchUrlsFromDatabase($table, $fields);
 			foreach ($fetchedUrls as $url => $data) {
-				$urls[$url] = array_merge((array)$urls[$url], $data);
+				$urls[$url] = array_merge((array) $urls[$url], $data);
 			}
 		}
 
 		if (isset($tablesWithFields['pages'])) {
 			$fetchedUrls = $this->fetchLinkCheckLinkType();
 			foreach ($fetchedUrls as $url => $data) {
-				$urls[$url] = array_merge((array)$urls[$url], $data);
+				$urls[$url] = array_merge((array) $urls[$url], $data);
 			}
 		}
 
@@ -116,8 +125,10 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 		$enableFields = $this->getPageSelectInstance()->enableFields(
 			$table, 1, array('starttime' => TRUE, 'fe_group' => TRUE)
 		);
+		/** @var $dbConnection DatabaseConnection */
+		$dbConnection = $GLOBALS['TYPO3_DB'];
 
-		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+		$rows = $dbConnection->exec_SELECTgetRows(
 			'uid, ' . implode(', ', $fields),
 			$table,
 			'(' . implode(' OR ', $whereClause) . ')' . $enableFields
@@ -217,10 +228,12 @@ class Tx_DfTools_Service_UrlParserService implements t3lib_Singleton {
 
 		$pageFilter = '';
 		if ($identities !== NULL) {
-			$pageFilter = ' AND uid IN (' . implode(', ', $identities) .  ')';
+			$pageFilter = ' AND uid IN (' . implode(', ', $identities) . ')';
 		}
+		/** @var $dbConnection DatabaseConnection */
+		$dbConnection = $GLOBALS['TYPO3_DB'];
 
-		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+		$rows = $dbConnection->exec_SELECTgetRows(
 			'uid, url, urltype',
 			'pages',
 			'doktype = 3 && urltype != 3 && urltype != 0' . $enableFields . $pageFilter

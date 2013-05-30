@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -23,44 +26,53 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+
 /**
  * LinkCheck Service
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
+class LinkCheckService implements SingletonInterface {
 	/**
 	 * Instance of the link check repository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $linkCheckRepository = NULL;
 
 	/**
 	 * Instance of the object manager
 	 *
-	 * @var Tx_ExtBase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager = NULL;
 
 	/**
 	 * Injects the redirect test category repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository
+	 * @param LinkCheckRepository $linkCheckRepository
 	 * @return void
 	 */
-	public function injectLinkCheckRepository(Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository) {
+	public function injectLinkCheckRepository(LinkCheckRepository $linkCheckRepository) {
 		$this->linkCheckRepository = $linkCheckRepository;
 	}
 
 	/**
 	 * Injects the object manager
 	 *
-	 * @param Tx_ExtBase_Object_ObjectManager $objectManager
+	 * @param ObjectManager $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(Tx_ExtBase_Object_ObjectManager $objectManager) {
+	public function injectObjectManager(ObjectManager $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -82,8 +94,8 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 			$excludedTableFields = explode(',', trim($excludedTableFieldsString, ','));
 		}
 
-		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
-		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
+		/** @var $urlParser UrlParserService */
+		$urlParser = $this->objectManager->get('SGalinski\DfTools\Service\UrlParserService');
 		return $urlParser->fetchUrls($excludedTables, $excludedTableFields);
 	}
 
@@ -97,8 +109,8 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	public function getUrlsFromSingleRecord($table, $identity) {
 		$record = $this->getRecordByTableAndId($table, $identity);
 
-		/** @var $urlParser Tx_DfTools_Service_UrlParserService */
-		$urlParser = $this->objectManager->get('Tx_DfTools_Service_UrlParserService');
+		/** @var $urlParser UrlParserService */
+		$urlParser = $this->objectManager->get('SGalinski\DfTools\Service\UrlParserService');
 
 		$rawUrls = array();
 		if ($table === 'pages') {
@@ -135,17 +147,17 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	 * @return array
 	 */
 	protected function getRecordByTableAndId($table, $identity) {
-		return t3lib_BEfunc::getRecord($table, $identity);
+		return BackendUtility::getRecord($table, $identity);
 	}
 
 	/**
 	 * Returns the records sets of a link check in a plain array structure
 	 *
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkCheck
+	 * @param LinkCheck $linkCheck
 	 * @return array
 	 */
-	protected function getRecordSetsAsPlainArray(Tx_DfTools_Domain_Model_LinkCheck $linkCheck) {
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+	protected function getRecordSetsAsPlainArray(LinkCheck $linkCheck) {
+		/** @var $recordSet RecordSet */
 		$recordSets = array();
 		foreach ($linkCheck->getRecordSets() as $recordSet) {
 			$index = $recordSet->getTableName() . $recordSet->getField() . $recordSet->getIdentifier();
@@ -166,7 +178,7 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	 * @return array
 	 */
 	protected function findExistingRawUrlsByTestUrls(array $urls) {
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkCheck LinkCheck */
 
 		$rawUrls = array();
 		foreach ($urls as $url) {
@@ -190,26 +202,28 @@ class Tx_DfTools_Service_LinkCheckService implements t3lib_Singleton {
 	 * @return array
 	 */
 	protected function findExistingRawUrlsByTableAndUid($table, $identity) {
-		$table = $GLOBALS['TYPO3_DB']->fullQuoteStr($table, 'tx_dftools_domain_model_linkcheck');
-		$queryResult = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
+		/** @var $dbConnection DatabaseConnection */
+		$dbConnection = $GLOBALS['TYPO3_DB'];
+		$table = $dbConnection->fullQuoteStr($table, 'tx_dftools_domain_model_linkcheck');
+		$queryResult = $dbConnection->exec_SELECT_mm_query(
 			'tx_dftools_domain_model_linkcheck.uid',
 			'tx_dftools_domain_model_linkcheck',
 			'tx_dftools_linkcheck_recordset_mm',
 			'tx_dftools_domain_model_recordset',
 			' AND tx_dftools_domain_model_recordset.table_name = ' . $table . ' AND ' .
-				'tx_dftools_domain_model_recordset.identifier = ' . intval($identity)
+			'tx_dftools_domain_model_recordset.identifier = ' . intval($identity)
 		);
 
 		$rawUrls = array();
-		if (!$GLOBALS['TYPO3_DB']->sql_error()) {
+		if (!$dbConnection->sql_error()) {
 			$linkCheckIds = array();
-			while (($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($queryResult))) {
+			while (($record = $dbConnection->sql_fetch_assoc($queryResult))) {
 				$linkCheckIds[] = $record['uid'];
 			}
-			$GLOBALS['TYPO3_DB']->sql_free_result($queryResult);
+			$dbConnection->sql_free_result($queryResult);
 
 			if (count($linkCheckIds)) {
-				/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+				/** @var $linkCheck LinkCheck */
 				$linkChecks = $this->linkCheckRepository->findInListByIdentity($linkCheckIds);
 				foreach ($linkChecks as $linkCheck) {
 					$url = $linkCheck->getTestUrl();

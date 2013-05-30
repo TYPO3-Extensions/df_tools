@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,8 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Backend\Utility\IconUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * View helper to add the df_tools inline settings for the access via javascript
@@ -33,7 +38,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ViewHelpers_AddJavaScriptSettingsViewHelper extends Tx_DfTools_ViewHelpers_AbstractViewHelper {
+class AddJavaScriptSettingsViewHelper extends AbstractViewHelper {
 	/**
 	 * Adds javascript inline settings
 	 *
@@ -42,24 +47,24 @@ class Tx_DfTools_ViewHelpers_AddJavaScriptSettingsViewHelper extends Tx_DfTools_
 	public function render() {
 		$settings = array(
 			'Sprites' => array(
-				'create' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-add'),
-				'destroy' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-delete'),
-				'edit' => t3lib_iconWorks::getSpriteIconClasses('actions-document-open'),
-				'run' => t3lib_iconWorks::getSpriteIconClasses('extensions-df_tools-run'),
-				'refresh' => t3lib_iconWorks::getSpriteIconClasses('actions-system-refresh'),
-				'error' => t3lib_iconWorks::getSpriteIconClasses('status-dialog-error'),
-				'warning' => t3lib_iconWorks::getSpriteIconClasses('status-dialog-warning'),
-				'information' => t3lib_iconWorks::getSpriteIconClasses('status-dialog-information'),
-				'unknown' => t3lib_iconWorks::getSpriteIconClasses('actions-system-help-open'),
-				'ok' => t3lib_iconWorks::getSpriteIconClasses('status-dialog-ok'),
-				'hide' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-hide'),
-				'unhide' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-unhide'),
-				'showPage' => t3lib_iconWorks::getSpriteIconClasses('actions-document-view'),
-				'comment' => t3lib_iconWorks::getSpriteIconClasses('actions-edit-localize-status-low'),
+				'create' => IconUtility::getSpriteIconClasses('actions-edit-add'),
+				'destroy' => IconUtility::getSpriteIconClasses('actions-edit-delete'),
+				'edit' => IconUtility::getSpriteIconClasses('actions-document-open'),
+				'run' => IconUtility::getSpriteIconClasses('extensions-df_tools-run'),
+				'refresh' => IconUtility::getSpriteIconClasses('actions-system-refresh'),
+				'error' => IconUtility::getSpriteIconClasses('status-dialog-error'),
+				'warning' => IconUtility::getSpriteIconClasses('status-dialog-warning'),
+				'information' => IconUtility::getSpriteIconClasses('status-dialog-information'),
+				'unknown' => IconUtility::getSpriteIconClasses('actions-system-help-open'),
+				'ok' => IconUtility::getSpriteIconClasses('status-dialog-ok'),
+				'hide' => IconUtility::getSpriteIconClasses('actions-edit-hide'),
+				'unhide' => IconUtility::getSpriteIconClasses('actions-edit-unhide'),
+				'showPage' => IconUtility::getSpriteIconClasses('actions-document-view'),
+				'comment' => IconUtility::getSpriteIconClasses('actions-edit-localize-status-low'),
 			),
 			'Settings' => array(
-				'destroyWindowFile' => '../' . t3lib_extMgm::siteRelPath('df_tools') .
-					'/Resources/Public/Templates/destroyWindow.html',
+				'destroyWindowFile' => '../' . ExtensionManagementUtility::siteRelPath('df_tools') .
+				'/Resources/Public/Templates/destroyWindow.html',
 			),
 		);
 

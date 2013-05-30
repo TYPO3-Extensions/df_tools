@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\View\RecordSet;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,10 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\View\AbstractArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Custom View
@@ -29,7 +36,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_RecordSet_ArrayView extends Tx_DfTools_View_AbstractArrayView {
+class ArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -45,18 +52,19 @@ class Tx_DfTools_View_RecordSet_ArrayView extends Tx_DfTools_View_AbstractArrayV
 	 * Note: Access this data by using the following code:
 	 * list($table, $field) = $this->getReadableTableAndFieldName($recordSet);
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSet
+	 * @param RecordSet $recordSet
 	 * @return array
 	 */
-	protected function getReadableTableAndFieldName(Tx_DfTools_Domain_Model_RecordSet $recordSet) {
+	protected function getReadableTableAndFieldName(RecordSet $recordSet) {
 		$table = $recordSet->getTableName();
-		t3lib_div::loadTCA($table);
 
+		/** @var LanguageService $language */
+		$language = $GLOBALS['LANG'];
 		$label = $GLOBALS['TCA'][$table]['ctrl']['title'];
-		$humanReadableTable = $GLOBALS['LANG']->sL($label);
+		$humanReadableTable = $language->sL($label);
 
 		$label = $GLOBALS['TCA'][$table]['columns'][$recordSet->getField()]['label'];
-		$humanReadableField = $GLOBALS['LANG']->sL($label);
+		$humanReadableField = $language->sL($label);
 
 		return array($humanReadableTable, $humanReadableField);
 	}
@@ -64,7 +72,7 @@ class Tx_DfTools_View_RecordSet_ArrayView extends Tx_DfTools_View_AbstractArrayV
 	/**
 	 * Renders a redirect test into a plain array
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $record
+	 * @param RecordSet $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {

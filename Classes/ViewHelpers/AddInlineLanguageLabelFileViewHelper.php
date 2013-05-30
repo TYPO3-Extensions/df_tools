@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,7 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * View helper to add languages labels for the usage on the client side with javascript
@@ -33,7 +37,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ViewHelpers_AddInlineLanguageLabelFileViewHelper extends Tx_DfTools_ViewHelpers_AbstractViewHelper {
+class AddInlineLanguageLabelFileViewHelper extends AbstractViewHelper {
 	/**
 	 * Adds the language labels as a JSON array
 	 *
@@ -46,7 +50,7 @@ class Tx_DfTools_ViewHelpers_AddInlineLanguageLabelFileViewHelper extends Tx_DfT
 			$extensionKey = $this->controllerContext->getRequest()->getControllerExtensionName();
 		}
 
-		$file = 'EXT:' . t3lib_div::camelCaseToLowerCaseUnderscored($extensionKey) . '/Resources/' . $file;
+		$file = 'EXT:' . GeneralUtility::camelCaseToLowerCaseUnderscored($extensionKey) . '/Resources/' . $file;
 		$this->getPageRenderer()->addInlineLanguageLabelFile($file);
 	}
 }

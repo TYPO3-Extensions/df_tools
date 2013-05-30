@@ -1,2 +1,11 @@
-# cat=basic; type=user[EXT:df_tools/Configuration/ExtensionManager/FlexForm.php:tx_DfTools_ExtensionManager_FlexForm->display]; label=
-configuration =
+# cat=basic; type=int; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.storagePid
+storagePid =
+
+# cat=basic; type=string; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTables
+excludedTables = tx_dftools_domain_model_redirecttest,tx_dftools_domain_model_linkcheck,tx_dftools_domain_model_contentcomparisontest,tx_dftools_domain_model_backlinktest
+
+# cat=basic; type=string; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTableFields
+excludedTableFields =
+
+# cat=basic; type=bool; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.disableAutoLinkSynchronizationFeature
+disableAutoLinkSynchronizationFeature

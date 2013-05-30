@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\View\ContentComparisonTest;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,10 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\View\AbstractArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Custom View
@@ -29,7 +36,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_ContentComparisonTest_ArrayView extends Tx_DfTools_View_AbstractArrayView {
+class ArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -59,7 +66,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayView extends Tx_DfTools_View_Ab
 	/**
 	 * Renders a redirect test into a plain array
 	 *
-	 * @param Tx_DfTools_Domain_Model_ContentComparisonTest $record
+	 * @param ContentComparisonTest $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {
@@ -67,10 +74,10 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayView extends Tx_DfTools_View_Ab
 			'__identity' => intval($record->getUid()),
 			'testUrl' => htmlspecialchars($record->getTestUrl()),
 			'compareUrl' => htmlspecialchars($record->getCompareUrl()),
-			'difference' => t3lib_div::removeXSS($record->getDifference()),
+			'difference' => GeneralUtility::removeXSS($record->getDifference()),
 			'testResult' => intval($record->getTestResult()),
 			'testMessage' => htmlspecialchars(
-				Tx_DfTools_Utility_LocalizationUtility::localizeParameterDrivenString(
+				LocalizationUtility::localizeParameterDrivenString(
 					$record->getTestMessage(), 'df_tools'
 				)
 			),

@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -23,6 +26,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * TCA Parser Service
  *
@@ -31,7 +37,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
+class TcaParserService implements SingletonInterface {
 	/**
 	 * List of allowed types
 	 *
@@ -53,7 +59,7 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 	 *
 	 * - All tables: t3ver_label
 	 * - Specific table: tt_content<bodytext>
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $excludedFields = array();
@@ -153,7 +159,7 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 		}
 
 		$fields = array();
-		foreach ($GLOBALS['TCA'] as  $table => $_) {
+		foreach ($GLOBALS['TCA'] as $table => $_) {
 			if (in_array($table, $this->excludedTables)) {
 				continue;
 			}
@@ -209,7 +215,6 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 	 * @return array
 	 */
 	protected function getFieldsFromTcaTable($table, $allowedTypes, $excludedEvals, $excludedFields, $callback = NULL) {
-		t3lib_div::loadTCA($table);
 		if (!is_array($GLOBALS['TCA'][$table]['columns']) || !count($allowedTypes)) {
 			return array();
 		}
@@ -244,7 +249,7 @@ class Tx_DfTools_Service_TcaParserService implements t3lib_Singleton {
 	 */
 	public function getAllTables() {
 		$tables = array();
-		foreach ($GLOBALS['TCA'] as  $table => $_) {
+		foreach ($GLOBALS['TCA'] as $table => $_) {
 			$tables[] = $table;
 		}
 

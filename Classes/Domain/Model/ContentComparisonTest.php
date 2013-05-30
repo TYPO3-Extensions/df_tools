@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,22 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\CompressorUtility;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use TYPO3\CMS\Core\Utility\DiffUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
  * URL Set For A Content Comparison
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObject_AbstractEntity implements Tx_DfTools_Domain_Model_TestableInterface {
+class ContentComparisonTest extends AbstractEntity implements TestableInterface {
 	/**
 	 * Test url
 	 *
@@ -73,7 +85,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @validate NumberRange(startRange = 0, endRange = 9)
 	 * @var int
 	 */
-	protected $testResult = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED;
+	protected $testResult = AbstractService::SEVERITY_UNTESTED;
 
 	/**
 	 * Test Message
@@ -82,15 +94,6 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @var string
 	 */
 	protected $testMessage = '';
-
-	/**
-	 * Just an empty constructor that is needed by the property mapper
-	 */
-	public function __construct() {
-		if (is_callable('parent::__construct')) {
-			parent::__construct();
-		}
-	}
 
 	/**
 	 * Setter for testUrl
@@ -137,7 +140,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function setCompareContent($compareContent) {
-		$this->compareContent = Tx_DfTools_Utility_CompressorUtility::compressContent($compareContent);
+		$this->compareContent = CompressorUtility::compressContent($compareContent);
 	}
 
 	/**
@@ -146,7 +149,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return string
 	 */
 	public function getCompareContent() {
-		return Tx_DfTools_Utility_CompressorUtility::decompressContent($this->compareContent);
+		return CompressorUtility::decompressContent($this->compareContent);
 	}
 
 	/**
@@ -156,7 +159,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function setTestContent($testContent) {
-		$this->testContent = Tx_DfTools_Utility_CompressorUtility::compressContent($testContent);
+		$this->testContent = CompressorUtility::compressContent($testContent);
 	}
 
 	/**
@@ -165,7 +168,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return string
 	 */
 	public function getTestContent() {
-		return Tx_DfTools_Utility_CompressorUtility::decompressContent($this->testContent);
+		return CompressorUtility::decompressContent($this->testContent);
 	}
 
 	/**
@@ -175,7 +178,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	public function setDifference($difference) {
-		$this->difference = Tx_DfTools_Utility_CompressorUtility::compressContent($difference);
+		$this->difference = CompressorUtility::compressContent($difference);
 	}
 
 	/**
@@ -184,7 +187,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return string
 	 */
 	public function getDifference() {
-		return Tx_DfTools_Utility_CompressorUtility::decompressContent($this->difference);
+		return CompressorUtility::decompressContent($this->difference);
 	}
 
 	/**
@@ -243,7 +246,6 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 		);
 	}
 
-
 	/**
 	 * Checks the differences of the saved contents inside the content comparison test
 	 * and updates the instance accordingly
@@ -253,11 +255,11 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * @return void
 	 */
 	protected function checkDifferences($compareContent, $testContent) {
-		/** @var $diffRenderer t3lib_diff */
-		$diffRenderer = t3lib_div::makeInstance('t3lib_diff');
+		/** @var $diffRenderer DiffUtility */
+		$diffRenderer = GeneralUtility::makeInstance('TYPO3\CMS\Core\Utility\DiffUtility');
 
-		$testContentParts = Tx_DfTools_Utility_HtmlUtility::getTypo3SearchBlocksFromContent($testContent);
-		$compareContentParts = Tx_DfTools_Utility_HtmlUtility::getTypo3SearchBlocksFromContent($compareContent);
+		$testContentParts = HtmlUtility::getTypo3SearchBlocksFromContent($testContent);
+		$compareContentParts = HtmlUtility::getTypo3SearchBlocksFromContent($compareContent);
 
 		$differences = array();
 		$count = count($testContentParts);
@@ -272,10 +274,10 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 		if (count($differences)) {
 			$message = 'tx_dftools_domain_model_contentcomparisontest.test.contentMismatch';
 			$diff = '<p class="diff">' . implode(' </p><p class="diff">', $differences) . '</p>';
-			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR);
+			$this->setTestResult(AbstractService::SEVERITY_ERROR);
 		} else {
 			$message = $diff = '';
-			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK);
+			$this->setTestResult(AbstractService::SEVERITY_OK);
 		}
 
 		$this->setTestMessage($message);
@@ -286,17 +288,17 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	 * Returns the url test report or NULL if the http code was invalid (not in [200, 301 or 302])
 	 *
 	 * @param string $url
-	 * @param Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService
+	 * @param AbstractService $urlCheckerService
 	 * @return array|NULL
 	 */
-	protected function resolveUrl($url, Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService) {
+	protected function resolveUrl($url, AbstractService $urlCheckerService) {
 		$report = $urlCheckerService->setUrl($url)->resolveURL();
 		if (!in_array($report['http_code'], array(200, 301, 302))) {
-			$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+			$message = LocalizationUtility::createLocalizableParameterDrivenString(
 				'tx_dftools_domain_model_contentcomparisontest.test.httpCodeMismatch',
 				array('[200, 301, 302]', $report['http_code'])
 			);
-			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR);
+			$this->setTestResult(AbstractService::SEVERITY_ERROR);
 			$this->setTestMessage($message);
 			$report = NULL;
 		}
@@ -307,12 +309,12 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	/**
 	 * Tests and evaluates the model
 	 *
-	 * @param Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService
+	 * @param AbstractService $urlCheckerService
 	 * @return void
 	 */
-	public function test(Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService) {
-		$testUrl = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($this->getTestUrl());
-		$compareUrl = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($this->getCompareUrl());
+	public function test(AbstractService $urlCheckerService) {
+		$testUrl = HttpUtility::prefixStringWithCurrentHost($this->getTestUrl());
+		$compareUrl = HttpUtility::prefixStringWithCurrentHost($this->getCompareUrl());
 
 		try {
 			$compareUrlReport = $this->resolveUrl($compareUrl, $urlCheckerService);
@@ -338,8 +340,8 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 
 			$this->checkDifferences($compareUrlReport['content'], $testContent);
 
-		} catch (Exception $exception) {
-			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+		} catch (\Exception $exception) {
+			$this->setTestResult(AbstractService::SEVERITY_EXCEPTION);
 			$this->setTestMessage($exception->getMessage());
 			$this->setDifference('');
 		}
@@ -348,18 +350,18 @@ class Tx_DfTools_Domain_Model_ContentComparisonTest extends Tx_Extbase_DomainObj
 	/**
 	 * Updates the test content of the test url
 	 *
-	 * @param Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService
+	 * @param AbstractService $urlCheckerService
 	 * @return void
 	 */
-	public function updateTestContent(Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService) {
-		$testUrl = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($this->getTestUrl());
+	public function updateTestContent(AbstractService $urlCheckerService) {
+		$testUrl = HttpUtility::prefixStringWithCurrentHost($this->getTestUrl());
 
 		try {
 			$report = $urlCheckerService->setUrl($testUrl)->resolveURL();
 			$this->setTestContent($report['content']);
 
-		} catch (Exception $exception) {
-			$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+		} catch (\Exception $exception) {
+			$this->setTestResult(AbstractService::SEVERITY_EXCEPTION);
 			$this->setTestMessage($exception->getMessage());
 			$this->setDifference('');
 		}

@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -23,61 +26,72 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+
 /**
  * RealUrl Import Service
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_RealUrlImportService implements t3lib_Singleton {
+class RealUrlImportService implements SingletonInterface {
 	/**
 	 * Instance of the redirect test repository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
 	 */
 	protected $redirectTestRepository = NULL;
 
 	/**
 	 * Instance of the redirect test category repository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $redirectTestCategoryRepository = NULL;
 
 	/**
 	 * Instance of the object manager
 	 *
-	 * @var Tx_ExtBase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager = NULL;
 
 	/**
 	 * Injects the redirect test repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_RedirectTestRepository $redirectTestRepository
+	 * @param RedirectTestRepository $redirectTestRepository
 	 * @return void
 	 */
-	public function injectRedirectTestRepository(Tx_DfTools_Domain_Repository_RedirectTestRepository $redirectTestRepository) {
+	public function injectRedirectTestRepository(RedirectTestRepository $redirectTestRepository) {
 		$this->redirectTestRepository = $redirectTestRepository;
 	}
 
 	/**
 	 * Injects the redirect test category repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository $redirectTestCategoryRepository
+	 * @param RedirectTestCategoryRepository $redirectTestCategoryRepository
 	 * @return void
 	 */
-	public function injectRedirectTestCategoryRepository(Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository $redirectTestCategoryRepository) {
+	public function injectRedirectTestCategoryRepository(
+		RedirectTestCategoryRepository $redirectTestCategoryRepository
+	) {
 		$this->redirectTestCategoryRepository = $redirectTestCategoryRepository;
 	}
 
 	/**
 	 * Injects the object manager
 	 *
-	 * @param Tx_ExtBase_Object_ObjectManager $objectManager
+	 * @param ObjectManager $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(Tx_ExtBase_Object_ObjectManager $objectManager) {
+	public function injectObjectManager(ObjectManager $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -87,14 +101,16 @@ class Tx_DfTools_Service_RealUrlImportService implements t3lib_Singleton {
 	 * @return array
 	 */
 	protected function getRealUrlRedirects() {
-		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('url, destination', 'tx_realurl_redirects');
+		/** @var DatabaseConnection $db */
+		$db = $GLOBALS['TYPO3_DB'];
+		return $db->exec_SELECTgetRows('url, destination', 'tx_realurl_redirects', '');
 	}
 
 	/**
 	 * Returns the category instance if one exists for the given category field value
 	 *
 	 * @param $category
-	 * @return Tx_DfTools_Domain_Model_RedirectTestCategory|NULL
+	 * @return RedirectTestCategory|NULL
 	 */
 	protected function getCategoryByCategoryField($category) {
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -105,15 +121,15 @@ class Tx_DfTools_Service_RealUrlImportService implements t3lib_Singleton {
 	 * Returns the import category for the redirect tests with the name "RealUrl"
 	 *
 	 * Note: If a category with the same name already exists, then the method
-	 * doesn't creates a new one.
+	 * does not creates a new one.
 	 *
-	 * @return Tx_DfTools_Domain_Model_RedirectTestCategory
+	 * @return RedirectTestCategory
 	 */
 	protected function getRedirectTestCategory() {
 		$category = $this->getCategoryByCategoryField('RealUrl');
 		if ($category === NULL) {
-			/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
-			$category = $this->objectManager->create('Tx_DfTools_Domain_Model_RedirectTestCategory');
+			/** @var $category RedirectTestCategory */
+			$category = $this->objectManager->get('SGalinski\DfTools\Domain\Model\RedirectTestCategory');
 			$category->setCategory('RealUrl');
 			$this->redirectTestCategoryRepository->add($category);
 		}
@@ -161,8 +177,8 @@ class Tx_DfTools_Service_RealUrlImportService implements t3lib_Singleton {
 		foreach ($records as $record) {
 			$url = $this->prepareUrl($record['url']);
 			if (!$this->doesRedirectTestWithUrlAlreadyExists($url)) {
-				/** @var $redirectTest Tx_DfTools_Domain_Model_RedirectTest */
-				$redirectTest = $this->objectManager->create('Tx_DfTools_Domain_Model_RedirectTest');
+				/** @var $redirectTest RedirectTest */
+				$redirectTest = $this->objectManager->get('SGalinski\DfTools\Domain\Model\RedirectTest');
 				$redirectTest->setCategory($category);
 				$redirectTest->setTestUrl($url);
 				$redirectTest->setExpectedUrl($this->prepareUrl($record['destination']));

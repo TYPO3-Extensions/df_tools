@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,22 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\TestableInterface;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
 /**
  * Abstract Controller
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_Controller_ActionController {
+abstract class AbstractController extends ActionController {
 	/**
 	 * @var array
 	 */
@@ -48,45 +60,12 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	/**
 	 * Error Handler
 	 *
-	 * @throws RuntimeException
+	 * @throws \RuntimeException
 	 * @return void
 	 */
 	public function errorAction() {
-		$this->clearCacheOnError();
-
-		$message = Tx_Extbase_Utility_Localization::translate(
-			'tx_dftools_common.generic',
-			'df_tools',
-			array(get_class($this), $this->actionMethodName)
-		);
-
-		if ($this->configurationManager->isFeatureEnabled('rewrittenPropertyMapper')) {
-			foreach ($this->arguments->getValidationResults()->getFlattenedErrors() as $errors) {
-				/** @var $error Tx_Extbase_Error_Error */
-				foreach ($errors as $error) {
-					$message .= '<strong>' .
-						Tx_Extbase_Utility_Localization::translate('tx_dftools_common.error', 'df_tools') .
-						':</strong>   ' . $error->getMessage() . '<br />';
-				}
-			}
-
-		} else {
-			/** @var $error Tx_Extbase_Error_Error */
-			foreach ((array) $this->argumentsMappingResults->getErrors() as $error) {
-				$message .= '<strong>' .
-					Tx_Extbase_Utility_Localization::translate('tx_dftools_common.error', 'df_tools') .
-					':</strong>   ' . $error->getMessage() . '<br />';
-			}
-
-			/** @var $warning Tx_Extbase_Error_Error */
-			foreach ((array) $this->argumentsMappingResults->getWarnings() as $warning) {
-				$message .= '<strong>' .
-					Tx_Extbase_Utility_Localization::translate('tx_dftools_common.warning', 'df_tools') .
-					':</strong> ' . $warning . '<br />';
-			}
-		}
-
-		throw new RuntimeException($message);
+		$message = parent::errorAction();
+		throw new \RuntimeException($message);
 	}
 
 	/**
@@ -96,15 +75,17 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	 * @return void
 	 */
 	public function setLastCalledControllerActionPair() {
-		if (!$GLOBALS['BE_USER']) {
+		/** @var BackendUserAuthentication $beUser */
+		$beUser = $GLOBALS['BE_USER'];
+		if (!$beUser) {
 			return;
 		}
 
-		$GLOBALS['BE_USER']->uc['DfToolsState']['LastActionControllerPair'] = array(
+		$beUser->uc['DfToolsState']['LastActionControllerPair'] = array(
 			$this->request->getControllerActionName(),
 			$this->request->getControllerName()
 		);
-		$GLOBALS['BE_USER']->writeUC($GLOBALS['BE_USER']->uc);
+		$beUser->writeUC($beUser->uc);
 	}
 
 	/**
@@ -114,12 +95,15 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	 * @return void
 	 */
 	public function resetLastCalledControllerActionPair() {
-		if (!$GLOBALS['BE_USER']) {
+		/** @var BackendUserAuthentication $beUser */
+		$beUser = $GLOBALS['BE_USER'];
+
+		if (!$beUser) {
 			return;
 		}
 
-		$GLOBALS['BE_USER']->uc['DfToolsState']['LastActionControllerPair'] = array();
-		$GLOBALS['BE_USER']->writeUC($GLOBALS['BE_USER']->uc);
+		$beUser->uc['DfToolsState']['LastActionControllerPair'] = array();
+		$beUser->writeUC($GLOBALS['BE_USER']->uc);
 	}
 
 	/**
@@ -157,29 +141,29 @@ abstract class Tx_DfTools_Controller_AbstractController extends Tx_Extbase_MVC_C
 	/**
 	 * Checks the test results and throws different kinds of exceptions if required.
 	 *
-	 * @throws RuntimeException if an exceptional error happened while the test
-	 * @param Tx_DfTools_Domain_Model_TestableInterface $record
+	 * @throws \RuntimeException if an exceptional error happened while the test
+	 * @param TestableInterface $record
 	 * @return void
 	 */
-	protected function handleExceptionalTest(Tx_DfTools_Domain_Model_TestableInterface $record) {
-		if ($record->getTestResult() === Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION) {
-			/** @var $persistenceManager Tx_Extbase_Persistence_Manager */
-			$persistenceManager = $this->objectManager->get('Tx_Extbase_Persistence_Manager');
+	protected function handleExceptionalTest(TestableInterface $record) {
+		if ($record->getTestResult() === AbstractService::SEVERITY_EXCEPTION) {
+			/** @var $persistenceManager PersistenceManager */
+			$persistenceManager = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
 			$persistenceManager->persistAll();
 
 			$message = $record->getTestMessage();
-			throw new RuntimeException($message, Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+			throw new \RuntimeException($message, AbstractService::SEVERITY_EXCEPTION);
 		}
 	}
 
 	/**
 	 * Returns an url checker instance
 	 *
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @return AbstractService
 	 */
 	protected function getUrlCheckerService() {
-		/** @var $factory Tx_DfTools_Service_UrlChecker_Factory */
-		$factory = $this->objectManager->get('Tx_DfTools_Service_UrlChecker_Factory');
+		/** @var $factory Factory */
+		$factory = $this->objectManager->get('SGalinski\DfTools\Service\UrlChecker\Factory');
 		return $factory->get();
 	}
 }

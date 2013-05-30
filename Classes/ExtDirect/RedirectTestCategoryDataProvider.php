@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -23,21 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * ExtDirect Data Provider For The Redirect Test Categories
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ExtDirect_RedirectTestCategoryDataProvider extends Tx_DfTools_ExtDirect_AbstractDataProvider {
+class RedirectTestCategoryDataProvider extends AbstractDataProvider {
 	/**
 	 * Returns all categories
 	 *
-	 * @param stdClass $data
+	 * @param \stdClass $data
 	 * @return array
 	 */
 	public function read($data) {
-		$data = (array)$data;
+		$data = (array) $data;
 		$parameters = array(
 			'filterString' => $data['query'],
 		);
@@ -75,7 +80,7 @@ class Tx_DfTools_ExtDirect_RedirectTestCategoryDataProvider extends Tx_DfTools_E
 			$success = TRUE;
 			$message = '';
 			$this->extBaseConnector->runControllerAction('RedirectTestCategory', 'deleteUnusedCategories');
-		} catch (Exception $exception) {
+		} catch (\Exception $exception) {
 			$success = FALSE;
 			$message = $exception->getMessage();
 		}

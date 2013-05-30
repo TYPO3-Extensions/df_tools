@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Service;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,10 +26,16 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Core\Bootstrap;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+
 /**
  * Utility class to simplify the execution of extbase actions from external sources (e.g. from Ext.Direct)
  */
-class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
+class ExtBaseConnectorService implements SingletonInterface {
 	/**
 	 * Extension Key
 	 *
@@ -44,14 +53,14 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	/**
 	 * ExtBase Bootstrap Instance
 	 *
-	 * @var Tx_Extbase_Core_Bootstrap
+	 * @var \TYPO3\CMS\Extbase\Core\Bootstrap
 	 */
 	protected $bootStrap = NULL;
 
 	/**
 	 * Object Manager
 	 *
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager = NULL;
 
@@ -59,20 +68,20 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 * Initializes the instance
 	 */
 	public function __construct() {
-		$this->objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+		$this->objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 
-		/** @var $bootStrap Tx_Extbase_Core_Bootstrap */
-		$bootStrap = $this->objectManager->create('Tx_Extbase_Core_Bootstrap');
+		/** @var $bootStrap Bootstrap */
+		$bootStrap = $this->objectManager->create('TYPO3\CMS\Extbase\Core\Bootstrap');
 		$this->injectBootstrap($bootStrap);
 	}
 
 	/**
 	 * Initialize the bootstrap
 	 *
-	 * @param Tx_Extbase_Core_Bootstrap $bootStrap
+	 * @param Bootstrap $bootStrap
 	 * @return void
 	 */
-	public function injectBootStrap(Tx_Extbase_Core_Bootstrap $bootStrap) {
+	public function injectBootStrap(Bootstrap $bootStrap) {
 		$this->bootStrap = $bootStrap;
 	}
 
@@ -121,8 +130,8 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 * @return void
 	 */
 	public function setParameters(array $parameters) {
-		/** @var $extensionService Tx_Extbase_Service_ExtensionService */
-		$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
+		/** @var $extensionService ExtensionService */
+		$extensionService = $this->objectManager->get('TYPO3\CMS\Extbase\Service\ExtensionService');
 		$parameterNamespace = $extensionService->getPluginNamespace(
 			$this->extensionKey,
 			$this->moduleOrPluginKey
@@ -136,12 +145,12 @@ class Tx_DfTools_Service_ExtBaseConnectorService implements t3lib_Singleton {
 	 *
 	 * @param string $controller
 	 * @param string $action
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 * @return array
 	 */
 	public function runControllerAction($controller, $action) {
 		if ($controller === '' || $action === '') {
-			throw new InvalidArgumentException('ExtDirect: Invalid Controller/Action Combination!');
+			throw new \InvalidArgumentException('ExtDirect: Invalid Controller/Action Combination!');
 		}
 
 		$response = $this->bootStrap->run(

@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -23,27 +26,31 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * ExtDirect Data Provider For The Redirect Tests
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ExtDirect_RedirectTestDataProvider extends Tx_DfTools_ExtDirect_AbstractDataProvider {
+class RedirectTestDataProvider extends AbstractDataProvider {
 	/**
 	 * Returns all redirect tests
 	 *
-	 * @param stdClass $parameters
+	 * @param \stdClass $parameters
 	 * @return array
 	 */
 	public function read($parameters) {
 		/** @noinspection PhpUndefinedFieldInspection */
-		$this->extBaseConnector->setParameters(array(
-			'offset' => intval($parameters->start),
-			'limit' => intval($parameters->limit),
-			'sortingField' => $parameters->sort,
-			'sortAscending' => strtoupper($parameters->dir) === 'ASC' ? TRUE : FALSE,
-		));
+		$this->extBaseConnector->setParameters(
+			array(
+				'offset' => intval($parameters->start),
+				'limit' => intval($parameters->limit),
+				'sortingField' => $parameters->sort,
+				'sortAscending' => strtoupper($parameters->dir) === 'ASC' ? TRUE : FALSE,
+			)
+		);
 		return $this->extBaseConnector->runControllerAction('RedirectTest', 'read');
 	}
 
@@ -64,7 +71,7 @@ class Tx_DfTools_ExtDirect_RedirectTestDataProvider extends Tx_DfTools_ExtDirect
 			)
 		);
 
-			// decide if we need to add a category before updating the assignment to the redirect test
+		// decide if we need to add a category before updating the assignment to the redirect test
 		if (is_numeric($updatedRecord['categoryId'])) {
 			$parameters['redirectTest']['category'] = array(
 				'__identity' => intval($updatedRecord['categoryId'])

@@ -1,27 +1,30 @@
 <?php
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+
+namespace SGalinski\DfTools\Service\UrlChecker;
+
+	/***************************************************************
+	 *  Copyright notice
+	 *
+	 *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+	 *
+	 *  All rights reserved
+	 *
+	 *  This script is part of the TYPO3 project. The TYPO3 project is
+	 *  free software; you can redistribute it and/or modify
+	 *  it under the terms of the GNU General Public License as published by
+	 *  the Free Software Foundation; either version 3 of the License, or
+	 *  (at your option) any later version.
+	 *
+	 *  The GNU General Public License can be found at
+	 *  http://www.gnu.org/copyleft/gpl.html.
+	 *
+	 *  This script is distributed in the hope that it will be useful,
+	 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 *  GNU General Public License for more details.
+	 *
+	 *  This copyright notice MUST APPEAR in all copies of the script!
+	 ***************************************************************/
 
 /**
  * Concrete Url Checker Service
@@ -31,7 +34,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_UrlChecker_AbstractService {
+class StreamService extends AbstractService {
 	/**
 	 * Stream Context
 	 *
@@ -53,13 +56,15 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 	 * @return void
 	 */
 	public function init() {
-		$this->context = stream_context_create(array(
-			'http' => array(
-				'method' => 'GET',
-				'user_agent' => $this->userAgent,
-				'timeout' => $this->getTimeout()
+		$this->context = stream_context_create(
+			array(
+				'http' => array(
+					'method' => 'GET',
+					'user_agent' => $this->userAgent,
+					'timeout' => $this->getTimeout()
+				)
 			)
-	   ));
+		);
 	}
 
 	/**
@@ -114,7 +119,7 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 	 *
 	 * Note: You must use setUrl to set the testing url!
 	 *
-	 * @throws RuntimeException contains any internal errors
+	 * @throws \RuntimeException contains any internal errors
 	 * @return array
 	 */
 	public function resolveURL() {
@@ -130,9 +135,9 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 
 			$headers = $http_response_header;
 			if (!count($headers)) {
-				throw new RuntimeException('Could not connect to host \'' . $this->host . '\'', 10001);
+				throw new \RuntimeException('Could not connect to host \'' . $this->host . '\'', 10001);
 			} elseif ($metaData['timed_out']) {
-				throw new RuntimeException('Connection timed out (Limit: ' . $this->timeout . ')!', 10002);
+				throw new \RuntimeException('Connection timed out (Limit: ' . $this->timeout . ')!', 10002);
 			}
 
 			$url = $this->getLastUrl($headers);
@@ -145,7 +150,7 @@ class Tx_DfTools_Service_UrlChecker_StreamService extends Tx_DfTools_Service_Url
 			);
 			fclose($stream);
 
-		} catch (RuntimeException $exception) {
+		} catch (\RuntimeException $exception) {
 			if (is_resource($stream)) {
 				fclose($stream);
 			}

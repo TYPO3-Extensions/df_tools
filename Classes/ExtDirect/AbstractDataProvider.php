@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,6 +26,13 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Lang\LanguageService;
+
 /**
  * Abstract ExtDirect Data Provider
  *
@@ -30,11 +40,11 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
+abstract class AbstractDataProvider {
 	/**
 	 * BootStrap Instance
 	 *
-	 * @var Tx_DfTools_Service_ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
 	 */
 	protected $extBaseConnector = NULL;
 
@@ -43,39 +53,37 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 */
 	public function __construct() {
 		if (TYPO3_MODE === 'FE' && !is_object($GLOBALS['TSFE'])) {
-			/** @noinspection PhpUnusedLocalVariableInspection */
-			global $TCA, $PAGES_TYPES, $FILEICONS; // because the include file inherits the local function scope (!)
-			require_once(TYPO3_tables_script ? PATH_typo3conf . TYPO3_tables_script : PATH_t3lib . 'stddb/tables.php');
+			$pageId = intval(GeneralUtility::_GP('pageId'));
+			GeneralUtility::_GETset(intval(GeneralUtility::_GP('L')), 'L');
 
-			$pageId = intval(t3lib_div::_GP('pageId'));
-			t3lib_div::_GETset(intval(t3lib_div::_GP('L')), 'L');
-
-			/** @var $tsfe tslib_fe */
-			$GLOBALS['TSFE'] = $tsfe = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $pageId, 0);
-			$tsfe->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
+			/** @var $tsfe TypoScriptFrontendController */
+			$GLOBALS['TSFE'] = $tsfe = GeneralUtility::makeInstance(
+				'TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], $pageId, 0
+			);
+			$tsfe->sys_page = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
 			$tsfe->getPageAndRootline();
 			$tsfe->initTemplate();
-
 			$tsfe->forceTemplateParsing = TRUE;
-			$tsfe->getConfigArray();
-			$GLOBALS['LANG'] = t3lib_div::makeInstance('language');
-			/** @noinspection PhpUndefinedMethodInspection */
-			$GLOBALS['LANG']->init($GLOBALS['TSFE']->config['config']['language']);
 
 			$tsfe->initFEuser();
 			$tsfe->initUserGroups();
-			$tsfe->getCompressedTCarray();
 
 			$tsfe->no_cache = TRUE;
 			$tsfe->tmpl->start($GLOBALS['TSFE']->rootLine);
 			$tsfe->no_cache = FALSE;
+			$tsfe->getConfigArray();
 
 			$tsfe->settingLanguage();
 			$tsfe->newCObj();
+			$GLOBALS['TSFE']->absRefPrefix = ($GLOBALS['TSFE']->config['config']['absRefPrefix'] ? : '');
+
+			/** @var $lang LanguageService */
+			$GLOBALS['LANG'] = $lang = GeneralUtility::makeInstance('TYPO3\CMS\Lang\LanguageService');
+			$lang->init($GLOBALS['TSFE']->config['config']['language']);
 		}
 
 		$key = 'tools_DfToolsTools';
-		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
+		$this->extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Connector\ExtBaseConnector');
 		$this->extBaseConnector->setExtensionKey('DfTools');
 		$this->extBaseConnector->setModuleOrPluginKey($key);
 	}
@@ -86,18 +94,18 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * @return bool
 	 */
 	public function isInFrontendMode() {
-		return (TYPO3_MODE === 'FE');
+		return TYPO3_MODE === 'FE';
 	}
 
 	/**
 	 * Checks the access rights for using Ext.Direct calls
 	 *
-	 * @throws Tx_DfTools_Exception_GenericException if the user has no rights to proceed
+	 * @throws GenericException if the user has no rights to proceed
 	 * @return bool
 	 */
 	public function hasAccess() {
 		if ($this->isInFrontendMode() && !$GLOBALS['TSFE']->fe_user->user['uid']) {
-			throw new Tx_DfTools_Exception_GenericException('Please login first to gain access!');
+			throw new GenericException('Please login first to gain access!');
 		}
 
 		return TRUE;
@@ -113,7 +121,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * know on the client side which records are written successfully. Always
 	 * update a record once by once!
 	 *
-	 * @param stdClass $updatedRecords
+	 * @param \stdClass $updatedRecords
 	 * @return array
 	 */
 	public function update($updatedRecords) {
@@ -136,7 +144,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 					$data['records'] = array_merge_recursive($data['records'], $record['records']);
 				}
 			}
-		} catch (Exception $exception) {
+		} catch (\Exception $exception) {
 			$data = array(
 				'success' => FALSE,
 				'message' => $exception->getMessage(),
@@ -150,7 +158,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	/**
 	 * Handles the incoming create record calls
 	 *
-	 * @param stdClass $newRecord
+	 * @param \stdClass $newRecord
 	 * @return array
 	 */
 	public function create($newRecord) {
@@ -165,7 +173,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 	 * Note: ExtJS transfers a single identifier object or multiple
 	 * ones based on the amount of deleted records.
 	 *
-	 * @param stdClass $identifiers
+	 * @param \stdClass $identifiers
 	 * @return array
 	 */
 	public function destroy($identifiers) {
@@ -183,7 +191,7 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 				'records' => array()
 			);
 
-		} catch (Exception $exception) {
+		} catch (\Exception $exception) {
 			$data = array(
 				'success' => FALSE,
 				'message' => $exception->getMessage(),
@@ -208,11 +216,11 @@ abstract class Tx_DfTools_ExtDirect_AbstractDataProvider {
 				'data' => $data,
 			);
 
-		} catch (Exception $exception) {
+		} catch (\Exception $exception) {
 			$result = array(
 				'success' => FALSE,
 				'data' => array(
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION,
+					'testResult' => AbstractService::SEVERITY_EXCEPTION,
 					'testMessage' => htmlspecialchars($exception->getMessage()),
 				),
 			);

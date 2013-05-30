@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,32 +26,37 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+
 /**
  * Controller for the RedirectTestCategory domain model
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Controller_RedirectTestCategoryController extends Tx_DfTools_Controller_AbstractController {
+class RedirectTestCategoryController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'Tx_DfTools_View_RedirectTestCategory_ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\RedirectTestCategory\ArrayView';
 
 	/**
 	 * Repository Instance
 	 *
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $redirectTestCategoryRepository;
 
 	/**
 	 * Injects the repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository $redirectTestCategoryRepository
+	 * @param RedirectTestCategoryRepository $redirectTestCategoryRepository
 	 * @return void
 	 */
-	public function injectRedirectTestCategoryRepository(Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository $redirectTestCategoryRepository) {
+	public function injectRedirectTestCategoryRepository(
+		RedirectTestCategoryRepository $redirectTestCategoryRepository
+	) {
 		$this->redirectTestCategoryRepository = $redirectTestCategoryRepository;
 	}
 
@@ -71,10 +79,10 @@ class Tx_DfTools_Controller_RedirectTestCategoryController extends Tx_DfTools_Co
 	/**
 	 * Updates an existing redirect test category
 	 *
-	 * @param Tx_DfTools_Domain_Model_RedirectTestCategory $redirectTestCategory
+	 * @param RedirectTestCategory $redirectTestCategory
 	 * @return void
 	 */
-	public function updateAction(Tx_DfTools_Domain_Model_RedirectTestCategory $redirectTestCategory) {
+	public function updateAction(RedirectTestCategory $redirectTestCategory) {
 		$this->redirectTestCategoryRepository->update($redirectTestCategory);
 		$this->view->assign('records', array($redirectTestCategory));
 	}
@@ -85,7 +93,7 @@ class Tx_DfTools_Controller_RedirectTestCategoryController extends Tx_DfTools_Co
 	 * @return void
 	 */
 	public function deleteUnusedCategoriesAction() {
-		/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
+		/** @var $category RedirectTestCategory */
 		$categories = $this->redirectTestCategoryRepository->findAllUnusedCategories();
 		foreach ($categories as $category) {
 			$this->redirectTestCategoryRepository->remove($category);

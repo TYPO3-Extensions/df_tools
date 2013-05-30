@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,30 +26,39 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlSynchronizeService;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\PageUtility;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Controller for the LinkCheck domain model
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_AbstractController {
+class LinkCheckController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'Tx_DfTools_View_LinkCheck_ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\LinkCheck\ArrayView';
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $linkCheckRepository;
 
 	/**
 	 * Injects the link check test repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository
+	 * @param LinkCheckRepository $linkCheckRepository
 	 * @return void
 	 */
-	public function injectLinkCheckRepository(Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository) {
+	public function injectLinkCheckRepository(LinkCheckRepository $linkCheckRepository) {
 		$this->linkCheckRepository = $linkCheckRepository;
 	}
 
@@ -54,7 +66,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function initializeIndexAction() {
-		$this->defaultViewObjectName = 'Tx_Fluid_View_TemplateView';
+		$this->defaultViewObjectName = 'TYPO3\CMS\Fluid\View\TemplateView';
 	}
 
 	/**
@@ -76,7 +88,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function readAction($offset, $limit, $sortingField, $sortAscending) {
-		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
+		/** @var $linkChecks ObjectStorage */
 		$linkChecks = $this->linkCheckRepository->findSortedAndInRange(
 			$offset, $limit, array($sortingField => $sortAscending)
 		);
@@ -93,16 +105,16 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function resetRecordAction($identity, $doIgnoreRecord) {
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkCheck LinkCheck */
 		$linkCheck = $this->linkCheckRepository->findByUid($identity);
 		$linkCheck->setTestMessage('');
 		$linkCheck->setResultUrl('');
 		$linkCheck->setHttpStatusCode(0);
 
 		if ($doIgnoreRecord) {
-			$linkCheck->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_IGNORE);
+			$linkCheck->setTestResult(AbstractService::SEVERITY_IGNORE);
 		} else {
-			$linkCheck->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED);
+			$linkCheck->setTestResult(AbstractService::SEVERITY_UNTESTED);
 		}
 
 		$this->linkCheckRepository->update($linkCheck);
@@ -117,13 +129,13 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function setFalsePositiveStateAction($identity, $isFalsePositive) {
-		/** @var $record Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $record LinkCheck */
 		$record = $this->linkCheckRepository->findByUid($identity);
 
 		if ($isFalsePositive) {
-			$record->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO);
+			$record->setTestResult(AbstractService::SEVERITY_INFO);
 		} else {
-			$record->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED);
+			$record->setTestResult(AbstractService::SEVERITY_UNTESTED);
 		}
 
 		$this->linkCheckRepository->update($record);
@@ -138,16 +150,16 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	public function synchronizeAction() {
 		$this->view = NULL;
 
-		/** @var $linkCheckService Tx_DfTools_Service_LinkCheckService */
-		$linkCheckService = $this->objectManager->get('Tx_DfTools_Service_LinkCheckService');
+		/** @var $linkCheckService LinkCheckService */
+		$linkCheckService = $this->objectManager->get('SGalinski\DfTools\Service\LinkCheckService');
 		$rawUrls = $linkCheckService->fetchAllRawUrlsFromTheDatabase(
 			$this->extensionConfiguration['excludedTables'],
 			$this->extensionConfiguration['excludedTableFields']
 		);
-		
-		/** @var $urlSynchronizationService Tx_DfTools_Service_UrlSynchronizeService */
+
+		/** @var $urlSynchronizationService UrlSynchronizeService */
 		$existingLinkChecks = $this->linkCheckRepository->findAll();
-		$urlSynchronizationService = $this->objectManager->get('Tx_DfTools_Service_UrlSynchronizeService');
+		$urlSynchronizationService = $this->objectManager->get('SGalinski\DfTools\Service\UrlSynchronizeService');
 		$urlSynchronizationService->synchronize($rawUrls, $existingLinkChecks);
 	}
 
@@ -161,12 +173,12 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	public function synchronizeUrlsFromASingleRecordAction($table, $identity) {
 		$this->view = NULL;
 
-		/** @var $linkCheckService Tx_DfTools_Service_LinkCheckService */
-		$linkCheckService = $this->objectManager->get('Tx_DfTools_Service_LinkCheckService');
+		/** @var $linkCheckService LinkCheckService */
+		$linkCheckService = $this->objectManager->get('SGalinski\DfTools\Service\LinkCheckService');
 		$rawUrls = $linkCheckService->getUrlsFromSingleRecord($table, $identity);
 
-		/** @var $urlSynchronizationService Tx_DfTools_Service_UrlSynchronizeService */
-		$urlSynchronizationService = $this->objectManager->get('Tx_DfTools_Service_UrlSynchronizeService');
+		/** @var $urlSynchronizationService UrlSynchronizeService */
+		$urlSynchronizationService = $this->objectManager->get('SGalinski\DfTools\Service\UrlSynchronizeService');
 		$urlSynchronizationService->synchronizeGroupOfUrls($rawUrls);
 	}
 
@@ -174,7 +186,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function initializeReadRecordSetsAction() {
-		$this->defaultViewObjectName = 'Tx_DfTools_View_RecordSet_ArrayView';
+		$this->defaultViewObjectName = 'SGalinski\DfTools\View\RecordSet\ArrayView';
 	}
 
 	/**
@@ -184,7 +196,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function readRecordSetsAction($identity) {
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkCheck LinkCheck */
 		$linkCheck = $this->linkCheckRepository->findByUid($identity);
 		$this->view->assign('records', $linkCheck->getRecordSets());
 	}
@@ -193,24 +205,24 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * Evaluates a test and writes the results into the link check test
 	 *
 	 * @param array $report
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkCheck
+	 * @param LinkCheck $linkCheck
 	 * @return void
 	 */
-	protected function evalTestResult(array $report, Tx_DfTools_Domain_Model_LinkCheck $linkCheck) {
-		$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK;
+	protected function evalTestResult(array $report, LinkCheck $linkCheck) {
+		$result = AbstractService::SEVERITY_OK;
 		$testUrl = $linkCheck->getTestUrl();
 		$message = '';
 
 		if (!in_array($report['http_code'], array(200, 301, 302))) {
-			$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR;
-			$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+			$result = AbstractService::SEVERITY_ERROR;
+			$message = LocalizationUtility::createLocalizableParameterDrivenString(
 				'tx_dftools_domain_model_LinkCheck.test.httpCodeMismatch',
 				array('[200, 301, 302]', $report['http_code'])
 			);
 
 		} elseif ($report['url'] !== $testUrl) {
-			$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_WARNING;
-			$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+			$result = AbstractService::SEVERITY_WARNING;
+			$message = LocalizationUtility::createLocalizableParameterDrivenString(
 				'tx_dftools_domain_model_LinkCheck.test.urlMismatch',
 				array($testUrl, $report['url'])
 			);
@@ -228,7 +240,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function runAllTestsAction() {
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkCheck LinkCheck */
 		$linkChecks = $this->linkCheckRepository->findAll();
 		$urlCheckerService = $this->getUrlCheckerService();
 		foreach ($linkChecks as $linkCheck) {
@@ -245,7 +257,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return void
 	 */
 	public function runTestAction($identity) {
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkCheck LinkCheck */
 		$linkCheck = $this->linkCheckRepository->findByUid($identity);
 		$linkCheck->test($this->getUrlCheckerService());
 		$this->forward('saveTest', NULL, NULL, array('linkCheck' => $linkCheck));
@@ -255,10 +267,10 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * Saves an link check test (just exists for validation issues)
 	 *
 	 * @dontverifyrequesthash
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkCheck
+	 * @param LinkCheck $linkCheck
 	 * @return void
 	 */
-	protected function saveTestAction(Tx_DfTools_Domain_Model_LinkCheck $linkCheck) {
+	protected function saveTestAction(LinkCheck $linkCheck) {
 		$this->linkCheckRepository->update($linkCheck);
 		$this->handleExceptionalTest($linkCheck);
 		$this->view->assign('records', array($linkCheck));
@@ -272,7 +284,7 @@ class Tx_DfTools_Controller_LinkCheckController extends Tx_DfTools_Controller_Ab
 	 * @return string
 	 */
 	public function getViewLinkAction($tableName, $identifier) {
-		return Tx_DfTools_Utility_PageUtility::getViewLinkFromTableNameAndIdPair($tableName, $identifier);
+		return PageUtility::getViewLinkFromTableNameAndIdPair($tableName, $identifier);
 	}
 }
 

@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Service\TcaParserService;
+
 /**
  * Collection of smaller tca utility functions
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-final class Tx_DfTools_Utility_TcaUtility {
+final class TcaUtility {
 	/**
 	 * Callback filter for the Tca parser with special filter logic
 	 *
@@ -48,41 +53,27 @@ final class Tx_DfTools_Utility_TcaUtility {
 	/**
 	 * Returns a list of available plain text table fields without special meanings
 	 *
-	 * @param Tx_DfTools_Service_TcaParserService $tcaParser
+	 * @param TcaParserService $tcaParser
 	 * @param array $excludedTables
 	 * @param array $excludedTableFields
 	 * @return array
 	 */
-	public static function getTextFields(Tx_DfTools_Service_TcaParserService $tcaParser, array $excludedTables = array(), array $excludedTableFields = array()) {
+	public static function getTextFields(
+		TcaParserService $tcaParser, array $excludedTables = array(),
+		array $excludedTableFields = array()
+	) {
 		$tcaParser->setExcludedTables($excludedTables);
 		$tcaParser->setAllowedTypes(array('input', 'text'));
 		$tcaParser->setExcludedFields(array_merge($excludedTableFields, array('t3ver_label')));
-		$tcaParser->setExcludedEvals(array(
-			'date', 'datetime', 'time', 'timesec', 'year',
-			'int', 'num', 'double2', 'alpha', 'alphanum', 'alphanum_x',
-			'md5', 'password'
-		));
+		$tcaParser->setExcludedEvals(
+			array(
+				'date', 'datetime', 'time', 'timesec', 'year',
+				'int', 'num', 'double2', 'alpha', 'alphanum', 'alphanum_x',
+				'md5', 'password'
+			)
+		);
 
 		return $tcaParser->findFields(array('Tx_DfTools_Utility_TcaUtility', 'filterCallback'));
-	}
-
-	/**
-	 * Strips the prefixed table names from the group db (tca type) values and returns an
-	 * array of pure ids
-	 *
-	 * @param string $values
-	 * @return array
-	 */
-	public static function stripTablePrefixFromGroupDBValues($values) {
-		$ids = array();
-		$values = explode(',', $values);
-		foreach ($values as $value) {
-			$lastUnderscorePosition = strrpos($value, '_');
-			$value = ($lastUnderscorePosition ? substr($value, $lastUnderscorePosition + 1) : $value);
-			$ids[] = trim($value);
-		}
-
-		return array_map('intval', $ids);
 	}
 }
 

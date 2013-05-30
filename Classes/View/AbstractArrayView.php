@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\View;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,20 +26,29 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\Mvc\View\AbstractView;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Security\Channel\RequestHashService;
+use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
 /**
  * Abstract View For The Rendering of Plain Records (array types of records)
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_AbstractView {
+abstract class AbstractArrayView extends AbstractView {
 	/**
-	 * @var Tx_Extbase_Security_Channel_RequestHashService
+	 * @var \TYPO3\CMS\Extbase\Security\Channel\RequestHashService
 	 */
 	protected $requestHashService;
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
 
@@ -50,21 +62,11 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	/**
 	 * Injects the object manager
 	 *
-	 * @param Tx_Extbase_Object_ObjectManager $objectManager
+	 * @param ObjectManager $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(Tx_Extbase_Object_ObjectManager $objectManager) {
+	public function injectObjectManager(ObjectManager $objectManager) {
 		$this->objectManager = $objectManager;
-	}
-
-	/**
-	 * Inject a request hash service
-	 *
-	 * @param Tx_Extbase_Security_Channel_RequestHashService $requestHashService
-	 * @return void
-	 */
-	public function injectRequestHashService(Tx_Extbase_Security_Channel_RequestHashService $requestHashService) {
-		$this->requestHashService = $requestHashService;
 	}
 
 	/**
@@ -73,14 +75,24 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	 * @return void
 	 */
 	protected function initializeObject() {
-		/** @var $requestHashService Tx_Extbase_Security_Channel_RequestHashService */
-		$requestHashService = t3lib_div::makeInstance('Tx_Extbase_Security_Channel_RequestHashService');
+		/** @var $requestHashService RequestHashService */
+		$requestHashService = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Security\Channel\RequestHashService');
 
-		/** @var $hashService Tx_Extbase_Security_Cryptography_HashService */
-		$hashService = t3lib_div::makeInstance('Tx_Extbase_Security_Cryptography_HashService');
+		/** @var $hashService HashService */
+		$hashService = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Security\Cryptography\HashService');
 		$requestHashService->injectHashService($hashService);
 
 		$this->injectRequestHashService($requestHashService);
+	}
+
+	/**
+	 * Inject a request hash service
+	 *
+	 * @param RequestHashService $requestHashService
+	 * @return void
+	 */
+	public function injectRequestHashService(RequestHashService $requestHashService) {
+		$this->requestHashService = $requestHashService;
 	}
 
 	/**
@@ -93,8 +105,8 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 		$extensionName = $request->getControllerExtensionName();
 		$pluginName = $request->getPluginName();
 
-			/** @var $extensionService Tx_Extbase_Service_ExtensionService */
-			$extensionService = $this->objectManager->get('Tx_Extbase_Service_ExtensionService');
+		/** @var $extensionService ExtensionService */
+		$extensionService = $this->objectManager->get('TYPO3\CMS\Extbase\Service\ExtensionService');
 		return $extensionService->getPluginNamespace($extensionName, $pluginName);
 	}
 
@@ -140,7 +152,7 @@ abstract class Tx_DfTools_View_AbstractArrayView extends Tx_Extbase_MVC_View_Abs
 	 * Must return the plain array of a given domain object
 	 *
 	 * @abstract
-	 * @param Tx_Extbase_DomainObject_AbstractDomainObject $record
+	 * @param AbstractDomainObject $record
 	 * @return void|array
 	 */
 	abstract protected function getPlainRecord($record);

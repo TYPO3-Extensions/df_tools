@@ -1,6 +1,6 @@
 module.tx_dftools {
 	mvc.requestHandlers {
-		Tx_DfTools_MVC_Web_CustomRequestHandler = Tx_DfTools_MVC_Web_CustomRequestHandler
+		Tx_DfTools_MVC_Web_CustomRequestHandler = SGalinski\DfTools\MVC\Web\CustomRequestHandler
 	}
 
 	view {
@@ -21,6 +21,6 @@ module.tx_dftools {
 	}
 
 	legacy {
-		enableLegacyFlashMessageHandling = 0
-	}
+    	enableLegacyFlashMessageHandling = 0
+    }
 }

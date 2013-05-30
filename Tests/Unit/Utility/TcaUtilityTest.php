@@ -74,41 +74,6 @@ class Tx_DfTools_Utility_TcaUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestCa
 	public function filterCallbackFiltersCorrectly($expected, array $input) {
 		$this->assertSame($expected, Tx_DfTools_Utility_TcaUtility::filterCallback($input));
 	}
-
-	/**
-	 * @return array
-	 */
-	public function stripTableNameFromGroupDbValueWorksDataProvider() {
-		return array(
-			'single value with table prefix' => array(
-				array(10), 'pages_10',
-			),
-			'single value without table prefix' => array(
-				array(10), '10',
-			),
-			'mulitple values with table prefix' => array(
-				array(10, 20, 30), 'pages_10, pages_20,pages_30',
-			),
-			'mulitple values without table prefix' => array(
-				array(10, 20, 30), '10, 20,30',
-			),
-			'mulitple values with mixed table prefixes' => array(
-				array(10, 20, 30), 'pages_10, 20,tt_content_30',
-			),
-		);
-	}
-
-	/**
-	 * @test
-	 * @dataProvider stripTableNameFromGroupDbValueWorksDataProvider
-	 *
-	 * @param array $expected
-	 * @param string $input
-	 * @return void
-	 */
-	public function stripTableNameFromGroupDbValueWorks(array $expected, $input) {
-		$this->assertSame($expected, Tx_DfTools_Utility_TcaUtility::stripTablePrefixFromGroupDBValues($input));
-	}
 }
 
 ?>

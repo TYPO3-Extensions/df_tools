@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractValueObject;
+
 /**
  * Record Set Assignments For The Link Checks
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_AbstractValueObject {
+class RecordSet extends AbstractValueObject {
 	/**
 	 * Database Table
 	 *
@@ -54,15 +59,6 @@ class Tx_DfTools_Domain_Model_RecordSet extends Tx_Extbase_DomainObject_Abstract
 	 * @var int $identifier
 	 */
 	protected $identifier = 0;
-
-	/**
-	 * Just an empty constructor that is needed by the property mapper
-	 */
-	public function __construct() {
-		if (is_callable('parent::__construct')) {
-			parent::__construct();
-		}
-	}
 
 	/**
 	 * Setter for tableName

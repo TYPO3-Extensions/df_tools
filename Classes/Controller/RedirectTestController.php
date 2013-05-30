@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,66 +26,76 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Controller for the RedirectTest domain model
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller_AbstractController {
+class RedirectTestController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'Tx_DfTools_View_RedirectTest_ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\RedirectTest\ArrayView';
 
 	/**
 	 * Instance of the redirect test repository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
 	 */
 	protected $redirectTestRepository;
 
 	/**
 	 * Instance of the redirect test category repository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $redirectTestCategoryRepository;
 
 	/**
 	 * Injects the redirect test repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_RedirectTestRepository $redirectTestRepository
+	 * @param RedirectTestRepository $redirectTestRepository
 	 * @return void
 	 */
-	public function injectRedirectTestRepository(Tx_DfTools_Domain_Repository_RedirectTestRepository $redirectTestRepository) {
+	public function injectRedirectTestRepository(RedirectTestRepository $redirectTestRepository) {
 		$this->redirectTestRepository = $redirectTestRepository;
 	}
 
 	/**
 	 * Injects the redirect test category repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository $redirectTestCategoryRepository
+	 * @param RedirectTestCategoryRepository $redirectTestCategoryRepository
 	 * @return void
 	 */
-	public function injectRedirectTestCategoryRepository(Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository $redirectTestCategoryRepository) {
+	public function injectRedirectTestCategoryRepository(
+		RedirectTestCategoryRepository $redirectTestCategoryRepository
+	) {
 		$this->redirectTestCategoryRepository = $redirectTestCategoryRepository;
 	}
 
 	/**
 	 * Returns an instance of the realUrl import service
 	 *
-	 * @return Tx_DfTools_Service_RealUrlImportService
+	 * @return RealUrlImportService
 	 */
 	public function getRealUrlImportService() {
-		return $this->objectManager->get('Tx_DfTools_Service_RealUrlImportService');
+		return $this->objectManager->get('SGalinski\DfTools\Service\RealUrlImportService');
 	}
 
 	/**
 	 * @return void
 	 */
 	public function initializeIndexAction() {
-		$this->defaultViewObjectName = 'Tx_Fluid_View_TemplateView';
+		$this->defaultViewObjectName = 'TYPO3\CMS\Fluid\View\TemplateView';
 	}
 
 	/**
@@ -104,7 +117,7 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function readAction($offset, $limit, $sortingField, $sortAscending) {
-		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
+		/** @var $linkChecks ObjectStorage */
 		$records = $this->redirectTestRepository->findSortedAndInRangeByCategory(
 			$offset, $limit, array($sortingField => $sortAscending)
 		);
@@ -116,17 +129,17 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	/**
 	 * Updates an existing redirect test
 	 *
-	 * @param Tx_DfTools_Domain_Model_RedirectTest $redirectTest
-	 * @param Tx_DfTools_Domain_Model_RedirectTestCategory $newCategory optional
+	 * @param RedirectTest $redirectTest
+	 * @param RedirectTestCategory $newCategory optional
 	 * @return void
 	 */
-	public function updateAction(Tx_DfTools_Domain_Model_RedirectTest $redirectTest, Tx_DfTools_Domain_Model_RedirectTestCategory $newCategory = NULL) {
+	public function updateAction(RedirectTest $redirectTest, RedirectTestCategory $newCategory = NULL) {
 		if ($newCategory !== NULL) {
 			$this->redirectTestCategoryRepository->add($newCategory);
 			$redirectTest->setCategory($newCategory);
 
-			/** @var $persistenceManager Tx_Extbase_Persistence_Manager */
-			$persistenceManager = $this->objectManager->get('Tx_Extbase_Persistence_Manager');
+			/** @var $persistenceManager PersistenceManager */
+			$persistenceManager = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
 			$persistenceManager->persistAll();
 		}
 
@@ -137,14 +150,14 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	/**
 	 * Creates a redirect test
 	 *
-	 * @param Tx_DfTools_Domain_Model_RedirectTest $newRedirectTest
+	 * @param RedirectTest $newRedirectTest
 	 * @return void
 	 */
-	public function createAction(Tx_DfTools_Domain_Model_RedirectTest $newRedirectTest) {
+	public function createAction(RedirectTest $newRedirectTest) {
 		$this->redirectTestRepository->add($newRedirectTest);
 
-		/** @var $persistenceManager Tx_Extbase_Persistence_Manager */
-		$persistenceManager = $this->objectManager->get('Tx_Extbase_Persistence_Manager');
+		/** @var $persistenceManager PersistenceManager */
+		$persistenceManager = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
 		$persistenceManager->persistAll();
 
 		$this->view->assign('records', array($newRedirectTest));
@@ -157,7 +170,7 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function destroyAction($identifiers) {
-		$this->view = null;
+		$this->view = NULL;
 
 		foreach ($identifiers as $identifier) {
 			$redirectTest = $this->redirectTestRepository->findByUid(intval($identifier));
@@ -182,7 +195,7 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function runAllTestsAction() {
-		/** @var $redirectTest Tx_DfTools_Domain_Model_RedirectTest */
+		/** @var $redirectTest RedirectTest */
 		$redirectTests = $this->redirectTestRepository->findAll();
 		$urlCheckerService = $this->getUrlCheckerService();
 		foreach ($redirectTests as $redirectTest) {
@@ -199,7 +212,7 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function runTestAction($identity) {
-		/** @var $redirectTest Tx_DfTools_Domain_Model_RedirectTest */
+		/** @var $redirectTest RedirectTest */
 		$redirectTest = $this->redirectTestRepository->findByUid($identity);
 		$redirectTest->test($this->getUrlCheckerService());
 		$this->forward('saveTest', NULL, NULL, array('redirectTest' => $redirectTest));
@@ -209,10 +222,10 @@ class Tx_DfTools_Controller_RedirectTestController extends Tx_DfTools_Controller
 	 * Saves an redirect test (just exists for validation issues)
 	 *
 	 * @dontverifyrequesthash
-	 * @param Tx_DfTools_Domain_Model_RedirectTest $redirectTest
+	 * @param RedirectTest $redirectTest
 	 * @return void
 	 */
-	protected function saveTestAction(Tx_DfTools_Domain_Model_RedirectTest $redirectTest) {
+	protected function saveTestAction(RedirectTest $redirectTest) {
 		$this->redirectTestRepository->update($redirectTest);
 		$this->handleExceptionalTest($redirectTest);
 		$this->view->assign('records', array($redirectTest));

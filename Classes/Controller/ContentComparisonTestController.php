@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,32 +26,39 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
+use SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Controller for the ContentComparisonTest domain model
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_Controller_AbstractController {
+class ContentComparisonTestController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'Tx_DfTools_View_ContentComparisonTest_ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\ContentComparisonTest\ArrayView';
 
 	/**
 	 * contentComparisonTestRepository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_ContentComparisonTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository
 	 */
 	protected $contentComparisonTestRepository;
 
 	/**
 	 * Initializes the current action
 	 *
-	 * @param Tx_DfTools_Domain_Repository_ContentComparisonTestRepository $contentComparisonTestRepository
+	 * @param ContentComparisonTestRepository $contentComparisonTestRepository
 	 * @return void
 	 */
-	public function injectContentComparisonTestRepository(Tx_DfTools_Domain_Repository_ContentComparisonTestRepository $contentComparisonTestRepository) {
+	public function injectContentComparisonTestRepository(
+		ContentComparisonTestRepository $contentComparisonTestRepository
+	) {
 		$this->contentComparisonTestRepository = $contentComparisonTestRepository;
 	}
 
@@ -56,7 +66,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function initializeIndexAction() {
-		$this->defaultViewObjectName = 'Tx_Fluid_View_TemplateView';
+		$this->defaultViewObjectName = 'TYPO3\CMS\Fluid\View\TemplateView';
 	}
 
 	/**
@@ -78,7 +88,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function readAction($offset, $limit, $sortingField, $sortAscending) {
-		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
+		/** @var $linkChecks ObjectStorage */
 		$records = $this->contentComparisonTestRepository->findSortedAndInRange(
 			$offset, $limit, array($sortingField => $sortAscending)
 		);
@@ -90,14 +100,14 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	/**
 	 * Creates a new content comparison test
 	 *
-	 * @param Tx_DfTools_Domain_Model_ContentComparisonTest $newContentComparisonTest
+	 * @param ContentComparisonTest $newContentComparisonTest
 	 * @return void
 	 */
-	public function createAction(Tx_DfTools_Domain_Model_ContentComparisonTest $newContentComparisonTest) {
+	public function createAction(ContentComparisonTest $newContentComparisonTest) {
 		$this->contentComparisonTestRepository->add($newContentComparisonTest);
 
-		/** @var $persistenceManager Tx_Extbase_Persistence_Manager */
-		$persistenceManager = $this->objectManager->get('Tx_Extbase_Persistence_Manager');
+		/** @var $persistenceManager PersistenceManager */
+		$persistenceManager = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
 		$persistenceManager->persistAll();
 
 		$this->view->assign('records', array($newContentComparisonTest));
@@ -106,10 +116,10 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	/**
 	 * Updates an existing content comparison test
 	 *
-	 * @param Tx_DfTools_Domain_Model_ContentComparisonTest $contentComparisonTest
+	 * @param ContentComparisonTest $contentComparisonTest
 	 * @return void
 	 */
-	public function updateAction(Tx_DfTools_Domain_Model_ContentComparisonTest $contentComparisonTest) {
+	public function updateAction(ContentComparisonTest $contentComparisonTest) {
 		$this->contentComparisonTestRepository->update($contentComparisonTest);
 		$this->view->assign('records', array($contentComparisonTest));
 	}
@@ -121,7 +131,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function destroyAction(array $identifiers) {
-		$this->view = null;
+		$this->view = NULL;
 
 		foreach ($identifiers as $identifier) {
 			$contentComparisonTest = $this->contentComparisonTestRepository->findByUid(intval($identifier));
@@ -135,7 +145,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function updateAllTestContentsAction() {
-		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
+		/** @var $contentComparisonTest ContentComparisonTest */
 		$contentComparisonTests = $this->contentComparisonTestRepository->findAll();
 		$urlCheckerService = $this->getUrlCheckerService();
 		foreach ($contentComparisonTests as $contentComparisonTest) {
@@ -152,7 +162,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function updateTestContentAction($identity) {
-		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
+		/** @var $contentComparisonTest ContentComparisonTest */
 		$contentComparisonTest = $this->contentComparisonTestRepository->findByUid($identity);
 		$urlCheckerService = $this->getUrlCheckerService();
 		$contentComparisonTest->updateTestContent($urlCheckerService);
@@ -166,7 +176,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function runAllTestsAction() {
-		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
+		/** @var $contentComparisonTest ContentComparisonTest */
 		$contentComparisonTests = $this->contentComparisonTestRepository->findAll();
 		$urlCheckerService = $this->getUrlCheckerService();
 		foreach ($contentComparisonTests as $contentComparisonTest) {
@@ -183,7 +193,7 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * @return void
 	 */
 	public function runTestAction($identity) {
-		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
+		/** @var $contentComparisonTest ContentComparisonTest */
 		$contentComparisonTest = $this->contentComparisonTestRepository->findByUid($identity);
 		$contentComparisonTest->test($this->getUrlCheckerService());
 		$this->forward('saveTest', NULL, NULL, array('contentComparisonTest' => $contentComparisonTest));
@@ -193,10 +203,10 @@ class Tx_DfTools_Controller_ContentComparisonTestController extends Tx_DfTools_C
 	 * Saves an content comparison test (just exists for validation issues)
 	 *
 	 * @dontverifyrequesthash
-	 * @param Tx_DfTools_Domain_Model_ContentComparisonTest $contentComparisonTest
+	 * @param ContentComparisonTest $contentComparisonTest
 	 * @return void
 	 */
-	protected function saveTestAction(Tx_DfTools_Domain_Model_ContentComparisonTest $contentComparisonTest) {
+	protected function saveTestAction(ContentComparisonTest $contentComparisonTest) {
 		$this->contentComparisonTestRepository->update($contentComparisonTest);
 		$this->handleExceptionalTest($contentComparisonTest);
 		$this->view->assign('records', array($contentComparisonTest));

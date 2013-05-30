@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Link Check
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_AbstractEntity implements Tx_DfTools_Domain_Model_TestableInterface {
+class LinkCheck extends AbstractEntity implements TestableInterface {
 	/**
 	 * Test URL
 	 *
@@ -59,7 +68,7 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	 * @validate NumberRange(startRange = 0, endRange = 9)
 	 * @var int
 	 */
-	protected $testResult = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED;
+	protected $testResult = AbstractService::SEVERITY_UNTESTED;
 
 	/**
 	 * Test Message
@@ -73,20 +82,9 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	 * Record Sets
 	 *
 	 * @lazy
-	 * @var Tx_Extbase_Persistence_ObjectStorage<Tx_DfTools_Domain_Model_RecordSet>
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\SGalinski\DfTools\Domain\Model\RecordSet>
 	 */
 	protected $recordSets = NULL;
-
-	/**
-	 * The constructor.
-	 */
-	public function __construct() {
-		$this->recordSets = new Tx_Extbase_Persistence_ObjectStorage();
-
-		if (is_callable('parent::__construct')) {
-			parent::__construct();
-		}
-	}
 
 	/**
 	 * Setter for testUrl
@@ -186,17 +184,17 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Setter for recordSets
 	 *
-	 * @param Tx_Extbase_Persistence_ObjectStorage $recordSets
+	 * @param ObjectStorage $recordSets
 	 * @return void
 	 */
-	public function setRecordSets(Tx_Extbase_Persistence_ObjectStorage $recordSets) {
+	public function setRecordSets(ObjectStorage $recordSets) {
 		$this->recordSets = $recordSets;
 	}
 
 	/**
 	 * Getter for recordSets
 	 *
-	 * @return Tx_Extbase_Persistence_ObjectStorage<Tx_DfTools_Domain_Model_RecordSet>
+	 * @return ObjectStorage<RecordSet>
 	 */
 	public function getRecordSets() {
 		return $this->recordSets;
@@ -205,20 +203,20 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Adds a RecordSet
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSet
+	 * @param RecordSet $recordSet
 	 * @return void
 	 */
-	public function addRecordSet(Tx_DfTools_Domain_Model_RecordSet $recordSet) {
+	public function addRecordSet(RecordSet $recordSet) {
 		$this->recordSets->attach($recordSet);
 	}
 
 	/**
 	 * Removes a RecordSet
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSetToRemove
+	 * @param RecordSet $recordSetToRemove
 	 * @return void
 	 */
-	public function removeRecordSet(Tx_DfTools_Domain_Model_RecordSet $recordSetToRemove) {
+	public function removeRecordSet(RecordSet $recordSetToRemove) {
 		$this->recordSets->detach($recordSetToRemove);
 	}
 
@@ -241,12 +239,12 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 	/**
 	 * Tests and evaluates the model
 	 *
-	 * @param Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService
+	 * @param AbstractService $urlCheckerService
 	 * @return void
 	 */
-	public function test(Tx_DfTools_Service_UrlChecker_AbstractService $urlCheckerService) {
+	public function test(AbstractService $urlCheckerService) {
 		$testResult = $this->getTestResult();
-		if ($testResult === Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_IGNORE) {
+		if ($testResult === AbstractService::SEVERITY_IGNORE) {
 			return;
 		}
 
@@ -254,26 +252,26 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 			$testUrl = $this->getTestUrl();
 			$report = $urlCheckerService->setUrl($testUrl)->resolveURL();
 
-			$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK;
+			$result = AbstractService::SEVERITY_OK;
 			$testUrl = $this->getTestUrl();
 			$message = '';
 
 			if (!in_array($report['http_code'], array(200, 301, 302))) {
-				$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR;
-				$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+				$result = AbstractService::SEVERITY_ERROR;
+				$message = LocalizationUtility::createLocalizableParameterDrivenString(
 					'tx_dftools_domain_model_linkcheck.test.httpCodeMismatch',
 					array('[200, 301, 302]', $report['http_code'])
 				);
 
 			} elseif ($report['url'] !== $testUrl) {
-				$result = Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_WARNING;
-				$message = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+				$result = AbstractService::SEVERITY_WARNING;
+				$message = LocalizationUtility::createLocalizableParameterDrivenString(
 					'tx_dftools_domain_model_linkcheck.test.urlMismatch',
 					array($testUrl, $report['url'])
 				);
 			}
 
-			if ($testResult !== Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO) {
+			if ($testResult !== AbstractService::SEVERITY_INFO) {
 				$this->setTestResult($result);
 			}
 
@@ -281,9 +279,9 @@ class Tx_DfTools_Domain_Model_LinkCheck extends Tx_Extbase_DomainObject_Abstract
 			$this->setResultUrl($report['url']);
 			$this->setHttpStatusCode($report['http_code']);
 
-		} catch (Exception $exception) {
-			if ($testResult !== Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO) {
-				$this->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+		} catch (\Exception $exception) {
+			if ($testResult !== AbstractService::SEVERITY_INFO) {
+				$this->setTestResult(AbstractService::SEVERITY_EXCEPTION);
 			}
 
 			$this->setTestMessage($exception->getMessage());

@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,15 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Abstract Repository
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbase_Persistence_Repository {
+abstract class AbstractRepository extends Repository {
 	/**
-	 * @var t3lib_pageSelect
+	 * @var \TYPO3\CMS\Frontend\Page\PageRepository
 	 */
 	protected $pageSelect = NULL;
 
@@ -41,8 +52,8 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 	 * @return void
 	 */
 	public function initializeObject() {
-		/** @var $querySettings Tx_Extbase_Persistence_Typo3QuerySettings */
-		$querySettings = $this->objectManager->create('Tx_Extbase_Persistence_Typo3QuerySettings');
+		/** @var $querySettings Typo3QuerySettings */
+		$querySettings = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings');
 		$querySettings->setRespectStoragePage(FALSE);
 		$this->setDefaultQuerySettings($querySettings);
 	}
@@ -51,11 +62,11 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 	 * Returns an instance of t3lib_pageSelect to call the enableFields method
 	 * for self-made queries.
 	 *
-	 * @return t3lib_pageSelect
+	 * @return PageRepository
 	 */
 	public function getPageSelectInstance() {
 		if ($this->pageSelect === NULL) {
-			$this->pageSelect = t3lib_div::makeInstance('t3lib_pageSelect');
+			$this->pageSelect = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
 		}
 
 		return $this->pageSelect;
@@ -64,11 +75,11 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 	/**
 	 * Adds a range limiter and a sorting information to the given query
 	 *
-	 * @param Tx_Extbase_Persistence_Query $query
+	 * @param Query $query
 	 * @param int $offset
 	 * @param int $limit
 	 * @param array $sortingInformation
-	 * @return Tx_Extbase_Persistence_Query
+	 * @return Query
 	 */
 	protected function addSortedAndRangeToQuery($query, $offset, $limit, array $sortingInformation) {
 		$query->setOffset(intval($offset));
@@ -77,8 +88,8 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 		if (count($sortingInformation)) {
 			foreach ($sortingInformation as $field => $direction) {
 				$sortingInformation[$field] = ($direction ?
-					Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING :
-					Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING);
+					QueryInterface::ORDER_ASCENDING :
+					QueryInterface::ORDER_DESCENDING);
 			}
 			$query->setOrderings($sortingInformation);
 		}
@@ -99,10 +110,10 @@ abstract class Tx_DfTools_Domain_Repository_AbstractRepository extends Tx_Extbas
 	 * @param int $offset
 	 * @param int $limit
 	 * @param array $sortingInformation
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	public function findSortedAndInRange($offset, $limit, array $sortingInformation) {
-		/** @var $query Tx_Extbase_Persistence_Query */
+		/** @var $query Query */
 		$query = $this->createQuery();
 		return $this->addSortedAndRangeToQuery($query, $offset, $limit, $sortingInformation)->execute();
 	}

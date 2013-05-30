@@ -1,27 +1,30 @@
 <?php
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+
+namespace SGalinski\DfTools\Utility;
+
+	/***************************************************************
+	 *  Copyright notice
+	 *
+	 *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+	 *
+	 *  All rights reserved
+	 *
+	 *  This script is part of the TYPO3 project. The TYPO3 project is
+	 *  free software; you can redistribute it and/or modify
+	 *  it under the terms of the GNU General Public License as published by
+	 *  the Free Software Foundation; either version 3 of the License, or
+	 *  (at your option) any later version.
+	 *
+	 *  The GNU General Public License can be found at
+	 *  http://www.gnu.org/copyleft/gpl.html.
+	 *
+	 *  This script is distributed in the hope that it will be useful,
+	 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 *  GNU General Public License for more details.
+	 *
+	 *  This copyright notice MUST APPEAR in all copies of the script!
+	 ***************************************************************/
 
 /**
  * Collection of smaller localization utility functions
@@ -29,9 +32,9 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-final class Tx_DfTools_Utility_LocalizationUtility {
+final class LocalizationUtility {
 	/**
-	 * Localizes a given string that contains parameters. The string is splitted by
+	 * Localizes a given string that contains parameters. The string is split by
 	 * the following character string: |!|
 	 *
 	 * @param string $string
@@ -41,7 +44,7 @@ final class Tx_DfTools_Utility_LocalizationUtility {
 	public static function localizeParameterDrivenString($string, $extensionKey) {
 		$parts = explode('|!|', $string);
 		$label = array_shift($parts);
-		$translation = Tx_Extbase_Utility_Localization::translate($label, $extensionKey, $parts);
+		$translation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate($label, $extensionKey, $parts);
 		if ($translation === '') {
 			$translation = $label;
 		}
@@ -49,7 +52,7 @@ final class Tx_DfTools_Utility_LocalizationUtility {
 	}
 
 	/**
-	 * Creates a localizable string with attached parameters that can be used with
+	 * Creates a localized string with attached parameters that can be used with
 	 * the static function: localizeParameterDrivenString. The parameters are split
 	 * by the following character string: |!|
 	 *

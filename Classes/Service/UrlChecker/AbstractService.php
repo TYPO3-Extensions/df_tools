@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Service\UrlChecker;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,19 +26,27 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
+
 /**
  * Abstract Url Checker Service
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_Service_UrlChecker_AbstractService implements t3lib_Singleton {
+abstract class AbstractService implements SingletonInterface {
 	const SEVERITY_UNTESTED = 9;
+
 	const SEVERITY_EXCEPTION = 6;
+
 	const SEVERITY_ERROR = 5;
+
 	const SEVERITY_WARNING = 4;
+
 	const SEVERITY_INFO = 3;
+
 	const SEVERITY_OK = 2;
+
 	const SEVERITY_IGNORE = 1;
 
 	/**
@@ -128,7 +139,7 @@ abstract class Tx_DfTools_Service_UrlChecker_AbstractService implements t3lib_Si
 	 * Sets and prepares the test url
 	 *
 	 * @param string $url
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @return AbstractService
 	 */
 	public function setUrl($url) {
 		$this->url = trim($url);

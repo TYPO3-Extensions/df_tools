@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,18 +26,20 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+
 /**
  * Repository for Tx_DfTools_Domain_Model_LinkCheck
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Repository_LinkCheckRepository extends Tx_DfTools_Domain_Repository_AbstractRepository {
+class LinkCheckRepository extends AbstractRepository {
 	/**
 	 * Returns all link checks that matches the given test urls
 	 *
 	 * @param array $testUrls
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	public function findInListByTestUrl(array $testUrls) {
 		$query = $this->createQuery();
@@ -45,7 +50,7 @@ class Tx_DfTools_Domain_Repository_LinkCheckRepository extends Tx_DfTools_Domain
 	 * Returns all link checks that matches the given identity array
 	 *
 	 * @param array $identities
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	public function findInListByIdentity(array $identities) {
 		$query = $this->createQuery();

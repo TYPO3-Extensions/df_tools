@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,6 +26,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
  * Redirect Test Category
  *
@@ -33,7 +39,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Model_RedirectTestCategory extends Tx_Extbase_DomainObject_AbstractEntity {
+class RedirectTestCategory extends AbstractEntity {
 	/**
 	 * Category
 	 *
@@ -41,15 +47,6 @@ class Tx_DfTools_Domain_Model_RedirectTestCategory extends Tx_Extbase_DomainObje
 	 * @var string $category
 	 */
 	protected $category;
-
-	/**
-	 * Just an empty constructor that is needed by the property mapper
-	 */
-	public function __construct() {
-		if (is_callable('parent::__construct')) {
-			parent::__construct();
-		}
-	}
 
 	/**
 	 * Setter for category

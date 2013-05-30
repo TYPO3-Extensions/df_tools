@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,17 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageGenerator;
+
 /**
  * Collection of smaller http utility functions
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-final class Tx_DfTools_Utility_HttpUtility {
+final class HttpUtility {
 	/**
 	 * Prefixes a string with the current host if it starts with a slash!
 	 *
@@ -39,14 +46,14 @@ final class Tx_DfTools_Utility_HttpUtility {
 	 * requests.
 	 *
 	 * @static
-	 * @throws RuntimeException if the current site url could not be determined
+	 * @throws \RuntimeException if the current site url could not be determined
 	 * @param string $string
 	 * @return string
 	 */
 	public static function prefixStringWithCurrentHost($string) {
 		if ($string{0} === '/') {
-			if (trim(t3lib_div::getIndpEnv('HTTP_HOST')) !== '') {
-				$locationUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			if (trim(GeneralUtility::getIndpEnv('HTTP_HOST')) !== '') {
+				$locationUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 			} else {
 				if (!is_object($GLOBALS['TSFE']) || !is_array($GLOBALS['TSFE']->config)) {
 					self::initTSFE();
@@ -57,7 +64,7 @@ final class Tx_DfTools_Utility_HttpUtility {
 				} elseif (trim($GLOBALS['TSFE']->absRefPrefix) !== '') {
 					$locationUrl = $GLOBALS['TSFE']->absRefPrefix;
 				} else {
-					throw new RuntimeException('The current site url could not be determined!');
+					throw new \RuntimeException('The current site url could not be determined!');
 				}
 			}
 
@@ -76,13 +83,15 @@ final class Tx_DfTools_Utility_HttpUtility {
 	 * @return void
 	 */
 	protected static function initTSFE() {
-		$GLOBALS['TT'] = new t3lib_timeTrackNull;
-		$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+		$GLOBALS['TT'] = new NullTimeTracker();
+		$GLOBALS['TSFE'] = GeneralUtility::makeInstance(
+			'TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0
+		);
 		$GLOBALS['TSFE']->initFEuser();
 		$GLOBALS['TSFE']->determineId();
 		$GLOBALS['TSFE']->initTemplate();
 		$GLOBALS['TSFE']->getConfigArray();
-		TSpagegen::pagegenInit();
+		PageGenerator::pagegenInit();
 	}
 }
 

@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -23,27 +26,31 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * ExtDirect Data Provider For The Back Link Tests
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ExtDirect_BackLinkTestDataProvider extends Tx_DfTools_ExtDirect_AbstractDataProvider {
+class BackLinkTestDataProvider extends AbstractDataProvider {
 	/**
 	 * Returns all back link tests
 	 *
-	 * @param stdClass $parameters
+	 * @param \stdClass $parameters
 	 * @return array
 	 */
 	public function read($parameters) {
 		/** @noinspection PhpUndefinedFieldInspection */
-		$this->extBaseConnector->setParameters(array(
-			'offset' => intval($parameters->start),
-			'limit' => intval($parameters->limit),
-			'sortingField' => $parameters->sort,
-			'sortAscending' => strtoupper($parameters->dir) === 'ASC' ? TRUE : FALSE,
-		));
+		$this->extBaseConnector->setParameters(
+			array(
+				'offset' => intval($parameters->start),
+				'limit' => intval($parameters->limit),
+				'sortingField' => $parameters->sort,
+				'sortAscending' => strtoupper($parameters->dir) === 'ASC' ? TRUE : FALSE,
+			)
+		);
 		return $this->extBaseConnector->runControllerAction('BackLinkTest', 'read');
 	}
 

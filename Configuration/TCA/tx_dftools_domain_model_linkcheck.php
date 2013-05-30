@@ -6,7 +6,28 @@ if (!defined('TYPO3_MODE')) {
 
 /** @var $TCA array */
 $TCA['tx_dftools_domain_model_linkcheck'] = array(
-	'ctrl' => $TCA['tx_dftools_domain_model_linkcheck']['ctrl'],
+	'ctrl' => array(
+		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_linkcheck',
+		'label' => 'test_url',
+		'dividers2tabs' => true,
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'versioningWS' => 2,
+		'versioning_followPages' => TRUE,
+		'searchFields' => 'test_url, result_url',
+		'origUid' => 't3_origuid',
+		'languageField' => 'sys_language_uid',
+		'transOrigPointerField' => 'l10n_parent',
+		'transOrigDiffSourceField' => 'l10n_diffsource',
+		'delete' => 'deleted',
+		'enablecolumns' => array(
+			'disabled' => 'hidden',
+			'starttime' => 'starttime',
+			'endtime' => 'endtime',
+		),
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('df_tools') .
+		'Resources/Public/Icons/tx_dftools_domain_model_linkcheck.gif'
+	),
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
 			test_url, result_url, http_status_code, test_result, test_message, record_sets, starttime, endtime',

@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -23,17 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * ExtDirect Data Provider For The Record Sets
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ExtDirect_RecordSetDataProvider extends Tx_DfTools_ExtDirect_AbstractDataProvider {
+class RecordSetDataProvider extends AbstractDataProvider {
 	/**
 	 * Returns all record sets that are related to the given link check identity
 	 *
-	 * @param stdClass $data
+	 * @param \stdClass $data
 	 * @return array
 	 */
 	public function read($data) {

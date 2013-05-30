@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Task;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,13 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Core\Mail\MailMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Scheduler\Task;
+
 /**
  * Abstract Task For The TYPO3 Scheduler Extension
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
+abstract class AbstractTask extends Task {
 	/**
 	 * @var string
 	 */
@@ -38,14 +47,14 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 	/**
 	 * Returns an initialized extbase connector
 	 *
-	 * @return Tx_DfTools_Service_ExtBaseConnectorService
+	 * @return ExtBaseConnectorService
 	 */
 	protected function getExtBaseConnector() {
-			// this must be set for CronJobs or ExtBase will fail
+		// this must be set for cronjobs or extbase will fail
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
-		/** @var $extBaseConnector Tx_DfTools_Service_ExtBaseConnectorService */
-		$extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
+		/** @var $extBaseConnector ExtBaseConnectorService */
+		$extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Service\ExtBaseConnectorService');
 		$extBaseConnector->setExtensionKey('DfTools');
 		$extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
 
@@ -90,9 +99,9 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 	 */
 	protected function checkTestResults(array $testResults) {
 		$notifySeverities = array(
-			Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION,
-			Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR,
-			Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_WARNING,
+			AbstractService::SEVERITY_EXCEPTION,
+			AbstractService::SEVERITY_ERROR,
+			AbstractService::SEVERITY_WARNING,
 		);
 
 		$failedRecords = array();
@@ -134,11 +143,11 @@ abstract class Tx_DfTools_Task_AbstractTask extends tx_scheduler_Task {
 	 * @return void
 	 */
 	protected function sendMail($subject, $message) {
-		/** @var $mail t3lib_mail_Message */
-		$mail = t3lib_div::makeInstance('t3lib_mail_Message');
+		/** @var $mail MailMessage */
+		$mail = GeneralUtility::makeInstance('TYPO3\CMS\Core\Mail\MailMessage');
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mail->setFrom(t3lib_utility_Mail::getSystemFrom())
+		$mail->setFrom(MailMessage::getSystemFrom())
 			->setTo($this->getNotificationEmailAddressesForSwift())
 			->setSubject($subject)
 			->setBody($message)

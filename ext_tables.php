@@ -6,8 +6,8 @@ if (!defined('TYPO3_MODE')) {
 
 if (TYPO3_MODE === 'BE') {
 	/** @var $_EXTKEY string */
-	Tx_Extbase_Utility_Extension::registerModule(
-		$_EXTKEY,
+	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+		'SGalinski.' . $_EXTKEY,
 		'tools',
 		'tools',
 		'',
@@ -21,166 +21,28 @@ if (TYPO3_MODE === 'BE') {
 		),
 		array(
 			'access' => 'user,group',
-			'icon' => 'EXT:df_tools/ext_icon.gif',
+			'icon' => 'EXT:df_tools/ext_icon.png',
 			'labels' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_tools.xlf',
 		)
 	);
 
 	$icons = array(
-		'run' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/run.png',
+		'run' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath(
+			$_EXTKEY
+		) . 'Resources/Public/Icons/run.png',
 	);
-	t3lib_SpriteManager::addSingleIcons($icons, $_EXTKEY);
+	\TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons($icons, $_EXTKEY);
 }
 
 /** @var $_EXTKEY string */
-t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_redirecttest');
-$TCA['tx_dftools_domain_model_redirecttest'] = array(
-	'ctrl' => array(
-		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttest',
-		'label' => 'test_url',
-		'dividers2tabs' => true,
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'versioningWS' => 2,
-		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
-		'languageField' => 'sys_language_uid',
-		'transOrigPointerField' => 'l10n_parent',
-		'transOrigDiffSourceField' => 'l10n_diffsource',
-		'delete' => 'deleted',
-		'enablecolumns' => array(
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/RedirectTest.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_redirecttest.gif'
-	)
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_dftools_domain_model_redirecttest');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+	'tx_dftools_domain_model_redirecttestcategory'
 );
-
-t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_redirecttestcategory');
-$TCA['tx_dftools_domain_model_redirecttestcategory'] = array(
-	'ctrl' => array(
-		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttestcategory',
-		'label' => 'category',
-		'dividers2tabs' => true,
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'versioningWS' => 2,
-		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
-		'languageField' => 'sys_language_uid',
-		'transOrigPointerField' => 'l10n_parent',
-		'transOrigDiffSourceField' => 'l10n_diffsource',
-		'delete' => 'deleted',
-		'enablecolumns' => array(
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/RedirectTestCategory.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_redirecttestcategory.gif'
-	)
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_dftools_domain_model_linkcheck');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_dftools_domain_model_recordset');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_dftools_domain_model_backlinktest');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+	'tx_dftools_domain_model_contentcomparisontest'
 );
-
-t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_linkcheck');
-$TCA['tx_dftools_domain_model_linkcheck'] = array(
-	'ctrl' => array(
-		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_linkcheck',
-		'label' => 'test_url',
-		'dividers2tabs' => true,
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'versioningWS' => 2,
-		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
-		'languageField' => 'sys_language_uid',
-		'transOrigPointerField' => 'l10n_parent',
-		'transOrigDiffSourceField' => 'l10n_diffsource',
-		'delete' => 'deleted',
-		'enablecolumns' => array(
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/LinkCheck.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_linkcheck.gif'
-	)
-);
-
-t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_recordset');
-$TCA['tx_dftools_domain_model_recordset'] = array(
-	'ctrl' => array(
-		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_recordset',
-		'label' => 'table_name',
-		'dividers2tabs' => true,
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'versioningWS' => 2,
-		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
-		'languageField' => 'sys_language_uid',
-		'transOrigPointerField' => 'l10n_parent',
-		'transOrigDiffSourceField' => 'l10n_diffsource',
-		'delete' => 'deleted',
-		'enablecolumns' => array(
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/RecordSet.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_recordset.gif'
-	)
-);
-
-t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_backlinktest');
-$TCA['tx_dftools_domain_model_backlinktest'] = array(
-	'ctrl' => array(
-		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_backlinktest',
-		'label' => 'test_url',
-		'dividers2tabs' => true,
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'versioningWS' => 2,
-		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
-		'languageField' => 'sys_language_uid',
-		'transOrigPointerField' => 'l10n_parent',
-		'transOrigDiffSourceField' => 'l10n_diffsource',
-		'delete' => 'deleted',
-		'enablecolumns' => array(
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/BackLinkTest.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_backlinktest.gif'
-	)
-);
-
-t3lib_extMgm::allowTableOnStandardPages('tx_dftools_domain_model_contentcomparisontest');
-$TCA['tx_dftools_domain_model_contentcomparisontest'] = array(
-	'ctrl' => array(
-		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_contentcomparisontest',
-		'label' => 'test_url',
-		'dividers2tabs' => true,
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'versioningWS' => 2,
-		'versioning_followPages' => TRUE,
-		'origUid' => 't3_origuid',
-		'languageField' => 'sys_language_uid',
-		'transOrigPointerField' => 'l10n_parent',
-		'transOrigDiffSourceField' => 'l10n_diffsource',
-		'delete' => 'deleted',
-		'enablecolumns' => array(
-			'disabled' => 'hidden',
-			'starttime' => 'starttime',
-			'endtime' => 'endtime',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/ContentComparisonTest.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_dftools_domain_model_contentcomparisontest.gif'
-	)
-);
-
 ?>

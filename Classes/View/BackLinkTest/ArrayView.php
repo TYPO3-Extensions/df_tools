@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\View\BackLinkTest;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,9 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\View\AbstractArrayView;
 
 /**
  * Custom View
@@ -29,7 +35,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_BackLinkTest_ArrayView extends Tx_DfTools_View_AbstractArrayView {
+class ArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -56,7 +62,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayView extends Tx_DfTools_View_AbstractArr
 	/**
 	 * Renders a redirect test into a plain array
 	 *
-	 * @param Tx_DfTools_Domain_Model_BackLinkTest $record
+	 * @param BackLinkTest $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {
@@ -66,7 +72,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayView extends Tx_DfTools_View_AbstractArr
 			'expectedUrl' => htmlspecialchars($record->getExpectedUrl()),
 			'testResult' => intval($record->getTestResult()),
 			'testMessage' => htmlspecialchars(
-				Tx_DfTools_Utility_LocalizationUtility::localizeParameterDrivenString(
+				LocalizationUtility::localizeParameterDrivenString(
 					$record->getTestMessage(), 'df_tools'
 				)
 			),

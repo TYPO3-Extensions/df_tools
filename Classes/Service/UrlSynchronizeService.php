@@ -1,8 +1,11 @@
 <?php
+
+namespace SGalinski\DfTools\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -23,55 +26,67 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Dbal\Database\DatabaseConnection;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Synchronization Service For The Link Check Aggregate
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
+class UrlSynchronizeService implements SingletonInterface {
 	/**
-	 * @var Tx_DfTools_Domain_Repository_RecordSetRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RecordSetRepository
 	 */
 	protected $recordSetRepository;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $linkCheckRepository;
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
 
 	/**
 	 * Injects the link check test repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository
+	 * @param LinkCheckRepository $linkCheckRepository
 	 * @return void
 	 */
-	public function injectLinkCheckRepository(Tx_DfTools_Domain_Repository_LinkCheckRepository $linkCheckRepository) {
+	public function injectLinkCheckRepository(LinkCheckRepository $linkCheckRepository) {
 		$this->linkCheckRepository = $linkCheckRepository;
 	}
 
 	/**
 	 * Injects the record set repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_RecordSetRepository $recordSetRepository
+	 * @param RecordSetRepository $recordSetRepository
 	 * @return void
 	 */
-	public function injectRecordSetRepository(Tx_DfTools_Domain_Repository_RecordSetRepository $recordSetRepository) {
+	public function injectRecordSetRepository(RecordSetRepository $recordSetRepository) {
 		$this->recordSetRepository = $recordSetRepository;
 	}
 
 	/**
 	 * Injects the object manager
 	 *
-	 * @param Tx_Extbase_Object_ObjectManagerInterface $objectManager
+	 * @param ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(Tx_Extbase_Object_ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -85,8 +100,9 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 			'tx_dftools_domain_model_recordset', 1,
 			array('starttime' => TRUE, 'endtime' => TRUE, 'fe_group' => TRUE)
 		);
-
-		$resource = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+		/** @var $dbConnection DatabaseConnection */
+		$dbConnection = $GLOBALS['TYPO3_DB'];
+		$resource = $dbConnection->exec_SELECTquery(
 			'uid, table_name, field, identifier',
 			'tx_dftools_domain_model_recordset',
 			'1=1' . $enableFields
@@ -97,11 +113,11 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 			return $recordSets;
 		}
 
-		while (($recordSet = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resource))) {
+		while (($recordSet = $dbConnection->sql_fetch_assoc($resource))) {
 			$identifier = $recordSet['table_name'] . $recordSet['field'] . $recordSet['identifier'];
 			$recordSets[$identifier] = $recordSet;
 		}
-		$GLOBALS['TYPO3_DB']->sql_free_result($resource);
+		$dbConnection->sql_free_result($resource);
 
 		return $recordSets;
 	}
@@ -109,26 +125,26 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	/**
 	 * Returns a record set based on the given identifier
 	 *
-	 * Note: The record set will be created if it doesn't exists!
+	 * Note: The record set will be created if it does not exists!
 	 *
 	 * @param string $table
 	 * @param string $field
 	 * @param string $identifier
 	 * @param array $existingRawRecordSets by reference
-	 * @return Tx_DfTools_Domain_Model_RecordSet
+	 * @return RecordSet
 	 */
 	protected function getValidRecordSet($table, $field, $identifier, array &$existingRawRecordSets) {
 		$index = $table . $field . $identifier;
 		if (!isset($existingRawRecordSets[$index])) {
-			/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
-			$recordSet = $this->objectManager->create('Tx_DfTools_Domain_Model_RecordSet');
+			/** @var $recordSet RecordSet */
+			$recordSet = $this->objectManager->get('SGalinski\DfTools\Domain\Model\RecordSet');
 			$recordSet->setTableName($table);
 			$recordSet->setIdentifier($identifier);
 			$recordSet->setField($field);
 			$existingRawRecordSets[$index] = $recordSet;
 			$this->recordSetRepository->add($recordSet);
 
-		} elseif ($existingRawRecordSets[$index] instanceof Tx_DfTools_Domain_Model_RecordSet) {
+		} elseif ($existingRawRecordSets[$index] instanceof RecordSet) {
 			$recordSet = $existingRawRecordSets[$index];
 
 		} else {
@@ -146,11 +162,11 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * removed from the url record.
 	 *
 	 * @param array $rawUrls by reference
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkTest
+	 * @param LinkCheck $linkTest
 	 * @return bool
 	 */
-	protected function removeUnknownRecordSetsFromUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $linkTest) {
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+	protected function removeUnknownRecordSetsFromUrlRecord(array &$rawUrls, LinkCheck $linkTest) {
+		/** @var $recordSet RecordSet */
 		$recordWasEdited = FALSE;
 		$recordSets = $linkTest->getRecordSets();
 		foreach ($recordSets as $recordSet) {
@@ -170,11 +186,13 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * a boolean TRUE if a record set was added, otherwise FALSE.
 	 *
 	 * @param array $rawUrls by reference
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkTest
+	 * @param LinkCheck $linkTest
 	 * @param array $existingRawRecordSets by reference
 	 * @return boolean
 	 */
-	protected function addMissingRecordSetsToUrlRecord(array &$rawUrls, Tx_DfTools_Domain_Model_LinkCheck $linkTest, array &$existingRawRecordSets) {
+	protected function addMissingRecordSetsToUrlRecord(
+		array &$rawUrls, LinkCheck $linkTest, array &$existingRawRecordSets
+	) {
 		$recordWasEdited = FALSE;
 		foreach ($rawUrls as $rawRecordSet) {
 			list($table, $field, $identifier) = $rawRecordSet;
@@ -200,8 +218,8 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 */
 	protected function addUrlRecords(array $rawUrls, array &$existingRawRecordSets) {
 		foreach ($rawUrls as $url => $rawRecordSets) {
-			/** @var $record Tx_DfTools_Domain_Model_LinkCheck */
-			$record = $this->objectManager->create('Tx_DfTools_Domain_Model_LinkCheck');
+			/** @var $record LinkCheck */
+			$record = $this->objectManager->get('SGalinski\DfTools\Domain\Model\LinkCheck');
 			$record->setTestUrl($url);
 
 			foreach ($rawRecordSets as $rawRecordSet) {
@@ -219,13 +237,13 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * Compares the records sets of the url with the raw data of the second parameter.
 	 * Missing ones are added and others are removed.
 	 *
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkTest
+	 * @param LinkCheck $linkTest
 	 * @param array $rawUrlData
 	 * @param array $existingRawRecordSets
 	 * @return void
 	 */
 	protected function evaluateRecordSetDataOfUrl(
-		Tx_DfTools_Domain_Model_LinkCheck $linkTest,
+		LinkCheck $linkTest,
 		array &$rawUrlData,
 		array &$existingRawRecordSets
 	) {
@@ -253,13 +271,13 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * - remove non-existing urls with their related records sets
 	 *
 	 * @param array $rawUrls
-	 * @param Tx_Extbase_Persistence_QueryResultInterface $existingLinkTests
+	 * @param QueryResultInterface $existingLinkTests
 	 * @return void
 	 */
 	public function synchronize(array $rawUrls, $existingLinkTests) {
 		$existingRawRecordSets = $this->fetchExistingRawRecordSets();
 
-		/** @var $linkTest Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkTest LinkCheck */
 		foreach ($existingLinkTests as $linkTest) {
 			$url = $linkTest->getTestUrl();
 			if (!isset($rawUrls[$url])) {
@@ -284,7 +302,7 @@ class Tx_DfTools_Service_UrlSynchronizeService implements t3lib_Singleton {
 	 * @return void
 	 */
 	public function synchronizeGroupOfUrls(array $rawUrls) {
-		/** @var $linkTest Tx_DfTools_Domain_Model_LinkCheck */
+		/** @var $linkTest LinkCheck */
 		$existingLinkTests = $this->linkCheckRepository->findInListByTestUrl(array_keys($rawUrls));
 		foreach ($existingLinkTests as $index => $linkTest) {
 			$url = $linkTest->getTestUrl();

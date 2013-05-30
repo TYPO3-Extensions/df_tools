@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,32 +26,37 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\BackLinkTestRepository;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Controller for the BackLinkTest domain model
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller_AbstractController {
+class BackLinkTestController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'Tx_DfTools_View_BackLinkTest_ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\BackLinkTest\ArrayView';
 
 	/**
 	 * Instance of the back link test repository
 	 *
-	 * @var Tx_DfTools_Domain_Repository_BackLinkTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\BackLinkTestRepository
 	 */
 	protected $backLinkTestRepository;
 
 	/**
 	 * Injects the back link test repository
 	 *
-	 * @param Tx_DfTools_Domain_Repository_BackLinkTestRepository $backLinkTestRepository
+	 * @param BackLinkTestRepository $backLinkTestRepository
 	 * @return void
 	 */
-	public function injectBackLinkTestRepository(Tx_DfTools_Domain_Repository_BackLinkTestRepository $backLinkTestRepository) {
+	public function injectBackLinkTestRepository(BackLinkTestRepository $backLinkTestRepository) {
 		$this->backLinkTestRepository = $backLinkTestRepository;
 	}
 
@@ -56,7 +64,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function initializeIndexAction() {
-		$this->defaultViewObjectName = 'Tx_Fluid_View_TemplateView';
+		$this->defaultViewObjectName = 'TYPO3\CMS\Fluid\View\TemplateView';
 	}
 
 	/**
@@ -78,7 +86,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function readAction($offset, $limit, $sortingField, $sortAscending) {
-		/** @var $linkChecks Tx_Extbase_Persistence_ObjectStorage */
+		/** @var $linkChecks ObjectStorage */
 		$records = $this->backLinkTestRepository->findSortedAndInRange(
 			$offset, $limit, array($sortingField => $sortAscending)
 		);
@@ -90,10 +98,10 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	/**
 	 * Updates an existing back link test
 	 *
-	 * @param Tx_DfTools_Domain_Model_BackLinkTest $backLinkTest
+	 * @param BackLinkTest $backLinkTest
 	 * @return void
 	 */
-	public function updateAction(Tx_DfTools_Domain_Model_BackLinkTest $backLinkTest) {
+	public function updateAction(BackLinkTest $backLinkTest) {
 		$this->backLinkTestRepository->update($backLinkTest);
 		$this->view->assign('records', array($backLinkTest));
 	}
@@ -101,14 +109,14 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	/**
 	 * Creates a back link test
 	 *
-	 * @param Tx_DfTools_Domain_Model_BackLinkTest $newBackLinkTest
+	 * @param BackLinkTest $newBackLinkTest
 	 * @return void
 	 */
-	public function createAction(Tx_DfTools_Domain_Model_BackLinkTest $newBackLinkTest) {
+	public function createAction(BackLinkTest $newBackLinkTest) {
 		$this->backLinkTestRepository->add($newBackLinkTest);
 
-		/** @var $persistenceManager Tx_Extbase_Persistence_Manager */
-		$persistenceManager = $this->objectManager->get('Tx_Extbase_Persistence_Manager');
+		/** @var $persistenceManager PersistenceManager */
+		$persistenceManager = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
 		$persistenceManager->persistAll();
 
 		$this->view->assign('records', array($newBackLinkTest));
@@ -121,7 +129,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function destroyAction($identifiers) {
-		$this->view = null;
+		$this->view = NULL;
 
 		foreach ($identifiers as $identifier) {
 			$redirectTest = $this->backLinkTestRepository->findByUid(intval($identifier));
@@ -135,7 +143,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function runAllTestsAction() {
-		/** @var $backLinkTest Tx_DfTools_Domain_Model_BackLinkTest */
+		/** @var $backLinkTest BackLinkTest */
 		$backLinkTests = $this->backLinkTestRepository->findAll();
 		$urlCheckerService = $this->getUrlCheckerService();
 		foreach ($backLinkTests as $backLinkTest) {
@@ -152,7 +160,7 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function runTestAction($identity) {
-		/** @var $backLinkTest Tx_DfTools_Domain_Model_BackLinkTest */
+		/** @var $backLinkTest BackLinkTest */
 		$backLinkTest = $this->backLinkTestRepository->findByUid($identity);
 		$backLinkTest->test($this->getUrlCheckerService());
 		$this->forward('saveTest', NULL, NULL, array('backLinkTest' => $backLinkTest));
@@ -162,10 +170,10 @@ class Tx_DfTools_Controller_BackLinkTestController extends Tx_DfTools_Controller
 	 * Saves a back link test (just exists for validation issues)
 	 *
 	 * @dontverifyrequesthash
-	 * @param Tx_DfTools_Domain_Model_BackLinkTest $backLinkTest
+	 * @param BackLinkTest $backLinkTest
 	 * @return void
 	 */
-	protected function saveTestAction(Tx_DfTools_Domain_Model_BackLinkTest $backLinkTest) {
+	protected function saveTestAction(BackLinkTest $backLinkTest) {
 		$this->backLinkTestRepository->update($backLinkTest);
 		$this->handleExceptionalTest($backLinkTest);
 		$this->view->assign('records', array($backLinkTest));

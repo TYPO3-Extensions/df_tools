@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Service\UrlChecker;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,39 +26,42 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+
 /**
  * Factory For The Creation Of An Url Checker Service
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_UrlChecker_Factory {
+class Factory {
 	/**
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var ObjectManager
 	 */
 	protected $objectManager = NULL;
 
 	/**
 	 * Injects the object manager
 	 *
-	 * @param Tx_Extbase_Object_ObjectManagerInterface $objectManager
+	 * @param ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(Tx_Extbase_Object_ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
 	/**
 	 * Returns an instance of the url checker depending on your extension configuration
 	 *
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @return AbstractService
 	 */
 	public function get() {
-		/** @var $instance Tx_DfTools_Service_UrlChecker_AbstractService */
+		/** @var $instance AbstractService */
 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse']) {
-			$instance = $this->objectManager->get('Tx_DfTools_Service_UrlChecker_CurlService');
+			$instance = $this->objectManager->get('SGalinski\DfTools\Service\UrlChecker\CurlService');
 		} else {
-			$instance = $this->objectManager->get('Tx_DfTools_Service_UrlChecker_StreamService');
+			$instance = $this->objectManager->get('SGalinski\DfTools\Service\UrlChecker\StreamService');
 		}
 
 		$instance->init();

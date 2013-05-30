@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,24 +26,29 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendViewHelper;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 /**
  * Abstract View Helper
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_ViewHelpers_AbstractViewHelper extends Tx_Fluid_ViewHelpers_Be_AbstractBackendViewHelper {
+abstract class AbstractViewHelper extends AbstractBackendViewHelper {
 	/**
 	 * Returns an instance of the page renderer
 	 *
-	 * @return t3lib_PageRenderer
+	 * @return PageRenderer
 	 */
 	public function getPageRenderer() {
+		/** @var $tsfe TypoScriptFrontendController */
+		$tsfe = $GLOBALS['TSFE'];
 		if (TYPO3_MODE === 'BE') {
 			$pageRenderer = $this->getDocInstance()->getPageRenderer();
 		} else {
-			/** @noinspection PhpUndefinedMethodInspection */
-			$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
+			$pageRenderer = $tsfe->getPageRenderer();
 		}
 
 		return $pageRenderer;

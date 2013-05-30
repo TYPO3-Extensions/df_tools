@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Task;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,7 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Scheduler task to execute the redirect tests
@@ -29,7 +33,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Task_RedirectTestTask extends Tx_DfTools_Task_AbstractTask {
+class RedirectTestTask extends AbstractTask {
 	/**
 	 * Calls the ExtBase controller to execute the tests
 	 *
@@ -47,9 +51,11 @@ class Tx_DfTools_Task_RedirectTestTask extends Tx_DfTools_Task_AbstractTask {
 	 * @return void
 	 */
 	protected function sendNotificationEmail(array $failedRecords) {
+		/** @var LanguageService $language */
+		$language = $GLOBALS['LANG'];
 		$sLPrefix = 'LLL:EXT:df_tools/Resources/Private/Language/locallang.xml:';
-		$subject = $GLOBALS['LANG']->sL($sLPrefix . 'tx_dftools_domain_model_redirecttest.scheduler.mailSubject');
-		$message = $GLOBALS['LANG']->sL($sLPrefix . 'tx_dftools_domain_model_redirecttest.scheduler.mailBody') .
+		$subject = $language->sL($sLPrefix . 'tx_dftools_domain_model_redirecttest.scheduler.mailSubject');
+		$message = $language->sL($sLPrefix . 'tx_dftools_domain_model_redirecttest.scheduler.mailBody') .
 			PHP_EOL . PHP_EOL;
 
 		foreach ($failedRecords as $failedRecord) {

@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,13 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Exception\GenericException;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Repository for Tx_DfTools_Domain_Model_RedirectTestCategory
@@ -29,7 +39,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfTools_Domain_Repository_AbstractRepository {
+class RedirectTestCategoryRepository extends AbstractRepository {
 	/**
 	 * Default settings
 	 *
@@ -39,7 +49,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 		parent::initializeObject();
 
 		$this->setDefaultOrderings(
-			array('category' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING)
+			array('category' => QueryInterface::ORDER_ASCENDING)
 		);
 	}
 
@@ -47,7 +57,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 	 * Returns a collection of categories filtered by the given filter
 	 *
 	 * @param string $filterString
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	public function findByStartingCategory($filterString) {
 		$query = $this->createQuery();
@@ -58,25 +68,25 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 	/**
 	 * Returns a collection of categories that are currently unused
 	 *
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	public function findAllUnusedCategories() {
-		/** @var $pageSelect t3lib_pageSelect */
+		/** @var $pageSelect PageRepository */
 		$pageSelect = $this->getPageSelectInstance();
 		$categoryEnableFields = $pageSelect->enableFields('tx_dftools_domain_model_redirecttestcategory');
 		$enableFields = $pageSelect->enableFields('tx_dftools_domain_model_redirecttest');
 
-		/** @var $query Tx_Extbase_Persistence_Query */
+		/** @var $query Query */
 		$query = $this->createQuery();
 		$query->statement(
 			'SELECT tx_dftools_domain_model_redirecttestcategory.* ' .
 			'FROM tx_dftools_domain_model_redirecttestcategory ' .
-				'LEFT JOIN tx_dftools_domain_model_redirecttest ' .
-					'ON tx_dftools_domain_model_redirecttest.category = ' .
-						'tx_dftools_domain_model_redirecttestcategory.uid ' .
-						$enableFields .
+			'LEFT JOIN tx_dftools_domain_model_redirecttest ' .
+			'ON tx_dftools_domain_model_redirecttest.category = ' .
+			'tx_dftools_domain_model_redirecttestcategory.uid ' .
+			$enableFields .
 			'WHERE tx_dftools_domain_model_redirecttest.uid IS NULL ' .
-				$categoryEnableFields
+			$categoryEnableFields
 		);
 
 		return $query->execute();
@@ -85,25 +95,25 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 	/**
 	 * Checks if the given category name is already assigned
 	 *
-	 * @throws Tx_DfTools_Exception_GenericException if the category already exists
+	 * @throws GenericException if the category already exists
 	 * @param string $category
 	 * @return bool
 	 */
 	protected function checkIfCategoryNameIsAlreadyAssigned($category) {
-		/** @var $result Tx_Extbase_Persistence_QueryResult */
+		/** @var $result QueryResult */
 		/** @noinspection PhpUndefinedMethodInspection */
 		$result = $this->findByCategory($category);
 		if ($result !== NULL && $result->count()) {
 			$label = 'tx_dftools_domain_model_redirecttestcategory.categoryExists';
-			$errorMessage = Tx_Extbase_Utility_Localization::translate($label, 'df_tools', array($category));
-			throw new Tx_DfTools_Exception_GenericException($errorMessage);
+			$errorMessage = LocalizationUtility::translate($label, 'df_tools', array($category));
+			throw new GenericException($errorMessage);
 		}
 	}
 
 	/**
 	 * Wrapper for the add repository method to do some validity checks
 	 *
-	 * @param Tx_DfTools_Domain_Model_RedirectTestCategory $redirectTestCategory
+	 * @param RedirectTestCategory $redirectTestCategory
 	 * @return void
 	 */
 	public function add($redirectTestCategory) {
@@ -114,7 +124,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository extends Tx_DfT
 	/**
 	 * Wrapper for the update repository method to do some validity checks
 	 *
-	 * @param Tx_DfTools_Domain_Model_RedirectTestCategory $redirectTestCategory
+	 * @param RedirectTestCategory $redirectTestCategory
 	 * @return void
 	 */
 	public function update($redirectTestCategory) {

@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,8 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Dbal\Database\DatabaseConnection;
 
 /**
  * Collection of smaller page utility functions
@@ -29,7 +34,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-final class Tx_DfTools_Utility_PageUtility {
+final class PageUtility {
 	/**
 	 * Fetches the page id given by the table name and id pair and calculates the
 	 * resulting view link that is returned afterwards.
@@ -41,7 +46,9 @@ final class Tx_DfTools_Utility_PageUtility {
 	public static function getViewLinkFromTableNameAndIdPair($tableName, $identifier) {
 		$pageId = $identifier;
 		if ($tableName !== 'pages') {
-			$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+			/** @var $dbConnection DatabaseConnection */
+			$dbConnection = $GLOBALS['TYPO3_DB'];
+			$record = $dbConnection->exec_SELECTgetSingleRow(
 				'pid',
 				$tableName,
 				'uid = ' . intval($identifier)
@@ -52,7 +59,7 @@ final class Tx_DfTools_Utility_PageUtility {
 			}
 		}
 
-		$javascriptLink = t3lib_BEfunc::viewOnClick($pageId);
+		$javascriptLink = BackendUtility::viewOnClick($pageId);
 		preg_match('/window\.open\(\'([^\']+)\'/i', $javascriptLink, $match);
 
 		return $match[1];

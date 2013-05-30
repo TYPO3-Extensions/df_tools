@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Task;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,15 +26,21 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Lang\LanguageService;
+use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+use TYPO3\CMS\Scheduler\Task\AbstractTask as SchedulerAbstractTask;
+
 /**
  * Additional fields for the scheduler redirect test task
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_AdditionalFieldProvider {
+abstract class AbstractFields implements AdditionalFieldProviderInterface {
 	/**
-	 * @var	string
+	 * @var    string
 	 */
 	protected $fieldPrefix = '';
 
@@ -71,21 +80,21 @@ abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_Additional
 	 *
 	 * array(
 	 *   'Identifier' => array(
-	 *	   'fieldId' => array(
-	 *	     'code' => '',
-	 *	     'label' => '',
-	 *	     'cshKey' => '',
-	 *	     'cshLabel' => ''
-	 *	   )
+	 *       'fieldId' => array(
+	 *         'code' => '',
+	 *         'label' => '',
+	 *         'cshKey' => '',
+	 *         'cshLabel' => ''
+	 *       )
 	 *   )
 	 * )
 	 *
-	 * @param array	$taskInfo Values of the fields from the add/edit task form
-	 * @param Tx_DfTools_Task_AbstractTask $task The task object being edited. Null when adding a task!
-	 * @param tx_scheduler_Module $schedulerModule Reference to the scheduler backend module
+	 * @param array $taskInfo Values of the fields from the add/edit task form
+	 * @param AbstractTask|SchedulerAbstractTask $task The task object being edited. Null when adding a task!
+	 * @param SchedulerModuleController $schedulerModule Reference to the scheduler backend module
 	 * @return array
 	 */
-	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
+	public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule) {
 		$fieldName = $this->getFullFieldName('notificationEmailAddress');
 		if ($schedulerModule->CMD === 'edit') {
 			$taskInfo[$fieldName] = $task->getNotificationEmailAddress();
@@ -98,7 +107,7 @@ abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_Additional
 		$additionalFields[$fieldId] = array(
 			'code' => $fieldHtml,
 			'label' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang.xml:' .
-				'tx_dftools_common.scheduler.notificationEmailAddress',
+			'tx_dftools_common.scheduler.notificationEmailAddress',
 			'cshKey' => '',
 			'cshLabel' => $fieldId
 		);
@@ -110,22 +119,26 @@ abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_Additional
 	 * Validates the additional fields' values
 	 *
 	 * @param array $submittedData An array containing the data submitted by the add/edit task form
-	 * @param tx_scheduler_Module $schedulerModule Reference to the scheduler backend module
+	 * @param SchedulerModuleController $schedulerModule Reference to the scheduler backend module
 	 * @return boolean True if validation was ok (or selected class is not relevant), false otherwise
 	 */
-	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
+	public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule) {
 		$validInput = TRUE;
 		$fieldName = $this->getFullFieldName('notificationEmailAddress');
 
+		/** @var LanguageService $language */
+		$language = $GLOBALS['LANG'];
 		$sanitizedAddresses = array();
 		$addresses = explode(',', $submittedData[$fieldName]);
 		foreach ($addresses as $address) {
 			$address = filter_var(trim($address), FILTER_VALIDATE_EMAIL);
 			if ($address === FALSE) {
 				$validInput = FALSE;
-				$label = $GLOBALS['LANG']->sL('LLL:EXT:df_tools/Resources/Private/Language/locallang.xml:' .
-					'tx_dftools_common.scheduler.emailNotValid');
-				$schedulerModule->addMessage($label, t3lib_FlashMessage::ERROR);
+				$label = $language->sL(
+					'LLL:EXT:df_tools/Resources/Private/Language/locallang.xml:' .
+					'tx_dftools_common.scheduler.emailNotValid'
+				);
+				$schedulerModule->addMessage($label, FlashMessage::ERROR);
 				break;
 			}
 			$sanitizedAddresses[] = $address;
@@ -138,11 +151,11 @@ abstract class Tx_DfTools_Task_AbstractFields implements tx_scheduler_Additional
 	/**
 	 * Takes care of saving the additional fields' values in the task's object
 	 *
-	 * @param array	$submittedData An array containing the data submitted by the add/edit task form
-	 * @param tx_scheduler_Task|Tx_DfTools_Task_AbstractTask $task Reference to the scheduler backend module
+	 * @param array $submittedData An array containing the data submitted by the add/edit task form
+	 * @param AbstractTask|SchedulerAbstractTask $task Reference to the scheduler backend module
 	 * @return void
 	 */
-	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
+	public function saveAdditionalFields(array $submittedData, SchedulerAbstractTask $task) {
 		$address = $submittedData[$this->getFullFieldName('notificationEmailAddress')];
 		$task->setNotificationEmailAddress($address);
 	}

@@ -1,4 +1,7 @@
 <?php
+
+namespace SGalinski\DfTools\Hooks;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,17 +26,21 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Hooks for synchronize urls directly on-the-fly while editing
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class tx_DfTools_Hooks_ProcessDatamap {
+class ProcessDatamap {
 	/**
 	 * BootStrap Instance
 	 *
-	 * @var Tx_DfTools_Service_ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
 	 */
 	protected $extBaseConnector = NULL;
 
@@ -41,7 +48,7 @@ class tx_DfTools_Hooks_ProcessDatamap {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->extBaseConnector = t3lib_div::makeInstance('Tx_DfTools_Service_ExtBaseConnectorService');
+		$this->extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Service\ExtBaseConnectorService');
 		$this->extBaseConnector->setExtensionKey('DfTools');
 		$this->extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
 	}
@@ -49,7 +56,7 @@ class tx_DfTools_Hooks_ProcessDatamap {
 	/**
 	 * Hook for synchronizing urls after any database operation
 	 *
-	 * @param t3lib_tcemain $tceMain
+	 * @param DataHandler $tceMain
 	 * @return void
 	 */
 	public function processDatamap_afterAllOperations($tceMain) {

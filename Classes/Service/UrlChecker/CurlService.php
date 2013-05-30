@@ -1,27 +1,30 @@
 <?php
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+
+namespace SGalinski\DfTools\Service\UrlChecker;
+
+	/***************************************************************
+	 *  Copyright notice
+	 *
+	 *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+	 *
+	 *  All rights reserved
+	 *
+	 *  This script is part of the TYPO3 project. The TYPO3 project is
+	 *  free software; you can redistribute it and/or modify
+	 *  it under the terms of the GNU General Public License as published by
+	 *  the Free Software Foundation; either version 3 of the License, or
+	 *  (at your option) any later version.
+	 *
+	 *  The GNU General Public License can be found at
+	 *  http://www.gnu.org/copyleft/gpl.html.
+	 *
+	 *  This script is distributed in the hope that it will be useful,
+	 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 *  GNU General Public License for more details.
+	 *
+	 *  This copyright notice MUST APPEAR in all copies of the script!
+	 ***************************************************************/
 
 /**
  * Concrete Url Checker Service
@@ -31,7 +34,7 @@
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlChecker_AbstractService {
+class CurlService extends AbstractService {
 	/**
 	 * cUrl Handle
 	 *
@@ -64,33 +67,35 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 	/**
 	 * Initializes a curl handle and returns it
 	 *
-	 * @throws RuntimeException
+	 * @throws \RuntimeException
 	 * @return resource
 	 */
 	protected function getCurlHandle() {
 		$curlHandle = curl_init();
 		if (!$curlHandle) {
-			throw new RuntimeException('cUrl could not be initialized!');
+			throw new \RuntimeException('cUrl could not be initialized!');
 		}
 
-		curl_setopt_array($curlHandle, array(
-			CURLOPT_ENCODING => '',
-			CURLOPT_USERAGENT => $this->userAgent,
-			CURLOPT_HTTPHEADER => array('Expect:'),
-			CURLOPT_COOKIEJAR => tempnam('/tmp', 'CURLCOOKIE'),
-			CURLOPT_FORBID_REUSE => TRUE,
+		curl_setopt_array(
+			$curlHandle, array(
+				CURLOPT_ENCODING => '',
+				CURLOPT_USERAGENT => $this->userAgent,
+				CURLOPT_HTTPHEADER => array('Expect:'),
+				CURLOPT_COOKIEJAR => tempnam('/tmp', 'CURLCOOKIE'),
+				CURLOPT_FORBID_REUSE => TRUE,
 
-			CURLOPT_CONNECTTIMEOUT => $this->timeout,
-			CURLOPT_TIMEOUT => $this->timeout,
+				CURLOPT_CONNECTTIMEOUT => $this->timeout,
+				CURLOPT_TIMEOUT => $this->timeout,
 
-			CURLOPT_FOLLOWLOCATION => TRUE,
-			CURLOPT_AUTOREFERER => TRUE,
-			CURLOPT_MAXREDIRS => 10,
+				CURLOPT_FOLLOWLOCATION => TRUE,
+				CURLOPT_AUTOREFERER => TRUE,
+				CURLOPT_MAXREDIRS => 10,
 
-			CURLOPT_SSL_VERIFYPEER => FALSE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_VERBOSE => TRUE,
-		));
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_VERBOSE => TRUE,
+			)
+		);
 
 		return $curlHandle;
 	}
@@ -98,7 +103,7 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 	/**
 	 * Initializes the cUrl instance
 	 *
-	 * @throws RuntimeException
+	 * @throws \RuntimeException
 	 * @return void
 	 */
 	public function init() {
@@ -143,7 +148,7 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 	 *
 	 * Note: You must use setUrl to set the testing url!
 	 *
-	 * @throws RuntimeException contains any internal cUrl errors
+	 * @throws \RuntimeException contains any internal cUrl errors
 	 * @param boolean $useProxyInstance
 	 * @return array
 	 */
@@ -164,7 +169,7 @@ class Tx_DfTools_Service_UrlChecker_CurlService extends Tx_DfTools_Service_UrlCh
 			return $this->resolveURL(TRUE);
 
 		} elseif ($curlInfo['error'] !== 0 || $curlInfo['errorMessage'] !== '') {
-			throw new RuntimeException($curlInfo['errorMessage'] . ' [' . $curlInfo['error'] . ']');
+			throw new \RuntimeException($curlInfo['errorMessage'] . ' [' . $curlInfo['error'] . ']');
 		}
 
 		return array(
