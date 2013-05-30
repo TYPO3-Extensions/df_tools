@@ -1,8 +1,8 @@
-config.tx_extbase.mvc.requestHandlers {
-	Tx_DfTools_MVC_Web_CustomRequestHandler = Tx_DfTools_MVC_Web_CustomRequestHandler
-}
-
 module.tx_dftools {
+	mvc.requestHandlers {
+		Tx_DfTools_MVC_Web_CustomRequestHandler = Tx_DfTools_MVC_Web_CustomRequestHandler
+	}
+
 	view {
 		templateRootPath = {$module.tx_dftools.view.templateRootPath}
 		partialRootPath = {$module.tx_dftools.view.partialRootPath}
@@ -20,7 +20,7 @@ module.tx_dftools {
 	settings {
 	}
 
-	features {
-		rewrittenPropertyMapper = 1
+	legacy {
+		enableLegacyFlashMessageHandling = 0
 	}
 }
