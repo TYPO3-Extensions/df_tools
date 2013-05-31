@@ -28,7 +28,6 @@ namespace SGalinski\DfTools\Tests\Unit\Controller;
 
 use SGalinski\DfTools\Controller\RedirectTestCategoryController;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
@@ -40,7 +39,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class RedirectTestCategoryControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\RedirectTestCategoryController
+	 * @var \SGalinski\DfTools\Controller\RedirectTestCategoryController|object
 	 */
 	protected $fixture;
 
@@ -53,25 +52,12 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 
 		/** @var $objectManager ObjectManager */
 		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
-		$this->fixture->injectObjectManager($objectManager);
+		$this->fixture->_set('objectManager', $objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$class = 'Tx_DfTools_View_RedirectTestCategory_ArrayView';
 		$mockView = $this->getMock($class, array('assign'));
 		$this->fixture->_set('view', $mockView);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository RedirectTestCategoryRepository */
-		$repository = new RedirectTestCategoryRepository($this->objectManager);
-		$this->fixture->injectRedirectTestCategoryRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('redirectTestCategoryRepository'));
 	}
 
 	/**

@@ -2,7 +2,7 @@
 storagePid =
 
 # cat=basic; type=string; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTables
-excludedTables = tx_dftools_domain_model_redirecttest,tx_dftools_domain_model_linkcheck,tx_dftools_domain_model_contentcomparisontest,tx_dftools_domain_model_backlinktest
+excludedTables = tx_dftools_domain_model_redirecttest,tx_dftools_domain_model_linkcheck,tx_dftools_domain_model_contentcomparisontest,tx_dftools_domain_model_backlinktest,sys_log,tx_extensionmanager_domain_model_extension,sys_history,tx_extensionmanager_domain_model_repository
 
 # cat=basic; type=string; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.excludedTableFields
 excludedTableFields =

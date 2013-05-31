@@ -39,7 +39,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class AbstractControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\AbstractController
+	 * @var \SGalinski\DfTools\Controller\AbstractController|object
 	 */
 	protected $fixture;
 
@@ -52,7 +52,7 @@ class AbstractControllerTest extends ControllerTestCase {
 
 		/** @var $objectManager ObjectManager */
 		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
-		$this->fixture->injectObjectManager($objectManager);
+		$this->fixture->_set('objectManager', $objectManager);
 	}
 
 	/**
@@ -88,7 +88,6 @@ class AbstractControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function errorActionThrowsRuntimeException() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$mockMappingResults = $this->getMock('TYPO3\CMS\Extbase\Property\MappingResults', array('dummy'));
 		$this->fixture->_set('argumentsMappingResults', $mockMappingResults);
 

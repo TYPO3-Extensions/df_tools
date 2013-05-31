@@ -42,12 +42,12 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class LinkCheckControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\LinkCheckController
+	 * @var \SGalinski\DfTools\Controller\LinkCheckController|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository|object
 	 */
 	protected $repository;
 
@@ -57,7 +57,7 @@ class LinkCheckControllerTest extends ControllerTestCase {
 	protected $objectManager;
 
 	/**
-	 * @var \SGalinski\DfTools\View\LinkCheckArrayView
+	 * @var \SGalinski\DfTools\View\LinkCheckArrayView|object
 	 */
 	protected $view;
 
@@ -69,7 +69,7 @@ class LinkCheckControllerTest extends ControllerTestCase {
 			'SGalinski\DfTools\Controller\LinkCheckController',
 			array('forward', 'getUrlCheckerService', 'fetchRawUrls', 'getUrlsFromSingleRecord')
 		);
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository LinkCheckRepository */
 		$this->repository = $this->getMock(
@@ -77,10 +77,10 @@ class LinkCheckControllerTest extends ControllerTestCase {
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRange', 'countAll'),
 			array($this->objectManager)
 		);
-		$this->fixture->injectLinkCheckRepository($this->repository);
+		$this->fixture->_set('repository', $this->repository);
 
 		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('SGalinski\DfTools\View\LinkCheckArrayView', array('assign'));
@@ -100,20 +100,6 @@ class LinkCheckControllerTest extends ControllerTestCase {
 		$linkCheck->setTestUrl('FooBar');
 
 		return $linkCheck;
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectLinkCheckRepository() {
-		/** @var $repository LinkCheckRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\LinkCheckRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectLinkCheckRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('linkCheckRepository'));
 	}
 
 	/**

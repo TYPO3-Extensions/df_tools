@@ -41,7 +41,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class RecordSetArrayViewTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\View\RecordSetArrayView
+	 * @var \SGalinski\DfTools\View\RecordSetArrayView|object
 	 */
 	protected $fixture;
 

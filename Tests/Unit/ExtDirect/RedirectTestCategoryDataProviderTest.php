@@ -26,10 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\ExtDirect\RedirectTestCategoryDataProvider;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -45,7 +42,7 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
  */
 class RedirectTestCategoryDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var \SGalinski\DfTools\ExtDirect\RedirectTestCategoryDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\RedirectTestCategoryDataProvider|object
 	 */
 	protected $fixture;
 
@@ -83,13 +80,13 @@ class RedirectTestCategoryDataProviderTest extends ExtBaseConnectorTestCase {
 		return array(
 			'simple update call #1' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'redirectTestCategory' => array(
 						'__identity' => 1,
 						'category' => 'fooBar',
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => '1',
 					'category' => 'fooBar',
 				)

@@ -38,7 +38,7 @@ TYPO3.DfTools.RedirectTestCategory.Model = Ext.data.Record.create([{
 		name: 'category',
 		allowBlank: false
 	}, {
-		name: '__hmac'
+		name: '__trustedProperties'
 	}
 ]);
 

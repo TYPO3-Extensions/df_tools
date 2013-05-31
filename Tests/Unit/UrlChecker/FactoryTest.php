@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Tests\Unit\Service\UrlChecker;
+namespace SGalinski\DfTools\Tests\Unit\UrlChecker;
 
 /***************************************************************
  *  Copyright notice
@@ -38,7 +38,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class FactoryTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\UrlChecker\Factory
+	 * @var \SGalinski\DfTools\UrlChecker\Factory|object
 	 */
 	protected $fixture;
 
@@ -67,20 +67,6 @@ class FactoryTest extends BaseTestCase {
 	public function tearDown() {
 		$GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] = $this->backupCurlUse;
 		unset($this->fixture);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function injectObjectManagerSetsObjectManager() {
-		/** @var $objectManager ObjectManager */
-		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('dummy'));
-		$this->fixture->injectObjectManager($objectManager);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$objectManager = $this->fixture->_get('objectManager');
-		$this->assertInstanceOf('TYPO3\CMS\Extbase\Object\ObjectManager', $objectManager);
 	}
 
 	/**
@@ -113,7 +99,7 @@ class FactoryTest extends BaseTestCase {
 
 		/** @var $objectManager ObjectManager */
 		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
-		$this->fixture->injectObjectManager($objectManager);
+		$this->fixture->_set('objectManager', $objectManager);
 
 		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\UrlChecker\AbstractService');
 		$service = $this->getMock($proxyClass, array('init', 'resolveUrl'));

@@ -36,7 +36,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
  */
 class OverviewControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\OverviewController
+	 * @var \SGalinski\DfTools\Controller\OverviewController|object
 	 */
 	protected $fixture;
 

@@ -56,7 +56,7 @@ class RedirectTestCategoryDataProvider extends AbstractDataProvider {
 	 */
 	protected function updateRecord(array $updatedRecord) {
 		$parameters = array(
-			'__hmac' => $updatedRecord['__hmac'],
+			'__trustedProperties' => $updatedRecord['__trustedProperties'],
 			'redirectTestCategory' => array(
 				'__identity' => intval($updatedRecord['__identity']),
 				'category' => $updatedRecord['category'],

@@ -26,10 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\ExtDirect\ContentComparisonTestDataProvider;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -96,7 +93,7 @@ class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 	 */
 	public function createCallsCreateAction() {
 		$parameters = array(
-			'__hmac' => 'hmac',
+			'__trustedProperties' => 'hmac',
 			'newContentComparisonTest' => array(
 				'testUrl' => 'FooBar',
 				'compareUrl' => 'FooBar'
@@ -104,10 +101,10 @@ class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 		);
 		$this->addMockedExtBaseConnector('ContentComparisonTest', 'create', $parameters);
 
-		/** @noinspection PhpUndefinedFieldInspection */
+		/** @var /stdClass $record */
 		$record = array(
 			'records' => (object) array(
-				'__hmac' => 'hmac',
+				'__trustedProperties' => 'hmac',
 				'__identity' => 0,
 				'testUrl' => 'FooBar',
 				'compareUrl' => 'FooBar',
@@ -123,7 +120,7 @@ class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 	 */
 	public function updateCallsUpdateAction() {
 		$parameters = array(
-			'__hmac' => 'hmac',
+			'__trustedProperties' => 'hmac',
 			'contentComparisonTest' => array(
 				'__identity' => 2,
 				'testUrl' => 'FooBar',
@@ -132,10 +129,10 @@ class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 		);
 		$this->addMockedExtBaseConnector('ContentComparisonTest', 'update', $parameters);
 
-		/** @noinspection PhpUndefinedFieldInspection */
+		/** @var /stdClass $record */
 		$record = (object) array(
 			'records' => (object) array(
-				'__hmac' => 'hmac',
+				'__trustedProperties' => 'hmac',
 				'__identity' => 2,
 				'testUrl' => 'FooBar',
 				'compareUrl' => 'FooBar',

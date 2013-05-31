@@ -52,7 +52,7 @@ TYPO3.DfTools.LinkCheck.Model = Ext.data.Record.create([{
 		name: 'testMessage',
 		type: 'string'
 	}, {
-		name: '__hmac'
+		name: '__trustedProperties'
 	}
 ]);
 

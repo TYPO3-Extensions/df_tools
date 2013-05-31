@@ -41,17 +41,17 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class BackLinkTestControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\BackLinkTestController
+	 * @var \SGalinski\DfTools\Controller\BackLinkTestController|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\BackLinkTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\BackLinkTestRepository|object
 	 */
 	protected $repository;
 
 	/**
-	 * @var \SGalinski\DfTools\View\BackLinkTestArrayView
+	 * @var \SGalinski\DfTools\View\BackLinkTestArrayView|object
 	 */
 	protected $view;
 
@@ -61,7 +61,7 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 	public function setUp() {
 		$class = 'SGalinski\DfTools\Controller\BackLinkTestController';
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository BackLinkTestRepository */
 		$this->repository = $this->getMock(
@@ -69,7 +69,7 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange'),
 			array($this->objectManager)
 		);
-		$this->fixture->injectBackLinkTestRepository($this->repository);
+		$this->fixture->_set('repository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('SGalinski\DfTools\View\BackLinkTestArrayView', array('assign'));
@@ -91,20 +91,6 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 		$backLinkTest->setTestUrl('FooBar');
 
 		return $backLinkTest;
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectBackLinkTestRepository() {
-		/** @var $repository BackLinkTestRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\BackLinkTestRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectBackLinkTestRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('backLinkTestRepository'));
 	}
 
 	/**

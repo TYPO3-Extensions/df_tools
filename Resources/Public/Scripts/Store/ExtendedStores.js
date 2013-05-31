@@ -248,7 +248,7 @@ TYPO3.DfTools.StoreExtension = {
 	},
 
 	/**
-	 * Adds the __hmac to the records before sending them to the server side
+	 * Adds the __trustedProperties to the records before sending them to the server side
 	 *
 	 * @private
 	 * @param {Ext.data.Store} store
@@ -257,7 +257,7 @@ TYPO3.DfTools.StoreExtension = {
 	 * @return {Boolean}
 	 */
 	addHmacToRecords: function(store, action, records) {
-		var hmac = store.reader.jsonData['__hmac'][action];
+		var hmac = store.reader.jsonData['__trustedProperties'][action];
 		if (!Ext.isEmpty(hmac)) {
 			var tempRecords = records;
 			if (!Ext.isArray(records)) {
@@ -265,7 +265,7 @@ TYPO3.DfTools.StoreExtension = {
 			}
 
 			Ext.each(tempRecords, function(record) {
-				record.data['__hmac'] = hmac;
+				record.data['__trustedProperties'] = hmac;
 			});
 		}
 

@@ -30,20 +30,18 @@ use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\CMS\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 require_once(ExtensionManagementUtility::extPath('fluid') . 'Tests/Unit/ViewHelpers/ViewHelperBaseTestcase.php');
 
 /**
- * Special Test Case For View Helpers
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ViewHelperTestCase
  */
 abstract class ViewHelperTestCase extends ViewHelperBaseTestcase {
 	/**
-	 * @var object
+	 * @var \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper|object
 	 */
 	protected $fixture;
 

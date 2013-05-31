@@ -53,7 +53,7 @@ TYPO3.DfTools.ContentComparisonTest.Model = Ext.data.Record.create([{
 		name: 'testMessage',
 		type: 'string'
 	}, {
-		name: '__hmac'
+		name: '__trustedProperties'
 	}
 ]);
 

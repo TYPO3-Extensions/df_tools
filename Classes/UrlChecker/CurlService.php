@@ -76,8 +76,10 @@ class CurlService extends AbstractService {
 				CURLOPT_ENCODING => '',
 				CURLOPT_USERAGENT => $this->userAgent,
 				CURLOPT_HTTPHEADER => array('Expect:'),
-				CURLOPT_COOKIEJAR => tempnam('/tmp', 'CURLCOOKIE'),
-				CURLOPT_FORBID_REUSE => TRUE,
+				CURLOPT_COOKIEFILE => '',
+				CURLOPT_COOKIEJAR => (PHP_OS === 'Windows' ? 'NUL' : '/dev/null'),
+				CURLOPT_COOKIE => '',
+//				CURLOPT_FORBID_REUSE => TRUE,
 
 				CURLOPT_CONNECTTIMEOUT => $this->timeout,
 				CURLOPT_TIMEOUT => $this->timeout,

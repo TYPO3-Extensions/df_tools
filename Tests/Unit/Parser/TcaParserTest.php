@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Tests\Unit\Service;
+namespace SGalinski\DfTools\Tests\Unit\Parser;
 
 /***************************************************************
  *  Copyright notice
@@ -26,9 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\Parser\TcaParser;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -38,14 +36,14 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 /**
  * Class TcaParserServiceTest
  */
-class TcaParserServiceTest extends BaseTestCase {
+class TcaParserTest extends BaseTestCase {
 	/**
 	 * @var array
 	 */
 	protected $backupTCA;
 
 	/**
-	 * @var \SGalinski\DfTools\Parser\TcaParserService
+	 * @var \SGalinski\DfTools\Parser\TcaParser
 	 */
 	protected $fixture;
 
@@ -55,7 +53,7 @@ class TcaParserServiceTest extends BaseTestCase {
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->backupTCA = $GLOBALS['TCA'];
-		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Parser\TcaParserService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Parser\TcaParser');
 		$this->fixture = $this->getMock($proxyClass, array('dummy'));
 	}
 

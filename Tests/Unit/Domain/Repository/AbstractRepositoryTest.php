@@ -36,7 +36,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
  */
 class AbstractRepositoryTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\AbstractRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\AbstractRepository|object
 	 */
 	protected $fixture;
 

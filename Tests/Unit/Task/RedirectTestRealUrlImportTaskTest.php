@@ -26,9 +26,6 @@ namespace SGalinski\DfTools\Tests\Unit\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Task\RedirectTestRealUrlImportTask;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;

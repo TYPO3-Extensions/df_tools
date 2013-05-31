@@ -26,10 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -42,7 +39,7 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
  */
 class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var \SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider|object
 	 */
 	protected $fixture;
 
@@ -97,7 +94,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 		return array(
 			'simple update call #1' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'backLinkTest' => array(
 						'__identity' => 1,
 						'testUrl' => 'fooBar',
@@ -105,7 +102,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 						'comment' => 'fooBar',
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => '1',
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
@@ -115,7 +112,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 
 			'simple update call #2' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'backLinkTest' => array(
 						'__identity' => 2,
 						'testUrl' => 'fooBar',
@@ -123,7 +120,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 						'comment' => 'fooBar',
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => 2,
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
@@ -133,7 +130,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 
 			'simple update call with quoted expected url' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'backLinkTest' => array(
 						'__identity' => 2,
 						'testUrl' => 'fooBar',
@@ -141,7 +138,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 						'comment' => 'fooBar',
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => 2,
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'http:\/\/foo.bar',
@@ -171,7 +168,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 	 */
 	public function createCallsTheExtBaseControllerWithExpectedParameters() {
 		$parameters = array(
-			'__hmac' => '__hmac',
+			'__trustedProperties' => '__trustedProperties',
 			'newBackLinkTest' => array(
 				'testUrl' => 'FooBar',
 				'expectedUrl' => 'http:\\\/\\\/foo.bar',
@@ -182,7 +179,7 @@ class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 		/** @noinspection PhpUndefinedFieldInspection */
 		$record = new \stdClass();
 		$record->records = new \stdClass();
-		$record->records->__hmac = '__hmac';
+		$record->records->__trustedProperties = '__trustedProperties';
 		$record->records->__identity = 0;
 		$record->records->testUrl = 'FooBar';
 		$record->records->expectedUrl = 'http:\/\/foo.bar';

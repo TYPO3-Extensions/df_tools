@@ -51,7 +51,7 @@ TYPO3.DfTools.RecordSet.Model = Ext.data.Record.create([{
 		name: 'identifier',
 		type: 'int'
 	}, {
-		name: '__hmac'
+		name: '__trustedProperties'
 	}
 ]);
 

@@ -72,8 +72,8 @@ class AddInlineLanguageLabelFileViewHelperTest extends ViewHelperTestCase {
 	 * @return void
 	 */
 	public function languageFileCanBeAddedWithoutExtensionKey() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->prepareTests();
+		/** @noinspection PhpUndefinedMethodInspection */
 		$this->request->expects($this->once())->method('getControllerExtensionName')
 			->will($this->returnValue('MyExt'));
 		$this->fixture->render('Foo/Bar.xml');

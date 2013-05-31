@@ -59,7 +59,7 @@ class BackLinkTestDataProvider extends AbstractDataProvider {
 	 */
 	protected function updateRecord(array $updatedRecord) {
 		$parameters = array(
-			'__hmac' => $updatedRecord['__hmac'],
+			'__trustedProperties' => $updatedRecord['__trustedProperties'],
 			'backLinkTest' => array(
 				'__identity' => intval($updatedRecord['__identity']),
 				'testUrl' => $updatedRecord['testUrl'],
@@ -80,7 +80,7 @@ class BackLinkTestDataProvider extends AbstractDataProvider {
 	 */
 	public function createRecord(array $newRecord) {
 		$parameters = array(
-			'__hmac' => $newRecord['__hmac'],
+			'__trustedProperties' => $newRecord['__trustedProperties'],
 			'newBackLinkTest' => array(
 				'testUrl' => $newRecord['testUrl'],
 				'expectedUrl' => str_replace('\\', '\\\\', $newRecord['expectedUrl']),

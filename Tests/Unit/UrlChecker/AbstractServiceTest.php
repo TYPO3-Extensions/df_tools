@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Tests\Unit\Service\UrlChecker;
+namespace SGalinski\DfTools\Tests\Unit\UrlChecker;
 
 /***************************************************************
  *  Copyright notice

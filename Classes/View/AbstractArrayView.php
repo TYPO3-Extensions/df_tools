@@ -30,8 +30,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Mvc\View\AbstractView;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Security\Channel\RequestHashService;
-use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
@@ -40,48 +38,16 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
  */
 abstract class AbstractArrayView extends AbstractView {
 	/**
-	 * @var \TYPO3\CMS\Extbase\Security\Channel\RequestHashService
+	 * @inject
+	 * @var \TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService
 	 */
-	protected $requestHashService;
+	protected $mvcPropertyMappingConfigurationService;
 
 	/**
 	 * @inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		$this->initializeObject();
-	}
-
-	/**
-	 * Initializes the object
-	 *
-	 * @return void
-	 */
-	protected function initializeObject() {
-		/** @var $requestHashService RequestHashService */
-		$requestHashService = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Security\Channel\RequestHashService');
-
-		/** @var $hashService HashService */
-		$hashService = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Security\Cryptography\HashService');
-		$requestHashService->injectHashService($hashService);
-
-		$this->injectRequestHashService($requestHashService);
-	}
-
-	/**
-	 * Inject a request hash service
-	 *
-	 * @param RequestHashService $requestHashService
-	 * @return void
-	 */
-	public function injectRequestHashService(RequestHashService $requestHashService) {
-		$this->requestHashService = $requestHashService;
-	}
 
 	/**
 	 * Returns the current parameter namespace
@@ -105,7 +71,9 @@ abstract class AbstractArrayView extends AbstractView {
 	 * @return string
 	 */
 	protected function getDataHash(array $fieldNames) {
-		return $this->requestHashService->generateRequestHash($fieldNames, $this->getNamespace());
+		return $this->mvcPropertyMappingConfigurationService->generateTrustedPropertiesToken(
+			$fieldNames, $this->getNamespace()
+		);
 	}
 
 	/**
@@ -127,7 +95,7 @@ abstract class AbstractArrayView extends AbstractView {
 
 		$fieldConfiguration = $this->getHmacFieldConfiguration();
 		return array(
-			'__hmac' => array(
+			'__trustedProperties' => array(
 				'update' => $this->getDataHash($fieldConfiguration['update']),
 				'create' => $this->getDataHash($fieldConfiguration['create']),
 			),

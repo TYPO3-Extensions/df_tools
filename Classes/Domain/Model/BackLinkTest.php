@@ -201,7 +201,7 @@ class BackLinkTest extends AbstractEntity implements TestableInterface {
 
 			$message = '';
 			$result = AbstractService::SEVERITY_OK;
-			$regularExpression = '/href="' . str_replace(array('\/', '/'), array('/', '\/'), $expectedUrl) . '"/is';
+			$regularExpression = '/="' . str_replace(array('\/', '/'), array('/', '\/'), $expectedUrl) . '"/is';
 			if (!preg_match($regularExpression, $report['content'])) {
 				$result = AbstractService::SEVERITY_ERROR;
 				$message = LocalizationUtility::createLocalizableParameterDrivenString(

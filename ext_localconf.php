@@ -112,6 +112,8 @@ if (TYPO3_MODE === 'BE') {
 		$extPath . 'Classes/ExtDirect/ContentComparisonTestDataProvider.php:SGalinski\DfTools\ExtDirect\ContentComparisonTestDataProvider',
 		'tools_DfToolsTools'
 	);
+
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('RTE.default.useFEediting = 1');
 }
 
 ?>

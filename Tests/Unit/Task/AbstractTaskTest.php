@@ -26,9 +26,6 @@ namespace SGalinski\DfTools\Tests\Unit\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Task\AbstractTask;
 use SGalinski\DfTools\UrlChecker\AbstractService;
 use SGalinski\DfTools\Utility\HttpUtility;
@@ -43,7 +40,7 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
  */
 class AbstractTaskTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Task\AbstractTask
+	 * @var \SGalinski\DfTools\Task\AbstractTask|object
 	 */
 	protected $fixture;
 

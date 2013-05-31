@@ -26,14 +26,11 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
 use SGalinski\DfTools\Domain\Service\UrlSynchronizeService;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,7 +44,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class UrlSynchronizeServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService
+	 * @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService|object
 	 */
 	protected $fixture;
 
@@ -62,7 +59,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 
 		/** @var $objectManager ObjectManager */
 		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
-		$this->fixture->injectObjectManager($objectManager);
+		$this->fixture->_set('objectManager', $objectManager);
 	}
 
 	/**
@@ -70,34 +67,6 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 */
 	public function tearDown() {
 		unset($this->fixture);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectLinkCheckRepository() {
-		/** @var $repository LinkCheckRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\LinkCheckRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectLinkCheckRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('linkCheckRepository'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRecordSetRepository() {
-		/** @var $repository RecordSetRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\RecordSetRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectRecordSetRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('recordSetRepository'));
 	}
 
 	/**
@@ -216,11 +185,13 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	public function synchronizationLogicRemovesTwoUrls() {
 		$this->prepareTestSynchronizationLogic();
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->never())->method('update');
 		$linkCheckRepository->expects($this->exactly(2))->method('remove');
 
+		/** @var  $recordSetRepository RecordSetRepository|object */
 		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->never())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
@@ -237,11 +208,13 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	public function synchronizationLogicRemovesOneUrlAndAddsAnotherWithOneNewRecordSetAndOneExisting() {
 		$this->prepareTestSynchronizationLogic();
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('add');
 		$linkCheckRepository->expects($this->never())->method('update');
 		$linkCheckRepository->expects($this->once())->method('remove');
 
+		/** @var  $recordSetRepository RecordSetRepository|object */
 		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
@@ -294,16 +267,18 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	public function synchronizationLogicEditsAnUrlByRemovingARecordSetAndAddingAnother() {
 		$this->prepareTestSynchronizationLogic();
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
 		$linkCheckRepository->expects($this->never())->method('remove');
 
+		/** @var  $recordSetRepository RecordSetRepository|object */
 		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->never())->method('findByUid')
-			->will($this->returnValue(new Tx_DfTools_Domain_Model_RecordSet()));
+			->will($this->returnValue(new RecordSet()));
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(
@@ -350,11 +325,13 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	public function synchronizationLogicAddsARecordSetForAnUrlAndAddsAnotherUrlWithTheSimilarRecordSet() {
 		$this->prepareTestSynchronizationLogic();
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
 		$linkCheckRepository->expects($this->never())->method('remove');
 
+		/** @var  $recordSetRepository RecordSetRepository|object */
 		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
@@ -415,11 +392,13 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	public function synchronizationLogicRemovesARecordSetWithEmptyField() {
 		$this->prepareTestSynchronizationLogic();
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('add');
 		$linkCheckRepository->expects($this->once())->method('update');
 		$linkCheckRepository->expects($this->never())->method('remove');
 
+		/** @var  $recordSetRepository RecordSetRepository|object */
 		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->never())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
@@ -496,6 +475,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('synchronize')->with($expectedRawUrls, $expectedQueryResult);
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('remove');
 		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
@@ -530,6 +510,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->never())->method('synchronize');
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->once())->method('remove');
 		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
@@ -563,6 +544,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('synchronize')->with($rawUrls, $queryResult);
 
+		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
 		$linkCheckRepository->expects($this->never())->method('remove');
 		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')

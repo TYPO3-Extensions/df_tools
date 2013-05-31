@@ -253,6 +253,8 @@ class LinkCheck extends AbstractEntity implements TestableInterface {
 			$testUrl = $this->getTestUrl();
 			$message = '';
 
+			$reportUrlLower = strtolower($report['url']);
+			$testUrlLower = strtolower($testUrl);
 			if (!in_array($report['http_code'], array(200, 301, 302))) {
 				$result = AbstractService::SEVERITY_ERROR;
 				$message = LocalizationUtility::createLocalizableParameterDrivenString(
@@ -260,7 +262,9 @@ class LinkCheck extends AbstractEntity implements TestableInterface {
 					array('[200, 301, 302]', $report['http_code'])
 				);
 
-			} elseif ($report['url'] !== $testUrl) {
+			} elseif ($reportUrlLower !== $testUrlLower && $reportUrlLower . '/' !== $testUrlLower
+				&& $reportUrlLower !== $testUrlLower . '/'
+			) {
 				$result = AbstractService::SEVERITY_WARNING;
 				$message = LocalizationUtility::createLocalizableParameterDrivenString(
 					'tx_dftools_domain_model_linkcheck.test.urlMismatch',

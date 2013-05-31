@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Tests\Unit\Service;
+namespace SGalinski\DfTools\Tests\Unit\Connector;
 
 /***************************************************************
  *  Copyright notice
@@ -46,10 +46,13 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 */
 	public function setUp() {
 		$class = 'SGalinski\DfTools\Connector\ExtBaseConnector';
-		$this->fixture = $this->getAccessibleMock($class, array('initialize', 'handleWebRequest'));
 
-		$this->fixture->setExtensionKey('Foo');
-		$this->fixture->setModuleOrPluginKey('tools_FooTools');
+		/** @var ExtBaseConnector $fixture */
+		$fixture = $this->getAccessibleMock($class, array('initialize', 'handleWebRequest'));
+
+		$fixture->setExtensionKey('Foo');
+		$fixture->setModuleOrPluginKey('tools_FooTools');
+		$this->fixture = $fixture;
 	}
 
 	/**

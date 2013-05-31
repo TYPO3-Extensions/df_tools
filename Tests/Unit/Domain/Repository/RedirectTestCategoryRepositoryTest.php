@@ -36,7 +36,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
  */
 class RedirectTestCategoryRepositoryTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository|object
 	 */
 	protected $fixture;
 

@@ -58,7 +58,7 @@ class RedirectTestDataProvider extends AbstractDataProvider {
 	 */
 	protected function updateRecord(array $updatedRecord) {
 		$parameters = array(
-			'__hmac' => $updatedRecord['__hmac'],
+			'__trustedProperties' => $updatedRecord['__trustedProperties'],
 			'redirectTest' => array(
 				'__identity' => intval($updatedRecord['__identity']),
 				'testUrl' => $updatedRecord['testUrl'],
@@ -66,9 +66,6 @@ class RedirectTestDataProvider extends AbstractDataProvider {
 				'httpStatusCode' => intval($updatedRecord['httpStatusCode']),
 			)
 		);
-
-//		__trustedProperties
-
 
 		// decide if we need to add a category before updating the assignment to the redirect test
 		if (is_numeric($updatedRecord['categoryId'])) {
@@ -93,7 +90,7 @@ class RedirectTestDataProvider extends AbstractDataProvider {
 	 */
 	public function createRecord(array $newRecord) {
 		$parameters = array(
-			'__hmac' => $newRecord['__hmac'],
+			'__trustedProperties' => $newRecord['__trustedProperties'],
 			'newRedirectTest' => array(
 				'testUrl' => $newRecord['testUrl'],
 				'expectedUrl' => $newRecord['expectedUrl'],

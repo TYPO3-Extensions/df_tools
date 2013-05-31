@@ -26,10 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\ExtDirect\RecordSetDataProvider;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;

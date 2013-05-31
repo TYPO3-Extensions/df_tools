@@ -47,17 +47,17 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class RedirectTestControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\RedirectTestController
+	 * @var \SGalinski\DfTools\Controller\RedirectTestController|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository|object
 	 */
 	protected $repository;
 
 	/**
-	 * @var \SGalinski\DfTools\View\RedirectTestArrayView
+	 * @var \SGalinski\DfTools\View\RedirectTestArrayView|object
 	 */
 	protected $view;
 
@@ -67,7 +67,7 @@ class RedirectTestControllerTest extends ControllerTestCase {
 	public function setUp() {
 		$class = 'SGalinski\DfTools\Controller\RedirectTestController';
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository RedirectTestRepository */
 		$this->repository = $this->getMock(
@@ -75,7 +75,7 @@ class RedirectTestControllerTest extends ControllerTestCase {
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRangeByCategory', 'countAll'),
 			array($this->objectManager)
 		);
-		$this->fixture->injectRedirectTestRepository($this->repository);
+		$this->fixture->_set('repository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('SGalinski\DfTools\View\RedirectTestArrayView', array('assign'));
@@ -98,20 +98,6 @@ class RedirectTestControllerTest extends ControllerTestCase {
 		$redirectTest->setHttpStatusCode(200);
 
 		return $redirectTest;
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRedirectTestRepository() {
-		/** @var $repository RedirectTestRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectRedirectTestRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('redirectTestRepository'));
 	}
 
 	/**

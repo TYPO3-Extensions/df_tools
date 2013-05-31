@@ -41,17 +41,17 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class ContentComparisonTestControllerTest extends ControllerTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Controller\ContentComparisonTestController
+	 * @var \SGalinski\DfTools\Controller\ContentComparisonTestController|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository|object
 	 */
 	protected $repository;
 
 	/**
-	 * @var \SGalinski\DfTools\View\ContentComparisonTestArrayView
+	 * @var \SGalinski\DfTools\View\ContentComparisonTestArrayView|object
 	 */
 	protected $view;
 
@@ -61,7 +61,7 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 	public function setUp() {
 		$class = 'SGalinski\DfTools\Controller\ContentComparisonTestController';
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository ContentComparisonTestRepository */
 		$this->repository = $this->getMock(
@@ -69,7 +69,7 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange'),
 			array($this->objectManager)
 		);
-		$this->fixture->injectContentComparisonTestRepository($this->repository);
+		$this->fixture->_set('repository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('SGalinski\DfTools\View\ContentComparisonTestArrayView', array('assign'));
@@ -88,19 +88,6 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 		$contentComparisonTest->setCompareUrl('FooBar');
 
 		return $contentComparisonTest;
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository ContentComparisonTestRepository */
-		$repository = new ContentComparisonTestRepository($this->objectManager);
-		$this->fixture->injectContentComparisonTestRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('contentComparisonTestRepository'));
 	}
 
 	/**

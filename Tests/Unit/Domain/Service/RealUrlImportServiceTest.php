@@ -26,12 +26,10 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
 use SGalinski\DfTools\Domain\Service\RealUrlImportService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -43,22 +41,22 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class RealUrlImportServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Domain\Service\RealUrlImportService
+	 * @var \SGalinski\DfTools\Domain\Service\RealUrlImportService|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository|object
 	 */
 	protected $testRepository;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository|object
 	 */
 	protected $categoryRepository;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager|object
 	 */
 	protected $objectManager;
 
@@ -78,19 +76,19 @@ class RealUrlImportServiceTest extends BaseTestCase {
 			array('add'),
 			array($this->objectManager)
 		);
-		$this->fixture->injectRedirectTestRepository($this->testRepository);
+		$this->fixture->_set('testRepository', $this->testRepository);
 
 		/** @var $repository RedirectTestCategoryRepository */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$this->categoryRepository = $this->getMock($class, array('add'), array($this->objectManager));
-		$this->fixture->injectRedirectTestCategoryRepository($this->categoryRepository);
+		$this->fixture->_set('categoryRepository', $this->categoryRepository);
 
 		/** @var $repository ObjectManager */
 		$this->objectManager = $this->getMock(
 			'TYPO3\CMS\Extbase\Object\ObjectManager',
 			array('create')
 		);
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 	}
 
 	/**
@@ -98,48 +96,6 @@ class RealUrlImportServiceTest extends BaseTestCase {
 	 */
 	public function tearDown() {
 		unset($this->fixture);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRedirectTestRepository() {
-		/** @var $repository RedirectTestRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectRedirectTestRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('redirectTestRepository'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository RedirectTestCategoryRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectRedirectTestCategoryRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('redirectTestCategoryRepository'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectObjectManager() {
-		/** @var $repository ObjectManager */
-		$class = 'TYPO3\CMS\Extbase\Object\ObjectManager';
-		$objectManager = $this->getMock($class, array('dummy'));
-		$this->fixture->injectObjectManager($objectManager);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($objectManager, $this->fixture->_get('objectManager'));
 	}
 
 	/**

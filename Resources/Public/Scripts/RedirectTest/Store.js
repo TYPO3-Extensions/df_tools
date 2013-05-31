@@ -76,7 +76,7 @@ TYPO3.DfTools.RedirectTest.Model = Ext.data.Record.create([{
 			return value;
 		}
 	}, {
-		name: '__hmac'
+		name: '__trustedProperties'
 	}
 ]);
 

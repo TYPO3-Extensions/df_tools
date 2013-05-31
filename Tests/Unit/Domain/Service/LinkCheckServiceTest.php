@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Tests\Unit\Service;
+namespace SGalinski\DfTools\Tests\Unit\Domain\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -26,12 +26,10 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Service\LinkCheckService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -44,17 +42,17 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class LinkCheckServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Domain\Service\LinkCheckService
+	 * @var \SGalinski\DfTools\Domain\Service\LinkCheckService|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository|object
 	 */
 	protected $testRepository;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager|object
 	 */
 	protected $objectManager;
 
@@ -74,11 +72,11 @@ class LinkCheckServiceTest extends BaseTestCase {
 			array('dummy'),
 			array($this->objectManager)
 		);
-		$this->fixture->injectLinkCheckRepository($this->testRepository);
+		$this->fixture->_set('testRepository', $this->testRepository);
 
 		/** @var $repository ObjectManager */
 		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('create', 'get'));
-		$this->fixture->injectObjectManager($this->objectManager);
+		$this->fixture->_set('objectManager', $this->objectManager);
 	}
 
 	/**
@@ -86,34 +84,6 @@ class LinkCheckServiceTest extends BaseTestCase {
 	 */
 	public function tearDown() {
 		unset($this->fixture);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectLinkCheckRepository() {
-		/** @var $repository LinkCheckRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\LinkCheckRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectLinkCheckRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('linkCheckRepository'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectObjectManager() {
-		/** @var $repository ObjectManager */
-		$class = 'TYPO3\CMS\Extbase\Object\ObjectManager';
-		$objectManager = $this->getMock($class, array('dummy'));
-		$this->fixture->injectObjectManager($objectManager);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($objectManager, $this->fixture->_get('objectManager'));
 	}
 
 	/**

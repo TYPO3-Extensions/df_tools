@@ -26,11 +26,8 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\Exception\GenericException;
 use SGalinski\DfTools\ExtDirect\AbstractDataProvider;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\UrlChecker\AbstractService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -45,7 +42,7 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
  */
 class AbstractDataProviderTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\ExtDirect\AbstractDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\AbstractDataProvider|object
 	 */
 	protected $fixture;
 
@@ -101,16 +98,17 @@ class AbstractDataProviderTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function updateCanHandleASingleRecord() {
+		/** @var \stdClass $record */
 		$record = (object) array(
 			'records' => (object) array(
-				'__hmac' => 'hmac',
+				'__trustedProperties' => 'hmac',
 				'__identity' => 1
 			)
 		);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('updateRecord')
-			->with(array('__hmac' => 'hmac', '__identity' => 1))
+			->with(array('__trustedProperties' => 'hmac', '__identity' => 1))
 			->will($this->returnValue(array('records' => array())));
 
 		$this->fixture->update($record);
@@ -124,10 +122,10 @@ class AbstractDataProviderTest extends BaseTestCase {
 		$record = (object) array(
 			'records' => array(
 				(object) array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => 1
 				), (object) array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => 2
 				),
 			)
@@ -158,6 +156,7 @@ class AbstractDataProviderTest extends BaseTestCase {
 	public function destroyCallsActionExpectableWithOnlyOneIdentifier() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('destroyRecords')->with(array(2));
+		/** @var /stdClass $records */
 		$records = (object) array('records' => array(2));
 		$this->fixture->destroy($records);
 	}
@@ -169,6 +168,7 @@ class AbstractDataProviderTest extends BaseTestCase {
 	public function destroyCallsActionExpectableWithMultipleIdentifiers() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('destroyRecords')->with(array(2, 5, 10));
+		/** @var /stdClass $records */
 		$records = (object) array('records' => array(2, 5, 10));
 		$this->fixture->destroy($records);
 	}

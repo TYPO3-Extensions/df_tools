@@ -38,7 +38,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class AbstractArrayViewTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\View\AbstractArrayView
+	 * @var \SGalinski\DfTools\View\AbstractArrayView|object
 	 */
 	protected $fixture;
 
@@ -61,23 +61,10 @@ class AbstractArrayViewTest extends BaseTestCase {
 	}
 
 	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRequestHash() {
-		/** @var $mock RequestHashService */
-		$mock = $this->getMock('TYPO3\CMS\Extbase\Security\Channel\RequestHashService', array('dummy'));
-		$this->fixture->injectRequestHashService($mock);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($mock, $this->fixture->_get('requestHashService'));
-	}
-
-	/**
 	 * @return array plain record
 	 */
 	protected function prepareTestRenderProcess() {
-		/** @var $requestHashService RequestHashService */
+		/** @var $requestHashService RequestHashService|object */
 		$class = 'TYPO3\CMS\Extbase\Security\Channel\RequestHashService';
 		$requestHashService = $this->getMock($class, array('generateRequestHash'));
 
@@ -131,7 +118,7 @@ class AbstractArrayViewTest extends BaseTestCase {
 	public function testRenderProcess() {
 		$plainRecord = $this->prepareTestRenderProcess();
 		$expectedData = array(
-			'__hmac' => array(
+			'__trustedProperties' => array(
 				'update' => 'hmac',
 				'create' => 'hmac'
 			),
@@ -139,7 +126,7 @@ class AbstractArrayViewTest extends BaseTestCase {
 			'total' => 1
 		);
 
-		$this->fixture->assign('records', array(array('record1')));
+		$this->fixture->assign('records', (object) array(array('record1')));
 		$this->assertSame($expectedData, $this->fixture->render());
 	}
 
@@ -150,7 +137,7 @@ class AbstractArrayViewTest extends BaseTestCase {
 	public function testRenderProcessWithAssignedTotalRecords() {
 		$plainRecord = $this->prepareTestRenderProcess();
 		$expectedData = array(
-			'__hmac' => array(
+			'__trustedProperties' => array(
 				'update' => 'hmac',
 				'create' => 'hmac'
 			),
@@ -158,8 +145,8 @@ class AbstractArrayViewTest extends BaseTestCase {
 			'total' => 199
 		);
 
-		$this->fixture->assign('records', array(array('record1')));
-		$this->fixture->assign('totalRecords', 199);
+		$this->fixture->assign('records', (object) array(array('record1')));
+		$this->fixture->assign('totalRecords', (object) 199);
 		$this->assertSame($expectedData, $this->fixture->render());
 	}
 }

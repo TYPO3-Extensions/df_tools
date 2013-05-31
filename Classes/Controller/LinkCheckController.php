@@ -177,7 +177,7 @@ class LinkCheckController extends AbstractController {
 	 * @return void
 	 */
 	public function initializeReadRecordSetsAction() {
-		$this->defaultViewObjectName = 'SGalinski\DfTools\View\RecordSet\ArrayView';
+		$this->defaultViewObjectName = 'SGalinski\DfTools\View\RecordSetArrayView';
 	}
 
 	/**

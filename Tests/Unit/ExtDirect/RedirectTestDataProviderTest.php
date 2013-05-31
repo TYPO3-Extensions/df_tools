@@ -26,10 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\ExtDirect\RedirectTestDataProvider;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -45,7 +42,7 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
  */
 class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var \SGalinski\DfTools\ExtDirect\RedirectTestDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\RedirectTestDataProvider|object
 	 */
 	protected $fixture;
 
@@ -100,7 +97,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 		return array(
 			'simple update call #1' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'redirectTest' => array(
 						'__identity' => 1,
 						'testUrl' => 'fooBar',
@@ -111,7 +108,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 						)
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => '1',
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
@@ -122,7 +119,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 
 			'simple update call #2' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'redirectTest' => array(
 						'__identity' => 2,
 						'testUrl' => 'fooBar',
@@ -133,7 +130,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 						)
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => 2,
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
@@ -144,7 +141,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 
 			'update call with new category' => array(
 				array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'redirectTest' => array(
 						'__identity' => 2,
 						'testUrl' => 'fooBar',
@@ -155,7 +152,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 						'category' => 'fooBar',
 					)
 				), array(
-					'__hmac' => 'hmac',
+					'__trustedProperties' => 'hmac',
 					'__identity' => 2,
 					'testUrl' => 'fooBar',
 					'expectedUrl' => 'fooBar',
@@ -186,7 +183,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 	 */
 	public function createCallsTheExtBaseControllerWithExpectedParameters() {
 		$parameters = array(
-			'__hmac' => '__hmac',
+			'__trustedProperties' => '__trustedProperties',
 			'newRedirectTest' => array(
 				'testUrl' => 'FooBar',
 				'expectedUrl' => 'FooBar',
@@ -198,7 +195,7 @@ class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 		/** @noinspection PhpUndefinedFieldInspection */
 		$record = new \stdClass;
 		$record->records = new \stdClass;
-		$record->records->__hmac = '__hmac';
+		$record->records->__trustedProperties = '__trustedProperties';
 		$record->records->__identity = 0;
 		$record->records->categoryId = 0;
 		$record->records->testUrl = 'FooBar';

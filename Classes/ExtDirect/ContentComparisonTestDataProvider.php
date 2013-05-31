@@ -58,7 +58,7 @@ class ContentComparisonTestDataProvider extends AbstractDataProvider {
 	 */
 	protected function createRecord(array $newRecord) {
 		$parameters = array(
-			'__hmac' => $newRecord['__hmac'],
+			'__trustedProperties' => $newRecord['__trustedProperties'],
 			'newContentComparisonTest' => array(
 				'testUrl' => $newRecord['testUrl'],
 				'compareUrl' => $newRecord['compareUrl']
@@ -77,7 +77,7 @@ class ContentComparisonTestDataProvider extends AbstractDataProvider {
 	 */
 	protected function updateRecord(array $updatedRecord) {
 		$parameters = array(
-			'__hmac' => $updatedRecord['__hmac'],
+			'__trustedProperties' => $updatedRecord['__trustedProperties'],
 			'contentComparisonTest' => array(
 				'__identity' => intval($updatedRecord['__identity']),
 				'testUrl' => $updatedRecord['testUrl'],

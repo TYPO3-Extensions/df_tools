@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Tests\Unit\Service;
+namespace SGalinski\DfTools\Tests\Unit\Parser;
 
 /***************************************************************
  *  Copyright notice
@@ -26,9 +26,8 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnectorService;
-use SGalinski\DfTools\Parser\TcaParserService;
-use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\Parser\TcaParser;
+use SGalinski\DfTools\Parser\UrlParser;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -40,12 +39,12 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class UrlParserServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Parser\UrlParserService
+	 * @var \SGalinski\DfTools\Parser\UrlParser|object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection
+	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection|object
 	 */
 	protected $savedDB;
 
@@ -56,7 +55,7 @@ class UrlParserServiceTest extends BaseTestCase {
 		$this->savedDB = $GLOBALS['TYPO3_DB'];
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Parser\UrlParserService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Parser\UrlParser');
 		$this->fixture = $this->getMock($proxyClass, array('getPageSelectInstance'));
 	}
 
@@ -66,18 +65,6 @@ class UrlParserServiceTest extends BaseTestCase {
 	public function tearDown() {
 		$GLOBALS['TYPO3_DB'] = $this->savedDB;
 		unset($this->fixture);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function tcaParserCanBeInjected() {
-		$tcaParser = new TcaParserService();
-		$this->fixture->injectTcaParser($tcaParser);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertInstanceOf('SGalinski\DfTools\Parser\UrlParserService', $this->fixture->_get('tcaParser'));
 	}
 
 	/**
@@ -340,9 +327,9 @@ class UrlParserServiceTest extends BaseTestCase {
 			array('fetchLinkCheckLinkType', 'fetchUrlsFromDatabase')
 		);
 
-		/** @var $tcaParser TcaParserService */
-		$tcaParser = $this->getMock('SGalinski\DfTools\Parser\TcaParserService', array('findFields'));
-		$this->fixture->injectTcaParser($tcaParser);
+		/** @var $tcaParser TcaParser|object */
+		$tcaParser = $this->getMock('SGalinski\DfTools\Parser\TcaParser', array('findFields'));
+		$this->fixture->_set('tcaParser', $tcaParser);
 
 		$tableFields = array('pages' => array('field1', 'field2'), 'tt_content' => array('field1'));
 		$tcaParser->expects($this->once())->method('findFields')->will($this->returnValue($tableFields));

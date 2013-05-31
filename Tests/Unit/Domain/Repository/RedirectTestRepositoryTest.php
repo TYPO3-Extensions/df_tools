@@ -37,7 +37,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class RedirectTestRepositoryTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository|object
 	 */
 	protected $fixture;
 
