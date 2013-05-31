@@ -1,185 +1,162 @@
 /* common styles */
 .tx_dftools-button-text {
-	padding: 2px 3px 0 5px;
-	vertical-align: top;
-	display: inline-block;
+  padding: 2px 3px 0 5px;
+  vertical-align: top;
+  display: inline-block;
 }
 
 button span.t3-icon {
-	vertical-align: top;
+  vertical-align: top;
 }
 
 .x-grid-group-hd div.x-grid-group-title {
-	border-bottom: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
 }
 
 .ext-webkit .x-small-editor .x-form-text {
-	padding-top: 0;
+  padding-top: 0;
 }
 
 .ext-strict #tx_dftools .x-small-editor .x-form-text {
-	height: 16px !important;
+  height: 16px !important;
 }
-
 .ext-strict .ext-webkit #tx_dftools .x-small-editor .x-form-text {
-	height: 17px !important;
+  height: 17px !important;
 }
 
 .x-panel-nofooter .x-panel-bc {
-	height: 2px;
+  height: 2px;
 }
 
 .x-grid3-col-actions img {
-	margin: 0 0 0 4px;
+  margin: 0 0 0 4px;
 }
 
 .x-grid3-row .x-grid3-col {
-	border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
 }
 
 .x-grid3-row-body {
-	padding: 10px 0;
-	margin-left: 30px;
+  padding: 10px 0;
+  margin-left: 30px;
 }
 
-.x-grid3-row.x-grid3-row-over .x-grid3-col,
-.x-grid3-row.x-grid3-row-selected .x-grid3-col {
-	background: #F0EFEF none;
+.x-grid3-row.x-grid3-row-over .x-grid3-col, .x-grid3-row.x-grid3-row-selected .x-grid3-col {
+  background: #F0EFEF none;
 }
 
 .tx_dftools-grid-row-test-success .x-grid3-col {
-	background-color: #D0E4C9;
-	border-bottom: 1px solid #D0E4C9;
+  background-color: #D0E4C9;
+  border-bottom: 1px solid #D0E4C9;
 }
-
-.tx_dftools-grid-row-test-success.x-grid3-row-over .x-grid3-col,
-.tx_dftools-grid-row-test-success.x-grid3-row-selected .x-grid3-col {
-	background-color: #B4DDA5;
-	border-bottom: 1px solid #B4DDA5;
+.tx_dftools-grid-row-test-success.x-grid3-row-over .x-grid3-col, .tx_dftools-grid-row-test-success.x-grid3-row-selected .x-grid3-col {
+  background-color: #B4DDA5;
+  border-bottom: 1px solid #B4DDA5;
 }
 
 .tx_dftools-grid-row-test-error .x-grid3-col {
-	background-color: #F59393;
-	border-bottom: 1px solid #F59393;
+  background-color: #F59393;
+  border-bottom: 1px solid #F59393;
 }
-
-.tx_dftools-grid-row-test-error.x-grid3-row-over .x-grid3-col,
-.tx_dftools-grid-row-test-error.x-grid3-row-selected .x-grid3-col {
-	background-color: #EC7878;
-	border-bottom: 1px solid #EC7878;
+.tx_dftools-grid-row-test-error.x-grid3-row-over .x-grid3-col, .tx_dftools-grid-row-test-error.x-grid3-row-selected .x-grid3-col {
+  background-color: #EC7878;
+  border-bottom: 1px solid #EC7878;
 }
 
 .tx_dftools-grid-row-test-warning .x-grid3-col {
-	background-color: #F0F515;
-	border-bottom: 1px solid #F0F515;
+  background-color: #F0F515;
+  border-bottom: 1px solid #F0F515;
 }
-
-.tx_dftools-grid-row-test-warning.x-grid3-row-over .x-grid3-col,
-.tx_dftools-grid-row-test-warning.x-grid3-row-selected .x-grid3-col {
-	background-color: #D9DE0C;
-	border-bottom: 1px solid #D9DE0C;
+.tx_dftools-grid-row-test-warning.x-grid3-row-over .x-grid3-col, .tx_dftools-grid-row-test-warning.x-grid3-row-selected .x-grid3-col {
+  background-color: #D9DE0C;
+  border-bottom: 1px solid #D9DE0C;
 }
 
 .tx_dftools-grid-row-test-info .x-grid3-col {
-	background-color: #D4EDFC;
-	border-bottom: 1px solid #D4EDFC;
+  background-color: #D4EDFC;
+  border-bottom: 1px solid #D4EDFC;
 }
-
-.tx_dftools-grid-row-test-info.x-grid3-row-over .x-grid3-col,
-.tx_dftools-grid-row-test-info.x-grid3-row-selected .x-grid3-col {
-	background-color: #ACD3EB;
-	border-bottom: 1px solid #ACD3EB;
+.tx_dftools-grid-row-test-info.x-grid3-row-over .x-grid3-col, .tx_dftools-grid-row-test-info.x-grid3-row-selected .x-grid3-col {
+  background-color: #ACD3EB;
+  border-bottom: 1px solid #ACD3EB;
 }
 
 .x-grid3-row-expanded {
-	background-color: #F9F9F9;
+  background-color: #F9F9F9;
+}
+.x-grid3-row-expanded .x-grid3-td-numberer {
+  border-bottom: 1px solid #DDD;
+  background-color: transparent;
 }
 
-.x-grid3-row-expanded .x-grid3-td-numberer,
-.tx_dftools-grid-row-test-error .x-grid3-td-numberer,
-.tx_dftools-grid-row-test-warning .x-grid3-td-numberer,
-.tx_dftools-grid-row-test-info .x-grid3-td-numberer,
-.tx_dftools-grid-row-test-success .x-grid3-td-numberer {
-	border-bottom: 1px solid #DDD;
-	background-color: transparent;
+.tx_dftools-grid-row-test-error .x-grid3-td-numberer, .tx_dftools-grid-row-test-warning .x-grid3-td-numberer, .tx_dftools-grid-row-test-info .x-grid3-td-numberer, .tx_dftools-grid-row-test-success .x-grid3-td-numberer {
+  border-bottom: 1px solid #DDD;
+  background-color: transparent;
 }
 
-.x-grid3-row-expanded .x-grid3-row .x-grid3-col,
-.x-grid3-row-expanded.x-grid3-row-over .x-grid3-row .x-grid3-col,
-.x-grid3-row-expanded.x-grid3-row-selected .x-grid3-row .x-grid3-col {
-	background-color: transparent;
-	border-bottom: 1px solid transparent;
+.x-grid3-row-expanded .x-grid3-row .x-grid3-col, .x-grid3-row-expanded.x-grid3-row-over .x-grid3-row .x-grid3-col, .x-grid3-row-expanded.x-grid3-row-selected .x-grid3-row .x-grid3-col {
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
 }
 
 .tx_dftools-grid-row-test-ignore {
-	filter: alpha(opacity = 60);
-	opacity: .6;
+  filter: alpha(opacity=60);
+  opacity: .6;
 }
 
 .tx_dftools-loadingIndicator {
-	padding: 0;
-	margin: 0;
-	height: 16px;
-	width: 16px;
+  padding: 0;
+  margin: 0;
+  height: 16px;
+  width: 16px;
+  display: none;
 }
 
-.tx_dftools-loadingIndicator,
-.tx_dftools-statusError,
-.tx_dftools-statusWarning,
-.tx_dftools-statusInformation,
-.tx_dftools-statusOk {
-	display: none;
+.tx_dftools-statusError, .tx_dftools-statusWarning, .tx_dftools-statusInformation, .tx_dftools-statusOk {
+  display: none;
 }
 
-.tx_dftools-grid-row-test-running .tx_dftools-loadingIndicator,
-.tx_dftools-grid-row-test-success .tx_dftools-statusOk,
-.tx_dftools-grid-row-test-error .tx_dftools-statusError,
-.tx_dftools-grid-row-test-info .tx_dftools-statusInformation,
-.tx_dftools-grid-row-test-warning .tx_dftools-statusWarning {
-	display: inline-block;
+.tx_dftools-grid-row-test-running .tx_dftools-loadingIndicator, .tx_dftools-grid-row-test-success .tx_dftools-statusOk, .tx_dftools-grid-row-test-error .tx_dftools-statusError, .tx_dftools-grid-row-test-info .tx_dftools-statusInformation, .tx_dftools-grid-row-test-warning .tx_dftools-statusWarning {
+  display: inline-block;
 }
 
 .x-panel-tbar {
-	padding-bottom: 5px;
+  padding-bottom: 5px;
 }
 
 .x-panel-header-text {
-	line-height: 15px;
+  line-height: 15px;
 }
 
 /* special styles */
 #tx_dftools-button-runTest {
-	margin-right: 10px;
+  margin-right: 10px;
 }
 
-#typo3-inner-docbody .diff,
-#typo3-inner-docbody .help {
-	width: 700px;
-	margin-bottom: 10px
+#typo3-inner-docbody .diff, #typo3-inner-docbody .help {
+  width: 700px;
+  margin-bottom: 10px;
 }
 
 #tx_dftools-helpContent {
-	display: none;
+  display: none;
 }
 
 #tx_dftools-help {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 /* overview action */
 #typo3-docbody dl {
-	margin: 0 0 0 2em;
+  margin: 0 0 0 2em;
 }
-
 #typo3-docbody dt {
-	font-weight: bold;
+  font-weight: bold;
 }
-
 #typo3-docbody dt img {
-	vertical-align: bottom;
+  vertical-align: bottom;
 }
-
 #typo3-docbody dd {
-	margin: .5em 0 1em 21px;
-	width: 700px;
+  margin: .5em 0 1em 21px;
+  width: 700px;
 }

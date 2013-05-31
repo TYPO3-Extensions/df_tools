@@ -1,18 +1,18 @@
 .x-grid-group-hd div {
-	position: relative;
-	height: 16px;
+  position: relative;
+  height: 16px;
 }
 
 .ux-grow-action-item {
-	cursor: pointer;
-	float: left;
+  cursor: pointer;
+  float: left;
 }
 
 .ux-action-right {
-	float: right;
-	margin: 0 1px 0 4px;
+  float: right;
+  margin: 0 1px 0 4px;
 }
 
 .ux-grow-action-text {
-	float: left;
+  float: left;
 }
