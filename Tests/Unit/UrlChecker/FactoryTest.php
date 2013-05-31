@@ -26,26 +26,11 @@ namespace SGalinski\DfTools\Tests\Unit\Service\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\CurlService;
-use SGalinski\DfTools\Service\UrlChecker\Factory;
-use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\UrlChecker\Factory;
 use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\Utility\TcaUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -53,7 +38,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class FactoryTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Service\UrlChecker\Factory
+	 * @var \SGalinski\DfTools\UrlChecker\Factory
 	 */
 	protected $fixture;
 
@@ -69,7 +54,7 @@ class FactoryTest extends BaseTestCase {
 		$this->backupCurlUse = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'];
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlChecker\Factory');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\UrlChecker\Factory');
 		$this->fixture = $this->getMockBuilder($proxyClass)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -104,13 +89,13 @@ class FactoryTest extends BaseTestCase {
 	public function getReturnsUrlCheckerServiceDataProvider() {
 		return array(
 			'no type' => array(
-				'', 'SGalinski\DfTools\Service\UrlChecker\StreamService'
+				'', 'SGalinski\DfTools\UrlChecker\StreamService'
 			),
 			'native type' => array(
-				FALSE, 'SGalinski\DfTools\Service\UrlChecker\StreamService'
+				FALSE, 'SGalinski\DfTools\UrlChecker\StreamService'
 			),
 			'curl type' => array(
-				TRUE, 'SGalinski\DfTools\Service\UrlChecker\CurlService'
+				TRUE, 'SGalinski\DfTools\UrlChecker\CurlService'
 			),
 		);
 	}
@@ -130,7 +115,7 @@ class FactoryTest extends BaseTestCase {
 		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
 		$this->fixture->injectObjectManager($objectManager);
 
-		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlChecker\AbstractService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\UrlChecker\AbstractService');
 		$service = $this->getMock($proxyClass, array('init', 'resolveUrl'));
 
 		/** @noinspection PhpUndefinedMethodInspection */

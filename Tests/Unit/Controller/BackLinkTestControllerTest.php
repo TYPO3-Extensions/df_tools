@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,25 +26,32 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Controller\BackLinkTestController;
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\BackLinkTestRepository;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\View\BackLinkTestArrayView;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * Test case for class Tx_DfTools_Controller_BackLinkTestController.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class BackLinkTestControllerTest
  */
-class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Controller_ControllerTestCase {
+class BackLinkTestControllerTest extends ControllerTestCase {
 	/**
-	 * @var Tx_DfTools_Controller_BackLinkTestController
+	 * @var \SGalinski\DfTools\Controller\BackLinkTestController
 	 */
 	protected $fixture;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_BackLinkTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\BackLinkTestRepository
 	 */
 	protected $repository;
 
 	/**
-	 * @var Tx_DfTools_View_BackLinkTest_ArrayView
+	 * @var \SGalinski\DfTools\View\BackLinkTestArrayView
 	 */
 	protected $view;
 
@@ -50,31 +59,31 @@ class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Contro
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Controller_BackLinkTestController';
+		$class = 'SGalinski\DfTools\Controller\BackLinkTestController';
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
 		$this->fixture->injectObjectManager($this->objectManager);
 
-		/** @var $repository Tx_DfTools_Domain_Repository_BackLinkTestRepository */
+		/** @var $repository BackLinkTestRepository */
 		$this->repository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_BackLinkTestRepository',
+			'SGalinski\DfTools\Domain\Repository\BackLinkTestRepository',
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange'),
 			array($this->objectManager)
 		);
 		$this->fixture->injectBackLinkTestRepository($this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->view = $this->getMock('Tx_DfTools_View_BackLinkTest_ArrayView', array('assign'));
+		$this->view = $this->getMock('SGalinski\DfTools\View\BackLinkTestArrayView', array('assign'));
 		$this->fixture->_set('view', $this->view);
 	}
 
 	/**
 	 * Returns a back link test instance
 	 *
-	 * @return Tx_DfTools_Domain_Model_BackLinkTest
+	 * @return BackLinkTest
 	 */
 	protected function getBackLinkTest() {
-		/** @var $backLinkTest Tx_DfTools_Domain_Model_BackLinkTest */
-		$backLinkTest = $this->getMockBuilder('Tx_DfTools_Domain_Model_BackLinkTest')
+		/** @var $backLinkTest BackLinkTest */
+		$backLinkTest = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\BackLinkTest')
 			->setMethods(array('test'))
 			->disableOriginalClone()->getMock();
 
@@ -89,8 +98,8 @@ class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Contro
 	 * @return void
 	 */
 	public function testInjectBackLinkTestRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_BackLinkTestRepository */
-		$class = 'Tx_DfTools_Domain_Repository_BackLinkTestRepository';
+		/** @var $repository BackLinkTestRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\BackLinkTestRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectBackLinkTestRepository($repository);
 
@@ -110,7 +119,6 @@ class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Contro
 		$this->view->expects($this->exactly(2))->method('assign');
 		$this->fixture->readAction(1, 2, 'test', TRUE);
 	}
-
 
 	/**
 	 * @test
@@ -156,8 +164,8 @@ class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Contro
 	 * @return void
 	 */
 	public function runTestWorks() {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -181,19 +189,19 @@ class Tx_DfTools_Controller_BackLinkTestControllerTest extends Tx_DfTools_Contro
 		$backLinkTest1 = $this->getBackLinkTest();
 		$backLinkTest2 = $this->getBackLinkTest();
 
-		$testCollection = new Tx_Extbase_Persistence_ObjectStorage();
+		$testCollection = new ObjectStorage();
 		$testCollection->attach($backLinkTest1);
 		$testCollection->attach($backLinkTest2);
 
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->repository->expects($this->once())->method('findAll')
 			->will($this->returnValue($testCollection));
 		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('Tx_Extbase_Persistence_ObjectStorage'));
+			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
 		$this->fixture->expects($this->once())->method('getUrlCheckerService')
 			->will($this->returnValue($urlCheckerService));
 		$backLinkTest1->expects($this->once())->method('test')->with($urlCheckerService);

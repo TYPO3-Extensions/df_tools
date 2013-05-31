@@ -26,19 +26,8 @@ namespace SGalinski\DfTools\Tests\Unit\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Utility\HtmlUtility;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -50,12 +39,12 @@ class HttpUtilityTest extends BaseTestCase {
 	/**
 	 * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
 	 */
-	protected $backupTSFE = NULL;
+	protected $backupTSFE;
 
 	/**
 	 * @var array
 	 */
-	protected $backupServer = NULL;
+	protected $backupServer;
 
 	/**
 	 * @return void

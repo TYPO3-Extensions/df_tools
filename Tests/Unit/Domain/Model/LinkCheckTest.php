@@ -28,7 +28,7 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
@@ -171,9 +171,11 @@ class LinkCheckTest extends BaseTestCase {
 	 * @param \PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls
 	 * @return AbstractService
 	 */
-	protected function getUrlCheckerService($resolveUrlOutput, \PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls) {
+	protected function getUrlCheckerService(
+		$resolveUrlOutput, \PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls
+	) {
 		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
+use SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
- * Test case for class Tx_DfTools_ExtDirect_BackLinkTestDataProvider.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class BackLinkTestDataProviderTest
  */
-class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTools_ExtBaseConnectorTestCase {
+class BackLinkTestDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var Tx_DfTools_ExtDirect_BackLinkTestDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider
 	 */
 	protected $fixture;
 
@@ -43,7 +53,7 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_ExtDirect_BackLinkTestDataProvider';
+		$class = 'SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
@@ -66,7 +76,7 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 	 * @dataProvider readCallsExtBaseControllerWithParametersDataProvider
 	 * @test
 	 *
-	 * @param stdClass $input
+	 * @param \stdClass $input
 	 * @return void
 	 */
 	public function readCallsExtBaseControllerWithParameters($input) {
@@ -170,8 +180,8 @@ class Tx_DfTools_ExtBaseConnector_BackLinkTestDataProviderTest extends Tx_DfTool
 		$this->addMockedExtBaseConnector('BackLinkTest', 'create', $parameters);
 
 		/** @noinspection PhpUndefinedFieldInspection */
-		$record = new stdClass;
-		$record->records = new stdClass;
+		$record = new \stdClass();
+		$record->records = new \stdClass();
 		$record->records->__hmac = '__hmac';
 		$record->records->__identity = 0;
 		$record->records->testUrl = 'FooBar';

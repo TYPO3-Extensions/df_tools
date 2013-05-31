@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,20 +26,31 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\ExtDirect\AbstractDataProvider;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
- * Test case for class Tx_DfTools_ExtDirect_AbstractDataProvider.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractDataProviderTest
  */
-class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class AbstractDataProviderTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_ExtDirect_AbstractDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\AbstractDataProvider
 	 */
 	protected $fixture;
 
 	/**
-	 * @var tslib_fe
+	 * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
 	 */
 	protected $backupTSFE;
 
@@ -47,9 +60,11 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	public function setUp() {
 		$this->backupTSFE = $GLOBALS['TSFE'];
 
-		$proxy = $this->buildAccessibleProxy('Tx_DfTools_ExtDirect_AbstractDataProvider');
+		$proxy = $this->buildAccessibleProxy('SGalinski\DfTools\ExtDirect\AbstractDataProvider');
 		$this->fixture = $this->getMockBuilder($proxy)
-			->setMethods(array('updateRecord', 'createRecord', 'destroyRecords', 'isInFrontendMode', 'runTestForRecord'))
+			->setMethods(
+				array('updateRecord', 'createRecord', 'destroyRecords', 'isInFrontendMode', 'runTestForRecord')
+			)
 			->disableOriginalConstructor()->getMock();
 	}
 
@@ -63,7 +78,7 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 
 	/**
 	 * @test
-	 * @expectedException Tx_DfTools_Exception_GenericException
+	 * @expectedException GenericException
 	 * @return void
 	 */
 	public function accessCheckFailsIfNoFrontendUserIsLoggedInIfCalledInFrontendMode() {
@@ -167,13 +182,13 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 		$expectedResult = array(
 			'success' => TRUE,
 			'data' => array(
-				'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				'testResult' => AbstractService::SEVERITY_OK,
 				'testMessage' => '',
 			),
 		);
 
 		$data = array(
-			'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+			'testResult' => AbstractService::SEVERITY_OK,
 			'testMessage' => '',
 		);
 
@@ -189,11 +204,11 @@ class Tx_DfTools_ExtDirect_AbstractDataProviderTest extends Tx_Extbase_Tests_Uni
 	 */
 	public function runTestCallHandlesAGenericException() {
 		$identity = 12;
-		$exception = new Exception('FooBar');
+		$exception = new \Exception('FooBar');
 		$expectedResult = array(
 			'success' => FALSE,
 			'data' => array(
-				'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION,
+				'testResult' => AbstractService::SEVERITY_EXCEPTION,
 				'testMessage' => 'FooBar',
 			),
 		);

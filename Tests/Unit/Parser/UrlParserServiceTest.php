@@ -26,45 +26,21 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Model\LinkCheck;
-use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
-use SGalinski\DfTools\Service\LinkCheckService;
-use SGalinski\DfTools\Service\RealUrlImportService;
-use SGalinski\DfTools\Service\TcaParserService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\CurlService;
-use SGalinski\DfTools\Service\UrlChecker\Factory;
-use SGalinski\DfTools\Service\UrlParserService;
-use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\Utility\TcaUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 /**
  * Class UrlParserServiceTest
  */
 class UrlParserServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Service\UrlParserService
+	 * @var \SGalinski\DfTools\Parser\UrlParserService
 	 */
 	protected $fixture;
 
@@ -80,7 +56,7 @@ class UrlParserServiceTest extends BaseTestCase {
 		$this->savedDB = $GLOBALS['TYPO3_DB'];
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlParserService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Parser\UrlParserService');
 		$this->fixture = $this->getMock($proxyClass, array('getPageSelectInstance'));
 	}
 
@@ -101,7 +77,7 @@ class UrlParserServiceTest extends BaseTestCase {
 		$this->fixture->injectTcaParser($tcaParser);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertInstanceOf('SGalinski\DfTools\Service\UrlParserService', $this->fixture->_get('tcaParser'));
+		$this->assertInstanceOf('SGalinski\DfTools\Parser\UrlParserService', $this->fixture->_get('tcaParser'));
 	}
 
 	/**
@@ -360,12 +336,12 @@ class UrlParserServiceTest extends BaseTestCase {
 	 */
 	public function fetchUrlMergesUrlsFromSources() {
 		$this->fixture = $this->getMock(
-			'SGalinski\DfTools\Service\UrlParserService',
+			'SGalinski\DfTools\Parser\UrlParserService',
 			array('fetchLinkCheckLinkType', 'fetchUrlsFromDatabase')
 		);
 
 		/** @var $tcaParser TcaParserService */
-		$tcaParser = $this->getMock('SGalinski\DfTools\Service\TcaParserService', array('findFields'));
+		$tcaParser = $this->getMock('SGalinski\DfTools\Parser\TcaParserService', array('findFields'));
 		$this->fixture->injectTcaParser($tcaParser);
 
 		$tableFields = array('pages' => array('field1', 'field2'), 'tt_content' => array('field1'));

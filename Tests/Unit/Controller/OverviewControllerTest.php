@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,17 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Controller\OverviewController;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+
 /**
- * Test case for class Tx_DfTools_Controller_OverviewController.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class OverviewControllerTest
  */
-class Tx_DfTools_Controller_OverviewControllerTest extends Tx_DfTools_Controller_ControllerTestCase {
+class OverviewControllerTest extends ControllerTestCase {
 	/**
-	 * @var Tx_DfTools_Controller_OverviewController
+	 * @var \SGalinski\DfTools\Controller\OverviewController
 	 */
 	protected $fixture;
 
@@ -40,7 +44,7 @@ class Tx_DfTools_Controller_OverviewControllerTest extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Controller_OverviewController';
+		$class = 'SGalinski\DfTools\Controller\OverviewController';
 		$this->fixture = $this->getAccessibleMock($class, array('redirect'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -52,13 +56,15 @@ class Tx_DfTools_Controller_OverviewControllerTest extends Tx_DfTools_Controller
 	 */
 	protected function initStateTest() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$request = $this->getMock('Tx_Extbase_MVC_Request', array('getControllerActionName', 'getControllerName'));
+		$request = $this->getMock(
+			'TYPO3\CMS\Extbase\Mvc\Request', array('getControllerActionName', 'getControllerName')
+		);
 		$request->expects($this->once())->method('getControllerActionName')
 			->will($this->returnValue('Foo'));
 		$request->expects($this->once())->method('getControllerName')
 			->will($this->returnValue('Bar'));
 
-		$GLOBALS['BE_USER'] = new t3lib_beUserAuth();
+		$GLOBALS['BE_USER'] = new BackendUserAuthentication();
 		$this->fixture->_set('request', $request);
 		$this->fixture->setLastCalledControllerActionPair();
 	}

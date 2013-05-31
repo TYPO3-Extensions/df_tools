@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,23 +26,25 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\ViewHelpers\AddCssFileViewHelper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_ViewHelpers_AddCssFileViewHelper.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AddCssFileViewHelperTest
  */
-class Tx_DfTools_ViewHelpers_AddCssFileViewHelperTest extends Tx_DfTools_ViewHelpers_ViewHelperTestCase {
+class AddCssFileViewHelperTest extends ViewHelperTestCase {
 	/**
-	 * @var Tx_DfTools_ViewHelpers_AddCssFileViewHelper
+	 * @var \SGalinski\DfTools\ViewHelpers\AddCssFileViewHelper
 	 */
-	protected $fixture = NULL;
+	protected $fixture;
 
 	/**
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_ViewHelpers_AddCssFileViewHelper';
+		$class = 'SGalinski\DfTools\ViewHelpers\AddCssFileViewHelper';
 		$this->fixture = $this->getMock($class, array('getPageRenderer'));
 		parent::setUp();
 	}

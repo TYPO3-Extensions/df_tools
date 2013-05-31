@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class Factory {
 	/**
 	 * @inject
-	 * @var ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager = NULL;
 

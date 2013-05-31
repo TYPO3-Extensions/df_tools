@@ -26,49 +26,28 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
-use SGalinski\DfTools\Service\LinkCheckService;
-use SGalinski\DfTools\Service\RealUrlImportService;
-use SGalinski\DfTools\Service\TcaParserService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\CurlService;
-use SGalinski\DfTools\Service\UrlChecker\Factory;
-use SGalinski\DfTools\Service\UrlParserService;
-use SGalinski\DfTools\Service\UrlSynchronizeService;
-use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Domain\Service\UrlSynchronizeService;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\Utility\TcaUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Extbase\Service\ExtensionService;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /**
  * Class UrlSynchronizeServiceTest
  */
 class UrlSynchronizeServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Service\UrlSynchronizeService
+	 * @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService
 	 */
 	protected $fixture;
 
@@ -77,7 +56,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 */
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
-			'SGalinski\DfTools\Service\UrlSynchronizeService',
+			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService',
 			array('fetchExistingRawRecordSets', 'fetchExistingRawUrls')
 		);
 
@@ -156,7 +135,9 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$this->fixture->expects($this->once())->method('fetchExistingRawRecordSets')
 			->will($this->returnValue($existingRawRecordSets));
 
-		$persistenceManager = $this->getMock('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager', array('getBackend'));
+		$persistenceManager = $this->getMock(
+			'TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager', array('getBackend')
+		);
 		$backend = $this->getMock(
 			'Tx_Extbase_Persistence_BackendInterface',
 			array(
@@ -268,15 +249,17 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 			->will($this->returnValue(new RecordSet()));
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
-		$this->fixture->synchronize(array(
-			'http://bar.foo' => array(
-				'pagesurl3' => array('pages', 'url', 3),
-			),
-			'http://ying.yang' => array(
-				'pagessubtitle1' => array('pages', 'subtitle', 1),
-				'be_userstext1' => array('be_users', 'text', 1),
-			),
-		), $queryResult);
+		$this->fixture->synchronize(
+			array(
+				'http://bar.foo' => array(
+					'pagesurl3' => array('pages', 'url', 3),
+				),
+				'http://ying.yang' => array(
+					'pagessubtitle1' => array('pages', 'subtitle', 1),
+					'be_userstext1' => array('be_users', 'text', 1),
+				),
+			), $queryResult
+		);
 
 		/** @var $linkCheck LinkCheck */
 		/** @var $recordSet RecordSet */
@@ -323,14 +306,16 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 			->will($this->returnValue(new Tx_DfTools_Domain_Model_RecordSet()));
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
-		$this->fixture->synchronize(array(
-			'http://foo.bar' => array(
-				'pagesurl3' => array('pages', 'url', 3),
-			),
-			'http://bar.foo' => array(
-				'pagessubtitle4' => array('pages', 'subtitle', 4),
-			),
-		), $queryResult);
+		$this->fixture->synchronize(
+			array(
+				'http://foo.bar' => array(
+					'pagesurl3' => array('pages', 'url', 3),
+				),
+				'http://bar.foo' => array(
+					'pagessubtitle4' => array('pages', 'subtitle', 4),
+				),
+			), $queryResult
+		);
 
 		/** @var $linkCheck LinkCheck */
 		/** @var $recordSet RecordSet */
@@ -376,18 +361,20 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$recordSetRepository->expects($this->never())->method('findByUid');
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
-		$this->fixture->synchronize(array(
-			'http://foo.bar' => array(
-				'pagesurl3' => array('pages', 'url', 3),
-			),
-			'http://bar.foo' => array(
-				'pagesurl3' => array('pages', 'url', 3),
-				'be_userstext1' => array('be_users', 'text', 1),
-			),
-			'http://ying.yang' => array(
-				'be_userstext1' => array('be_users', 'text', 1),
-			),
-		), $queryResult);
+		$this->fixture->synchronize(
+			array(
+				'http://foo.bar' => array(
+					'pagesurl3' => array('pages', 'url', 3),
+				),
+				'http://bar.foo' => array(
+					'pagesurl3' => array('pages', 'url', 3),
+					'be_userstext1' => array('be_users', 'text', 1),
+				),
+				'http://ying.yang' => array(
+					'be_userstext1' => array('be_users', 'text', 1),
+				),
+			), $queryResult
+		);
 
 		/** @var $linkCheck LinkCheck */
 		/** @var $recordSet RecordSet */
@@ -439,14 +426,16 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$recordSetRepository->expects($this->never())->method('findByUid');
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
-		$this->fixture->synchronize(array(
-			'http://foo.bar' => array(
-				'pagesurl3' => array('pages', 'url', 3),
-			),
-			'http://bar.foo' => array(
-				'pages3' => array('pages', '', 3),
-			),
-		), $queryResult);
+		$this->fixture->synchronize(
+			array(
+				'http://foo.bar' => array(
+					'pagesurl3' => array('pages', 'url', 3),
+				),
+				'http://bar.foo' => array(
+					'pages3' => array('pages', '', 3),
+				),
+			), $queryResult
+		);
 
 		/** @var $linkCheck LinkCheck */
 		/** @var $recordSet RecordSet */
@@ -521,7 +510,9 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 */
 	public function synchronizeGroupOfUrlsWithOneRemovableLinkTest() {
 		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock('SGalinski\DfTools\Service\UrlSynchronizeService', array('synchronize'));
+		$this->fixture = $this->getAccessibleMock(
+			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService', array('synchronize')
+		);
 
 		$rawUrls = array(
 			'http://ying.yang' => array(),
@@ -553,7 +544,9 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 */
 	public function synchronizeGroupOfUrlsWithOneAddedLinkTest() {
 		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock('SGalinski\DfTools\Service\UrlSynchronizeService', array('synchronize'));
+		$this->fixture = $this->getAccessibleMock(
+			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService', array('synchronize')
+		);
 
 		$rawUrls = array(
 			'http://bar.foo' => array(

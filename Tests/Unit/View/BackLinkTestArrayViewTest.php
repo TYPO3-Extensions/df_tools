@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,20 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\BackLinkTestArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_View_BackLinkTest_ArrayView
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class BackLinkTestArrayViewTest
  */
-class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class BackLinkTestArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_BackLinkTest_ArrayView
+	 * @var \SGalinski\DfTools\View\BackLinkTestArrayView
 	 */
 	protected $fixture;
 
@@ -40,7 +47,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 	 * @return void
 	 */
 	public function setUp() {
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_BackLinkTest_ArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\BackLinkTestArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -58,19 +65,19 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
-		$backLinkTestNormal = new Tx_DfTools_Domain_Model_BackLinkTest();
+		$backLinkTestNormal = new BackLinkTest();
 		$backLinkTestNormal->setTestUrl('FooBar');
 		$backLinkTestNormal->setExpectedUrl('FooBar');
 		$backLinkTestNormal->setComment('FooBar');
 
-		$backLinkTestWithTestResult = new Tx_DfTools_Domain_Model_BackLinkTest();
+		$backLinkTestWithTestResult = new BackLinkTest();
 		$backLinkTestWithTestResult->setTestUrl('FooBar');
 		$backLinkTestWithTestResult->setExpectedUrl('FooBar');
 		$backLinkTestWithTestResult->setTestResult(1);
 		$backLinkTestWithTestResult->setTestMessage('FooBar');
 		$backLinkTestWithTestResult->setComment('FooBar');
 
-		$backLinkTestWithXSS = new Tx_DfTools_Domain_Model_BackLinkTest();
+		$backLinkTestWithXSS = new BackLinkTest();
 		$backLinkTestWithXSS->setTestUrl('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$backLinkTestWithXSS->setExpectedUrl('<script>alert("Ooops!!!");</script>');
 		$backLinkTestWithXSS->setTestMessage('<script>alert("Ooops!!!");</script>');
@@ -83,7 +90,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 					'__identity' => 0,
 					'testUrl' => 'FooBar',
 					'expectedUrl' => 'FooBar',
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => '',
 					'comment' => 'FooBar',
 				),
@@ -105,7 +112,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 					'__identity' => 0,
 					'testUrl' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
 					'expectedUrl' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 					'comment' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 				),
@@ -116,7 +123,7 @@ class Tx_DfTools_View_BackLinkTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 	/**
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
-	 * @param Tx_DfTools_Domain_Model_BackLinkTest $backLinkTest
+	 * @param BackLinkTest $backLinkTest
 	 * @param array $expected
 	 * @return void
 	 */

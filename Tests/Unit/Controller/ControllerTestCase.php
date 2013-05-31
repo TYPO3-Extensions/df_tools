@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,13 +26,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Special Test Case For Extbase Controllers
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ControllerTestCase
  */
-abstract class Tx_DfTools_Controller_ControllerTestCase extends Tx_Extbase_Tests_Unit_BaseTestCase {
+abstract class ControllerTestCase extends BaseTestCase {
 	/**
 	 * @var object
 	 */
@@ -49,9 +53,9 @@ abstract class Tx_DfTools_Controller_ControllerTestCase extends Tx_Extbase_Tests
 	 * @return void
 	 */
 	protected function addMockedCallToPersistAll() {
-		$class = 'Tx_Extbase_Persistence_Manager';
+		$class = 'TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager';
 		$mockPersistenceManager = $this->getMock($class, array('persistAll'));
-		$mockObjectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('get'));
+		$mockObjectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$mockObjectManager->expects($this->once())->method('get')

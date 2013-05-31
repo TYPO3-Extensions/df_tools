@@ -27,7 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
@@ -156,7 +156,7 @@ class ContentComparisonTestTest extends BaseTestCase {
 	 */
 	protected function getUrlCheckerService($resolveUrlOutput) {
 		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -201,15 +201,17 @@ class ContentComparisonTestTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function runTestWithEqualUrlsAndMultipleSearchTags() {
-		$this->fixture->setTestContent('
-			<!--TYPO3SEARCH_begin-->
-			Foo; Bar; Narf
-			<!--TYPO3SEARCH_end-->
-			Some Foo Content
-			<!--TYPO3SEARCH_begin-->
-			Foo; Bar; Narf
-			<!--TYPO3SEARCH_end-->
-		');
+		$this->fixture->setTestContent(
+			'
+						<!--TYPO3SEARCH_begin-->
+						Foo; Bar; Narf
+						<!--TYPO3SEARCH_end-->
+						Some Foo Content
+						<!--TYPO3SEARCH_begin-->
+						Foo; Bar; Narf
+						<!--TYPO3SEARCH_end-->
+					'
+		);
 
 		$returns = '
 			<!--TYPO3SEARCH_begin-->

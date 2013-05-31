@@ -26,41 +26,25 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
-use SGalinski\DfTools\Service\LinkCheckService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\CurlService;
-use SGalinski\DfTools\Service\UrlChecker\Factory;
-use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Domain\Service\LinkCheckService;
+use SGalinski\DfTools\Parser\UrlParserService;
 use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\Utility\TcaUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Extbase\Service\ExtensionService;
-use SGalinski\DfTools\Service\UrlParserService;
 
 /**
  * Class LinkCheckServiceTest
  */
 class LinkCheckServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Service\LinkCheckService
+	 * @var \SGalinski\DfTools\Domain\Service\LinkCheckService
 	 */
 	protected $fixture;
 
@@ -80,7 +64,7 @@ class LinkCheckServiceTest extends BaseTestCase {
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture = $this->getMock(
-			$this->buildAccessibleProxy('SGalinski\DfTools\Service\LinkCheckService'),
+			$this->buildAccessibleProxy('SGalinski\DfTools\Domain\Service\LinkCheckService'),
 			array('findExistingRawUrlsByTableAndUid', 'getRecordByTableAndId', 'findExistingRawUrlsByTestUrls')
 		);
 
@@ -142,7 +126,7 @@ class LinkCheckServiceTest extends BaseTestCase {
 		$preparedExcludedTablesString = array('tt_content', 'pages');
 		$preparedExcludedTableFieldsString = array('field1', 'field2', 'field3');
 
-		$urlParserService = $this->getMock('SGalinski\DfTools\Service\UrlParserService');
+		$urlParserService = $this->getMock('SGalinski\DfTools\Parser\UrlParserService');
 		$urlParserService->expects($this->once())->method('fetchUrls')
 			->with($preparedExcludedTablesString, $preparedExcludedTableFieldsString);
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -189,7 +173,7 @@ class LinkCheckServiceTest extends BaseTestCase {
 			),
 		);
 
-		$urlParserService = $this->getMock('SGalinski\DfTools\Service\UrlParserService');
+		$urlParserService = $this->getMock('SGalinski\DfTools\Parser\UrlParserService');
 		$urlParserService->expects($fetchLinkCheckTypeCallAmounts)->method('fetchLinkCheckLinkType')
 			->will($this->returnValue(array()));
 		$urlParserService->expects($this->once())->method('parseRows')

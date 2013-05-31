@@ -66,12 +66,12 @@ class LinkCheckService implements SingletonInterface {
 	public function fetchAllRawUrlsFromTheDatabase($excludedTablesString, $excludedTableFieldsString) {
 		$excludedTables = array();
 		if ($excludedTablesString !== '') {
-			$excludedTables = explode(',', trim($excludedTablesString, ','));
+			$excludedTables = GeneralUtility::trimExplode(',', trim($excludedTablesString, ','));
 		}
 
 		$excludedTableFields = array();
 		if ($excludedTableFieldsString !== '') {
-			$excludedTableFields = explode(',', trim($excludedTableFieldsString, ','));
+			$excludedTableFields = GeneralUtility::trimExplode(',', trim($excludedTableFieldsString, ','));
 		}
 
 		/** @var $urlParser UrlParser */

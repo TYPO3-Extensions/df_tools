@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,20 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Controller\AbstractController;
+use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+
 /**
- * Test case for class Tx_DfTools_Controller_AbstractController.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractControllerTest
  */
-class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller_ControllerTestCase {
+class AbstractControllerTest extends ControllerTestCase {
 	/**
-	 * @var Tx_DfTools_Controller_AbstractController
+	 * @var \SGalinski\DfTools\Controller\AbstractController
 	 */
 	protected $fixture;
 
@@ -40,11 +47,11 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Controller_AbstractController';
+		$class = 'SGalinski\DfTools\Controller\AbstractController';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 
-		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
-		$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+		/** @var $objectManager ObjectManager */
+		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$this->fixture->injectObjectManager($objectManager);
 	}
 
@@ -67,7 +74,7 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools'] = serialize($expected);
 
 		unset($this->fixture);
-		$class = 'Tx_DfTools_Controller_AbstractController';
+		$class = 'SGalinski\DfTools\Controller\AbstractController';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -76,20 +83,20 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 	}
 
 	/**
-	 * @expectedException RuntimeException
+	 * @expectedException \RuntimeException
 	 * @test
 	 * @return void
 	 */
 	public function errorActionThrowsRuntimeException() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockMappingResults = $this->getMock('Tx_Extbase_Property_MappingResults', array('dummy'));
+		$mockMappingResults = $this->getMock('TYPO3\CMS\Extbase\Property\MappingResults', array('dummy'));
 		$this->fixture->_set('argumentsMappingResults', $mockMappingResults);
-		
-		$arguments = $this->getMock('Tx_Extbase_MVC_Controller_Arguments', array('dummy'));
+
+		$arguments = $this->getMock('TYPO3\CMS\Extbase\Mvc\Controller\Arguments', array('dummy'));
 		$this->fixture->_set('arguments', $arguments);
-		$configuratioManager = $this->getMock('Tx_Extbase_Configuration_ConfigurationManager');
+		$configuratioManager = $this->getMock('TYPO3\CMS\Extbase\Configuration\ConfigurationManager');
 		$this->fixture->_set('configurationManager', $configuratioManager);
-		
+
 		$this->fixture->errorAction();
 	}
 
@@ -99,13 +106,15 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 	 */
 	protected function initStateTest() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$request = $this->getMock('Tx_Extbase_MVC_Request', array('getControllerActionName', 'getControllerName'));
+		$request = $this->getMock(
+			'TYPO3\CMS\Extbase\Mvc\Request', array('getControllerActionName', 'getControllerName')
+		);
 		$request->expects($this->once())->method('getControllerActionName')
 			->will($this->returnValue('Foo'));
 		$request->expects($this->once())->method('getControllerName')
 			->will($this->returnValue('Bar'));
 
-		$GLOBALS['BE_USER'] = new t3lib_beUserAuth();
+		$GLOBALS['BE_USER'] = new BackendUserAuthentication();
 		$this->fixture->_set('request', $request);
 		$this->fixture->setLastCalledControllerActionPair();
 	}
@@ -132,11 +141,11 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 	/**
 	 * Returns a redirect test instance
 	 *
-	 * @return Tx_DfTools_Domain_Model_RedirectTest
+	 * @return RedirectTest
 	 */
 	protected function getTestableDomainObject() {
-		/** @var $redirectTest Tx_DfTools_Domain_Model_RedirectTest */
-		$redirectTest = $this->getMockBuilder('Tx_DfTools_Domain_Model_RedirectTest')
+		/** @var $redirectTest RedirectTest */
+		$redirectTest = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTest')
 			->setMethods(array('dummy'))
 			->disableOriginalClone()->getMock();
 
@@ -149,13 +158,13 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 
 	/**
 	 * @test
-	 * @expectedException RuntimeException
+	 * @expectedException \RuntimeException
 	 * @return void
 	 */
 	public function handleActionThrowsRuntimeException() {
 		$this->addMockedCallToPersistAll();
 		$testableObject = $this->getTestableDomainObject();
-		$testableObject->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_EXCEPTION);
+		$testableObject->setTestResult(AbstractService::SEVERITY_EXCEPTION);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->_call('handleExceptionalTest', $testableObject);
@@ -168,16 +177,16 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 	public function handleActionThrowsNoExceptionButForAnRealError() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$testableObject = $this->getTestableDomainObject();
-		$testableObject->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK);
+		$testableObject->setTestResult(AbstractService::SEVERITY_OK);
 		$this->fixture->_call('handleExceptionalTest', $testableObject);
 
-		$testableObject->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO);
+		$testableObject->setTestResult(AbstractService::SEVERITY_INFO);
 		$this->fixture->_call('handleExceptionalTest', $testableObject);
 
-		$testableObject->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_WARNING);
+		$testableObject->setTestResult(AbstractService::SEVERITY_WARNING);
 		$this->fixture->_call('handleExceptionalTest', $testableObject);
 
-		$testableObject->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR);
+		$testableObject->setTestResult(AbstractService::SEVERITY_ERROR);
 		$this->fixture->_call('handleExceptionalTest', $testableObject);
 	}
 
@@ -188,7 +197,7 @@ class Tx_DfTools_Controller_AbstractControllerTest extends Tx_DfTools_Controller
 	public function getUrlCheckerServiceReturnsService() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$service = $this->fixture->_call('getUrlCheckerService');
-		$this->assertInstanceOf('Tx_DfTools_Service_UrlChecker_AbstractService', $service);
+		$this->assertInstanceOf('SGalinski\DfTools\UrlChecker\AbstractService', $service);
 	}
 }
 

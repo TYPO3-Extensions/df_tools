@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\ContentComparisonTestArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Test case for class Tx_DfTools_View_ContentComparisonTest_ArrayView
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class ContentComparisonTestArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_ContentComparisonTest_ArrayView
+	 * @var \SGalinski\DfTools\View\ContentComparisonTestArrayView
 	 */
 	protected $fixture;
 
@@ -41,7 +51,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 	 */
 	public function setUp() {
 		$GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'] = -1;
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_ContentComparisonTest_ArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\ContentComparisonTestArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -60,12 +70,12 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 	 */
 	public function recordsCanBeRenderedDataProvider() {
 		$GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'] = -1;
-		$contentComparisonTestNormal = new Tx_DfTools_Domain_Model_ContentComparisonTest();
+		$contentComparisonTestNormal = new ContentComparisonTest();
 		$contentComparisonTestNormal->setTestUrl('FooBar');
 		$contentComparisonTestNormal->setCompareUrl('FooBar');
 		$contentComparisonTestNormal->setDifference('FooBar');
 
-		$contentComparisonTestWithXSS = new Tx_DfTools_Domain_Model_ContentComparisonTest();
+		$contentComparisonTestWithXSS = new ContentComparisonTest();
 		$contentComparisonTestWithXSS->setTestUrl('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$contentComparisonTestWithXSS->setCompareUrl('<script>alert("Ooops!!!");</script>');
 		$contentComparisonTestWithXSS->setDifference('<script>alert("Ooops!!!");</script>');
@@ -79,7 +89,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 					'testUrl' => 'FooBar',
 					'compareUrl' => 'FooBar',
 					'difference' => 'FooBar',
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => '',
 				),
 			),
@@ -89,8 +99,8 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 					'__identity' => 0,
 					'testUrl' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
 					'compareUrl' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
-					'difference' => t3lib_div::removeXSS('<script>alert("Ooops!!!");</script>'),
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'difference' => GeneralUtility::removeXSS('<script>alert("Ooops!!!");</script>'),
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 				),
 			)
@@ -100,7 +110,7 @@ class Tx_DfTools_View_ContentComparisonTest_ArrayViewTest extends Tx_Extbase_Tes
 	/**
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
-	 * @param Tx_DfTools_Domain_Model_ContentComparisonTest $contentComparisonTest
+	 * @param ContentComparisonTest $contentComparisonTest
 	 * @param array $expected
 	 * @return void
 	 */

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
+use SGalinski\DfTools\ExtDirect\RecordSetDataProvider;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
- * Test case for class Tx_DfTools_ExtDirect_RecordSetDataProvider.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RecordSetDataProviderTest
  */
-class Tx_DfTools_ExtBaseConnector_RecordSetDataProviderTest extends Tx_DfTools_ExtBaseConnectorTestCase {
+class RecordSetDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var Tx_DfTools_ExtDirect_RecordSetDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\RecordSetDataProvider
 	 */
 	protected $fixture;
 
@@ -43,7 +53,7 @@ class Tx_DfTools_ExtBaseConnector_RecordSetDataProviderTest extends Tx_DfTools_E
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_ExtDirect_RecordSetDataProvider';
+		$class = 'SGalinski\DfTools\ExtDirect\RecordSetDataProvider';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
@@ -55,7 +65,7 @@ class Tx_DfTools_ExtBaseConnector_RecordSetDataProviderTest extends Tx_DfTools_E
 	public function readIsCalledWithAnIdentifier() {
 		$parameters = array('identity' => 12);
 		$this->addMockedExtBaseConnector('LinkCheck', 'readRecordSets', $parameters);
-		$this->fixture->read((object)array('identity' => '12'));
+		$this->fixture->read((object) array('identity' => '12'));
 	}
 
 	/**

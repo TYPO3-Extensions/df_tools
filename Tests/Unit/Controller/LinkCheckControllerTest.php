@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,30 +26,38 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Controller\LinkCheckController;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\View\LinkCheckArrayView;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * Test case for class Tx_DfTools_Controller_LinkCheckController.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class LinkCheckControllerTest
  */
-class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controller_ControllerTestCase {
+class LinkCheckControllerTest extends ControllerTestCase {
 	/**
-	 * @var Tx_DfTools_Controller_LinkCheckController
+	 * @var \SGalinski\DfTools\Controller\LinkCheckController
 	 */
 	protected $fixture;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $repository;
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var Tx_DfTools_View_LinkCheck_ArrayView
+	 * @var \SGalinski\DfTools\View\LinkCheckArrayView
 	 */
 	protected $view;
 
@@ -56,35 +66,35 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controlle
 	 */
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
-			'Tx_DfTools_Controller_LinkCheckController',
+			'SGalinski\DfTools\Controller\LinkCheckController',
 			array('forward', 'getUrlCheckerService', 'fetchRawUrls', 'getUrlsFromSingleRecord')
 		);
 		$this->fixture->injectObjectManager($this->objectManager);
 
-		/** @var $repository Tx_DfTools_Domain_Repository_LinkCheckRepository */
+		/** @var $repository LinkCheckRepository */
 		$this->repository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_LinkCheckRepository',
+			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository',
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRange', 'countAll'),
 			array($this->objectManager)
 		);
 		$this->fixture->injectLinkCheckRepository($this->repository);
 
-		$this->objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('get'));
+		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
 		$this->fixture->injectObjectManager($this->objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->view = $this->getMock('Tx_DfTools_View_LinkCheck_ArrayView', array('assign'));
+		$this->view = $this->getMock('SGalinski\DfTools\View\LinkCheckArrayView', array('assign'));
 		$this->fixture->_set('view', $this->view);
 	}
 
 	/**
 	 * Returns an link check test instance
 	 *
-	 * @return Tx_DfTools_Domain_Model_LinkCheck
+	 * @return LinkCheck
 	 */
 	protected function getLinkCheck() {
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-		$linkCheck = $this->getMockBuilder('Tx_DfTools_Domain_Model_LinkCheck')
+		/** @var $linkCheck LinkCheck */
+		$linkCheck = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\LinkCheck')
 			->setMethods(array('test'))
 			->disableOriginalClone()->getMock();
 		$linkCheck->setTestUrl('FooBar');
@@ -97,8 +107,8 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controlle
 	 * @return void
 	 */
 	public function testInjectLinkCheckRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_LinkCheckRepository */
-		$class = 'Tx_DfTools_Domain_Repository_LinkCheckRepository';
+		/** @var $repository LinkCheckRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\LinkCheckRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectLinkCheckRepository($repository);
 
@@ -136,8 +146,8 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controlle
 	 * @return void
 	 */
 	public function runTestWorks() {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -161,19 +171,19 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controlle
 		$linkCheck1 = $this->getLinkCheck();
 		$linkCheck2 = $this->getLinkCheck();
 
-		$testCollection = new Tx_Extbase_Persistence_ObjectStorage();
+		$testCollection = new ObjectStorage();
 		$testCollection->attach($linkCheck1);
 		$testCollection->attach($linkCheck2);
 
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->repository->expects($this->once())->method('findAll')
 			->will($this->returnValue($testCollection));
 		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('Tx_Extbase_Persistence_ObjectStorage'));
+			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
 		$this->fixture->expects($this->once())->method('getUrlCheckerService')
 			->will($this->returnValue($urlCheckerService));
 		$linkCheck1->expects($this->once())->method('test')->with($urlCheckerService);
@@ -187,10 +197,10 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controlle
 	public function resetActionResetsAnRecordDataProvider() {
 		return array(
 			'reset as ignore' => array(
-				TRUE, Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_IGNORE,
+				TRUE, AbstractService::SEVERITY_IGNORE,
 			),
 			'reset as untested' => array(
-				FALSE, Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+				FALSE, AbstractService::SEVERITY_UNTESTED,
 			),
 		);
 	}
@@ -231,11 +241,11 @@ class Tx_DfTools_Controller_LinkCheckControllerTest extends Tx_DfTools_Controlle
 
 		$this->fixture->setFalsePositiveStateAction(7, TRUE);
 		$state = $record->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO, $state);
+		$this->assertSame(AbstractService::SEVERITY_INFO, $state);
 
 		$this->fixture->setFalsePositiveStateAction(7, FALSE);
 		$state = $record->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED, $state);
+		$this->assertSame(AbstractService::SEVERITY_UNTESTED, $state);
 	}
 }
 

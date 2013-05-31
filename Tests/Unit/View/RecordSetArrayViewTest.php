@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,22 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\RecordSetArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Test case for class Tx_DfTools_View_RecordSet_ArrayView
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RecordSetArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_RecordSet_ArrayView
+	 * @var \SGalinski\DfTools\View\RecordSetArrayView
 	 */
 	protected $fixture;
 
@@ -40,7 +49,7 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function setUp() {
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_RecordSet_ArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\RecordSetArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('getReadableTableAndFieldName'))
 			->disableOriginalConstructor()
@@ -58,15 +67,15 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
-		/** @var $recordSetNormal Tx_DfTools_Domain_Model_RecordSet */
-		$recordSetNormal = $this->getMockBuilder('Tx_DfTools_Domain_Model_RecordSet')
+		/** @var $recordSetNormal RecordSet */
+		$recordSetNormal = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RecordSet')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$recordSetNormal->setTableName('FooBar');
 		$recordSetNormal->setField('FooBar');
 		$recordSetNormal->setIdentifier('12');
 
-		/** @var $recordSetWithXSS Tx_DfTools_Domain_Model_RecordSet */
-		$recordSetWithXSS = $this->getMockBuilder('Tx_DfTools_Domain_Model_RecordSet')
+		/** @var $recordSetWithXSS RecordSet */
+		$recordSetWithXSS = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RecordSet')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$recordSetWithXSS->setTableName('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$recordSetWithXSS->setField('<img src="" onerror="alert(\'Ooops!!!\');"/>');
@@ -100,7 +109,7 @@ class Tx_DfTools_View_RecordSet_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
 	 *
-	 * @param Tx_DfTools_Domain_Model_RecordSet $recordSet
+	 * @param RecordSet $recordSet
 	 * @param array $expected
 	 * @return void
 	 */

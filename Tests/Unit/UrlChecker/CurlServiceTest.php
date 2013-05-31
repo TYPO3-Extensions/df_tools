@@ -26,24 +26,10 @@ namespace SGalinski\DfTools\Tests\Unit\Service\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\CurlService;
-use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\UrlChecker\CurlService;
 use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\Utility\TcaUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -54,7 +40,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class CurlServiceTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Service\UrlChecker\CurlService
+	 * @var \SGalinski\DfTools\UrlChecker\CurlService
 	 */
 	protected $fixture;
 
@@ -67,7 +53,7 @@ class CurlServiceTest extends BaseTestCase {
 		}
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlChecker\CurlService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\UrlChecker\CurlService');
 		$this->fixture = $this->getMockBuilder($proxyClass)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()

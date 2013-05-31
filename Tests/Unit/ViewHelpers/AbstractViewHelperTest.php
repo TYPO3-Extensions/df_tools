@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,29 +26,33 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\ViewHelpers\AbstractViewHelper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_ViewHelpers_AbstractViewHelper.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractViewHelperTest
  */
-class Tx_DfTools_ViewHelpers_AbstractViewHelperTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class AbstractViewHelperTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_ViewHelpers_AbstractViewHelper
+	 * @var \SGalinski\DfTools\ViewHelpers\AbstractViewHelper
 	 */
-	protected $fixture = NULL;
+	protected $fixture;
 
 	/**
-	 * @var tslib_fe
+	 * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
 	 */
-	protected $backupTSFE = NULL;
+	protected $backupTSFE;
 
 	/**
 	 * @return void
 	 */
 	public function setUp() {
 		$this->backupTSFE = $GLOBALS['TSFE'];
-		$this->fixture = $this->getMock('Tx_DfTools_ViewHelpers_AbstractViewHelper', array('dummy'));
+		$this->fixture = $this->getMock('SGalinski\DfTools\ViewHelpers\AbstractViewHelper', array('dummy'));
 	}
 
 	/**

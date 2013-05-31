@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,26 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
+use SGalinski\DfTools\ExtDirect\RedirectTestDataProvider;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
  * Test case for class Tx_DfTools_ExtDirect_RedirectTestDataProvider.
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_ExtBaseConnector_RedirectTestDataProviderTest extends Tx_DfTools_ExtBaseConnectorTestCase {
+class RedirectTestDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var Tx_DfTools_ExtDirect_RedirectTestDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\RedirectTestDataProvider
 	 */
 	protected $fixture;
 
@@ -43,7 +56,7 @@ class Tx_DfTools_ExtBaseConnector_RedirectTestDataProviderTest extends Tx_DfTool
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_ExtDirect_RedirectTestDataProvider';
+		$class = 'SGalinski\DfTools\ExtDirect\RedirectTestDataProvider';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
@@ -66,7 +79,7 @@ class Tx_DfTools_ExtBaseConnector_RedirectTestDataProviderTest extends Tx_DfTool
 	 * @dataProvider readCallsExtBaseControllerWithParametersDataProvider
 	 * @test
 	 *
-	 * @param stdClass $input
+	 * @param \stdClass $input
 	 * @return void
 	 */
 	public function readCallsExtBaseControllerWithParameters($input) {
@@ -183,8 +196,8 @@ class Tx_DfTools_ExtBaseConnector_RedirectTestDataProviderTest extends Tx_DfTool
 		$this->addMockedExtBaseConnector('RedirectTest', 'create', $parameters);
 
 		/** @noinspection PhpUndefinedFieldInspection */
-		$record = new stdClass;
-		$record->records = new stdClass;
+		$record = new \stdClass;
+		$record->records = new \stdClass;
 		$record->records->__hmac = '__hmac';
 		$record->records->__identity = 0;
 		$record->records->categoryId = 0;

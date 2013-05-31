@@ -181,7 +181,7 @@ class LinkCheck extends AbstractEntity implements TestableInterface {
 	/**
 	 * Setter for recordSets
 	 *
-	 * @param ObjectStorage $recordSets
+	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $recordSets
 	 * @return void
 	 */
 	public function setRecordSets(ObjectStorage $recordSets) {
@@ -191,7 +191,7 @@ class LinkCheck extends AbstractEntity implements TestableInterface {
 	/**
 	 * Getter for recordSets
 	 *
-	 * @return ObjectStorage<RecordSet>
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<RecordSet>
 	 */
 	public function getRecordSets() {
 		return $this->recordSets;

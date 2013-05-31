@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,7 +26,14 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('fluid') . 'Tests/Unit/ViewHelpers/ViewHelperBaseTestcase.php');
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
+require_once(ExtensionManagementUtility::extPath('fluid') . 'Tests/Unit/ViewHelpers/ViewHelperBaseTestcase.php');
 
 /**
  * Special Test Case For View Helpers
@@ -32,7 +41,7 @@ require_once(t3lib_extMgm::extPath('fluid') . 'Tests/Unit/ViewHelpers/ViewHelper
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-abstract class Tx_DfTools_ViewHelpers_ViewHelperTestCase extends Tx_Fluid_ViewHelpers_ViewHelperBaseTestcase {
+abstract class ViewHelperTestCase extends ViewHelperBaseTestcase {
 	/**
 	 * @var object
 	 */
@@ -41,9 +50,9 @@ abstract class Tx_DfTools_ViewHelpers_ViewHelperTestCase extends Tx_Fluid_ViewHe
 	/**
 	 * Page Renderer
 	 *
-	 * @var t3lib_PageRenderer
+	 * @var \TYPO3\CMS\Core\Page\PageRenderer
 	 */
-	protected $pageRenderer = NULL;
+	protected $pageRenderer;
 
 	/**
 	 * @return void
@@ -52,7 +61,8 @@ abstract class Tx_DfTools_ViewHelpers_ViewHelperTestCase extends Tx_Fluid_ViewHe
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->pageRenderer = $this->getMockBuilder('t3lib_PageRenderer')->disableOriginalConstructor()->getMock();
+		$this->pageRenderer = $this->getMockBuilder('TYPO3\CMS\Core\Page\PageRenderer')->disableOriginalConstructor(
+		)->getMock();
 		$this->fixture->expects($this->once())->method('getPageRenderer')
 			->will($this->returnValue($this->pageRenderer));
 		$this->injectDependenciesIntoViewHelper($this->fixture);

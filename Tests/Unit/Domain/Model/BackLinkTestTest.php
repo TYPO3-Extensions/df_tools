@@ -27,7 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
@@ -126,7 +126,7 @@ class BackLinkTestTest extends BaseTestCase {
 	 */
 	protected function getUrlCheckerService($resolveUrlOutput) {
 		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */

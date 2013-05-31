@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\RedirectTestCategoryArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_View_RedirectTestCategory_ArrayView.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestCategoryArrayViewTest
  */
-class Tx_DfTools_View_RedirectTestCategory_ArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RedirectTestCategoryArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_RedirectTestCategory_ArrayView
+	 * @var \SGalinski\DfTools\View\RedirectTestCategoryArrayView
 	 */
 	protected $fixture;
 
@@ -40,7 +46,7 @@ class Tx_DfTools_View_RedirectTestCategory_ArrayViewTest extends Tx_Extbase_Test
 	 * @return void
 	 */
 	public function setUp() {
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_RedirectTestCategory_ArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\RedirectTestCategoryArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -58,10 +64,10 @@ class Tx_DfTools_View_RedirectTestCategory_ArrayViewTest extends Tx_Extbase_Test
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
-		$category = new Tx_DfTools_Domain_Model_RedirectTestCategory();
+		$category = new RedirectTestCategory();
 		$category->setCategory('FooBar');
 
-		$categoryWithXSS = new Tx_DfTools_Domain_Model_RedirectTestCategory();
+		$categoryWithXSS = new RedirectTestCategory();
 		$categoryWithXSS->setCategory('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 
 		return array(
@@ -85,7 +91,7 @@ class Tx_DfTools_View_RedirectTestCategory_ArrayViewTest extends Tx_Extbase_Test
 	/**
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
-	 * @param Tx_DfTools_Domain_Model_RedirectTestCategory $category
+	 * @param RedirectTestCategory $category
 	 * @param array $expected
 	 * @return void
 	 */

@@ -217,7 +217,8 @@ abstract class AbstractDataProvider {
 				'success' => FALSE,
 				'data' => array(
 					'testResult' => AbstractService::SEVERITY_EXCEPTION,
-					'testMessage' => htmlspecialchars($exception->getMessage()),
+					'testMessage' => $exception->getFile() . ':' . $exception->getLine() . ' - ' .
+					htmlspecialchars($exception->getMessage()),
 				),
 			);
 		}

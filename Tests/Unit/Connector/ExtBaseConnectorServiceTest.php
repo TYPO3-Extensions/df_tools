@@ -26,36 +26,18 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\CurlService;
-use SGalinski\DfTools\Service\UrlChecker\Factory;
-use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Connector\ExtBaseConnector;
 use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\Utility\TcaUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 /**
- * Class ExtBaseConnectorServiceTest
+ * Class ExtBaseConnectorTest
  */
-class ExtBaseConnectorServiceTest extends BaseTestCase {
+class ExtBaseConnectorTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Connector\ExtBaseConnector
 	 */
 	protected $fixture;
 
@@ -63,7 +45,7 @@ class ExtBaseConnectorServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'SGalinski\DfTools\Service\ExtBaseConnectorService';
+		$class = 'SGalinski\DfTools\Connector\ExtBaseConnector';
 		$this->fixture = $this->getAccessibleMock($class, array('initialize', 'handleWebRequest'));
 
 		$this->fixture->setExtensionKey('Foo');
@@ -133,13 +115,15 @@ class ExtBaseConnectorServiceTest extends BaseTestCase {
 		$this->prepareRunControllerAndActionTests();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->expects($this->once())->method('initialize')->with(array(
-			'extensionName' => 'Foo',
-			'pluginName' => 'tools_FooTools',
-			'switchableControllerActions' => array(
-				'TestController' => array('TestAction')
-			),
-		));
+		$this->fixture->expects($this->once())->method('initialize')->with(
+			array(
+				'extensionName' => 'Foo',
+				'pluginName' => 'tools_FooTools',
+				'switchableControllerActions' => array(
+					'TestController' => array('TestAction')
+				),
+			)
+		);
 		$this->fixture->runControllerAction('TestController', 'TestAction');
 	}
 

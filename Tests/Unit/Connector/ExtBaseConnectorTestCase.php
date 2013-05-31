@@ -38,7 +38,7 @@ abstract class ExtBaseConnectorTestCase extends BaseTestCase {
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Connector\ExtBaseConnector
 	 */
 	protected $extBaseConnector;
 
@@ -46,7 +46,7 @@ abstract class ExtBaseConnectorTestCase extends BaseTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->extBaseConnector = $this->getMock('SGalinski\DfTools\Service\ExtBaseConnectorService');
+		$this->extBaseConnector = $this->getMock('SGalinski\DfTools\Connector\ExtBaseConnector');
 	}
 
 	/**
@@ -66,7 +66,9 @@ abstract class ExtBaseConnectorTestCase extends BaseTestCase {
 	 * @param \Exception $exception optional
 	 * @return void
 	 */
-	protected function addMockedExtBaseConnector($controller, $action, array $parameters = array(), $returnValue = NULL, $exception = NULL) {
+	protected function addMockedExtBaseConnector(
+		$controller, $action, array $parameters = array(), $returnValue = NULL, $exception = NULL
+	) {
 		/** @var $mockedMethod \PHPUnit_Framework_MockObject_Builder_InvocationMocker */
 		/** @noinspection PhpUndefinedMethodInspection */
 		$mockedMethod = $this->extBaseConnector->expects($this->once())->method('runControllerAction');

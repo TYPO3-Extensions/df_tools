@@ -26,9 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
 use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
@@ -128,10 +126,12 @@ class AbstractRepositoryTest extends BaseTestCase {
 	public function findSortedInRangeWithMultipleSorters() {
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
-			->with(array(
-				'field1' => QueryInterface::ORDER_ASCENDING,
-				'field2' => QueryInterface::ORDER_DESCENDING
-			));
+			->with(
+				array(
+					'field1' => QueryInterface::ORDER_ASCENDING,
+					'field2' => QueryInterface::ORDER_DESCENDING
+				)
+			);
 		$this->fixture->findSortedAndInRange('10', '20', array('field1' => TRUE, 'field2' => FALSE));
 	}
 }

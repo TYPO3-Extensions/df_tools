@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,21 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Controller\RedirectTestCategoryController;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * Test case for class Tx_DfTools_Controller_RedirectTestCategoryController.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestCategoryControllerTest
  */
-class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTools_Controller_ControllerTestCase {
+class RedirectTestCategoryControllerTest extends ControllerTestCase {
 	/**
-	 * @var Tx_DfTools_Controller_RedirectTestCategoryController
+	 * @var \SGalinski\DfTools\Controller\RedirectTestCategoryController
 	 */
 	protected $fixture;
 
@@ -40,11 +48,11 @@ class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTool
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Controller_RedirectTestCategoryController';
+		$class = 'SGalinski\DfTools\Controller\RedirectTestCategoryController';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 
-		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
-		$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+		/** @var $objectManager ObjectManager */
+		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$this->fixture->injectObjectManager($objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -58,8 +66,8 @@ class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTool
 	 * @return void
 	 */
 	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository */
-		$repository = new Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository($this->objectManager);
+		/** @var $repository RedirectTestCategoryRepository */
+		$repository = new RedirectTestCategoryRepository($this->objectManager);
 		$this->fixture->injectRedirectTestCategoryRepository($repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -72,7 +80,7 @@ class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTool
 	 */
 	public function readWithoutFilterFindAllResults() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository';
+		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$mockRepository = $this->getMock($class, array('findAll'), array($this->objectManager));
 		$mockRepository->expects($this->once())->method('findAll');
 
@@ -86,7 +94,7 @@ class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTool
 	 */
 	public function readWithFilterStringFindsCategoriesStartingWithTheFilterString() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository';
+		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$mockRepository = $this->getMock($class, array('findByStartingCategory'), array($this->objectManager));
 		$mockRepository->expects($this->once())->method('findByStartingCategory')->with('FooBar');
 
@@ -99,13 +107,13 @@ class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTool
 	 * @return void
 	 */
 	public function deleteAllUnusedCategoriesMethodRemovesCategories() {
-		$objectCollection = new Tx_Extbase_Persistence_ObjectStorage();
-		$objectCollection->attach(new Tx_DfTools_Domain_Model_RedirectTestCategory());
-		$objectCollection->attach(new Tx_DfTools_Domain_Model_RedirectTestCategory());
+		$objectCollection = new ObjectStorage();
+		$objectCollection->attach(new RedirectTestCategory());
+		$objectCollection->attach(new RedirectTestCategory());
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$mockRepository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository',
+			'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository',
 			array('findAllUnusedCategories', 'remove'),
 			array($this->objectManager)
 		);
@@ -123,13 +131,13 @@ class Tx_DfTools_Controller_RedirectTestCategoryControllerTest extends Tx_DfTool
 	 * @return void
 	 */
 	public function updateActionUpdatesCategory() {
-		/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
-		$category = $this->getMockBuilder('Tx_DfTools_Domain_Model_RedirectTestCategory')
+		/** @var $category RedirectTestCategory */
+		$category = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTestCategory')
 			->disableOriginalClone()->getMock();
 		$category->setCategory('FooBar');
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository';
+		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$mockRepository = $this->getMock($class, array('update'), array($this->objectManager));
 		$mockRepository->expects($this->once())->method('update')->with($category);
 		$this->fixture->_set('redirectTestCategoryRepository', $mockRepository);

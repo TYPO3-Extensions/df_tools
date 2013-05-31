@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,23 +26,25 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\ViewHelpers\AddJavaScriptFileViewHelper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AddJavaScriptFileViewHelperTest
  */
-class Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelperTest extends Tx_DfTools_ViewHelpers_ViewHelperTestCase {
+class AddJavaScriptFileViewHelperTest extends ViewHelperTestCase {
 	/**
-	 * @var Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper
+	 * @var \SGalinski\DfTools\ViewHelpers\AddJavaScriptFileViewHelper
 	 */
-	protected $fixture = NULL;
+	protected $fixture;
 
 	/**
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_ViewHelpers_AddJavaScriptFileViewHelper';
+		$class = 'SGalinski\DfTools\ViewHelpers\AddJavaScriptFileViewHelper';
 		$this->fixture = $this->getMock($class, array('getPageRenderer'));
 		parent::setUp();
 	}

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Connector\ExtBaseConnectorService;
+use SGalinski\DfTools\ExtDirect\ContentComparisonTestDataProvider;
+use SGalinski\DfTools\Parser\TcaParserService;
+use SGalinski\DfTools\Parser\UrlParserService;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
- * Test case for class Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ContentComparisonTestDataProviderTest
  */
-class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends Tx_DfTools_ExtBaseConnectorTestCase {
+class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider
+	 * @var \SGalinski\DfTools\ExtDirect\ContentComparisonTestDataProvider
 	 */
 	protected $fixture;
 
@@ -43,7 +53,7 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_ExtDirect_ContentComparisonTestDataProvider';
+		$class = 'SGalinski\DfTools\ExtDirect\ContentComparisonTestDataProvider';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
@@ -66,7 +76,7 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 	 * @dataProvider readCallsExtBaseControllerWithParametersDataProvider
 	 * @test
 	 *
-	 * @param stdClass $input
+	 * @param \stdClass $input
 	 * @return void
 	 */
 	public function readCallsExtBaseControllerWithParameters($input) {
@@ -96,7 +106,7 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 
 		/** @noinspection PhpUndefinedFieldInspection */
 		$record = array(
-			'records' => (object)array(
+			'records' => (object) array(
 				'__hmac' => 'hmac',
 				'__identity' => 0,
 				'testUrl' => 'FooBar',
@@ -104,7 +114,7 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 			),
 		);
 
-		$this->fixture->create((object)$record);
+		$this->fixture->create((object) $record);
 	}
 
 	/**
@@ -123,8 +133,8 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 		$this->addMockedExtBaseConnector('ContentComparisonTest', 'update', $parameters);
 
 		/** @noinspection PhpUndefinedFieldInspection */
-		$record = (object)array(
-			'records' => (object)array(
+		$record = (object) array(
+			'records' => (object) array(
 				'__hmac' => 'hmac',
 				'__identity' => 2,
 				'testUrl' => 'FooBar',
@@ -142,7 +152,7 @@ class Tx_DfTools_ExtBaseConnector_ContentComparisonTestDataProviderTest extends 
 	public function destroyCallsDestrayAction() {
 		$parameters = array('identifiers' => array(10, 20));
 		$this->addMockedExtBaseConnector('ContentComparisonTest', 'destroy', $parameters);
-		$this->fixture->destroy((object)array('records' => array(10, 20)));
+		$this->fixture->destroy((object) array('records' => array(10, 20)));
 	}
 
 	/**

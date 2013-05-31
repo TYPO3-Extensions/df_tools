@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\AbstractArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Security\Channel\RequestHashService;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_View_AbstractArrayView.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractArrayViewTest
  */
-class Tx_DfTools_View_AbstractArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class AbstractArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_AbstractArrayView
+	 * @var \SGalinski\DfTools\View\AbstractArrayView
 	 */
 	protected $fixture;
 
@@ -40,7 +46,7 @@ class Tx_DfTools_View_AbstractArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function setUp() {
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_AbstractArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\AbstractArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('getPlainRecord', 'getHmacFieldConfiguration', 'getNamespace'))
 			->disableOriginalConstructor()
@@ -59,8 +65,8 @@ class Tx_DfTools_View_AbstractArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function testInjectRequestHash() {
-		/** @var $mock Tx_Extbase_Security_Channel_RequestHashService */
-		$mock = $this->getMock('Tx_Extbase_Security_Channel_RequestHashService', array('dummy'));
+		/** @var $mock RequestHashService */
+		$mock = $this->getMock('TYPO3\CMS\Extbase\Security\Channel\RequestHashService', array('dummy'));
 		$this->fixture->injectRequestHashService($mock);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -71,8 +77,8 @@ class Tx_DfTools_View_AbstractArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return array plain record
 	 */
 	protected function prepareTestRenderProcess() {
-		/** @var $requestHashService Tx_Extbase_Security_Channel_RequestHashService */
-		$class = 'Tx_Extbase_Security_Channel_RequestHashService';
+		/** @var $requestHashService RequestHashService */
+		$class = 'TYPO3\CMS\Extbase\Security\Channel\RequestHashService';
 		$requestHashService = $this->getMock($class, array('generateRequestHash'));
 
 		$plainRecord = array(

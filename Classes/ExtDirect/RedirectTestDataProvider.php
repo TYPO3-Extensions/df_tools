@@ -67,6 +67,9 @@ class RedirectTestDataProvider extends AbstractDataProvider {
 			)
 		);
 
+//		__trustedProperties
+
+
 		// decide if we need to add a category before updating the assignment to the redirect test
 		if (is_numeric($updatedRecord['categoryId'])) {
 			$parameters['redirectTest']['category'] = array(

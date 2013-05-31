@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,25 +26,32 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Controller\ContentComparisonTestController;
+use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
+use SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\View\ContentComparisonTestArrayView;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * Test case for class Tx_DfTools_Controller_ContentComparisonTestController.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ContentComparisonTestControllerTest
  */
-class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfTools_Controller_ControllerTestCase {
+class ContentComparisonTestControllerTest extends ControllerTestCase {
 	/**
-	 * @var Tx_DfTools_Controller_ContentComparisonTestController
+	 * @var \SGalinski\DfTools\Controller\ContentComparisonTestController
 	 */
 	protected $fixture;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_ContentComparisonTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository
 	 */
 	protected $repository;
 
 	/**
-	 * @var Tx_DfTools_View_ContentComparisonTest_ArrayView
+	 * @var \SGalinski\DfTools\View\ContentComparisonTestArrayView
 	 */
 	protected $view;
 
@@ -50,29 +59,29 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Controller_ContentComparisonTestController';
+		$class = 'SGalinski\DfTools\Controller\ContentComparisonTestController';
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
 		$this->fixture->injectObjectManager($this->objectManager);
 
-		/** @var $repository Tx_DfTools_Domain_Repository_ContentComparisonTestRepository */
+		/** @var $repository ContentComparisonTestRepository */
 		$this->repository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_ContentComparisonTestRepository',
+			'SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository',
 			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange'),
 			array($this->objectManager)
 		);
 		$this->fixture->injectContentComparisonTestRepository($this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->view = $this->getMock('Tx_DfTools_View_ContentComparisonTest_ArrayView', array('assign'));
+		$this->view = $this->getMock('SGalinski\DfTools\View\ContentComparisonTestArrayView', array('assign'));
 		$this->fixture->_set('view', $this->view);
 	}
 
 	/**
-	 * @return Tx_DfTools_Domain_Model_ContentComparisonTest
+	 * @return ContentComparisonTest
 	 */
 	protected function getContentComparisonTest() {
-		/** @var $contentComparisonTest Tx_DfTools_Domain_Model_ContentComparisonTest */
-		$contentComparisonTest = $this->getMockBuilder('Tx_DfTools_Domain_Model_ContentComparisonTest')
+		/** @var $contentComparisonTest ContentComparisonTest */
+		$contentComparisonTest = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\ContentComparisonTest')
 			->setMethods(array('test', 'updateTestContent'))
 			->disableOriginalClone()->getMock();
 		$contentComparisonTest->setTestUrl('FooBar');
@@ -86,8 +95,8 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 	 * @return void
 	 */
 	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_ContentComparisonTestRepository */
-		$repository = new Tx_DfTools_Domain_Repository_ContentComparisonTestRepository($this->objectManager);
+		/** @var $repository ContentComparisonTestRepository */
+		$repository = new ContentComparisonTestRepository($this->objectManager);
 		$this->fixture->injectContentComparisonTestRepository($repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -149,8 +158,8 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 	 * @return void
 	 */
 	public function updateTestContentWorks() {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -174,19 +183,19 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 		$contentComparisonTest1 = $this->getContentComparisonTest();
 		$contentComparisonTest2 = $this->getContentComparisonTest();
 
-		$testCollection = new Tx_Extbase_Persistence_ObjectStorage();
+		$testCollection = new ObjectStorage();
 		$testCollection->attach($contentComparisonTest1);
 		$testCollection->attach($contentComparisonTest2);
 
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->repository->expects($this->once())->method('findAll')
 			->will($this->returnValue($testCollection));
 		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('Tx_Extbase_Persistence_ObjectStorage'));
+			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
 		$this->fixture->expects($this->once())->method('getUrlCheckerService')
 			->will($this->returnValue($urlCheckerService));
 		$contentComparisonTest1->expects($this->once())->method('updateTestContent')->with($urlCheckerService);
@@ -199,8 +208,8 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 	 * @return void
 	 */
 	public function runTestWorks() {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -224,19 +233,19 @@ class Tx_DfTools_Controller_ContentComparisonTestControllerTest extends Tx_DfToo
 		$contentComparisonTest1 = $this->getContentComparisonTest();
 		$contentComparisonTest2 = $this->getContentComparisonTest();
 
-		$testCollection = new Tx_Extbase_Persistence_ObjectStorage();
+		$testCollection = new ObjectStorage();
 		$testCollection->attach($contentComparisonTest1);
 		$testCollection->attach($contentComparisonTest2);
 
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->repository->expects($this->once())->method('findAll')
 			->will($this->returnValue($testCollection));
 		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('Tx_Extbase_Persistence_ObjectStorage'));
+			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
 		$this->fixture->expects($this->once())->method('getUrlCheckerService')
 			->will($this->returnValue($urlCheckerService));
 		$contentComparisonTest1->expects($this->once())->method('test')->with($urlCheckerService);

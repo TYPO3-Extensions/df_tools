@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\LinkCheckArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
  * Test case for class Tx_DfTools_View_LinkCheck_ArrayView
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_View_LinkCheck_ArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class LinkCheckArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_LinkCheck_ArrayView
+	 * @var \SGalinski\DfTools\View\LinkCheckArrayView
 	 */
 	protected $fixture;
 
@@ -40,7 +50,7 @@ class Tx_DfTools_View_LinkCheck_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function setUp() {
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_LinkCheck_ArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\LinkCheckArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -58,12 +68,12 @@ class Tx_DfTools_View_LinkCheck_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
-		$linkCheckNormal = new Tx_DfTools_Domain_Model_LinkCheck();
+		$linkCheckNormal = new LinkCheck();
 		$linkCheckNormal->setTestUrl('FooBar');
 		$linkCheckNormal->setResultUrl('FooBar');
 		$linkCheckNormal->setHttpStatusCode(200);
 
-		$linkCheckWithXSS = new Tx_DfTools_Domain_Model_LinkCheck();
+		$linkCheckWithXSS = new LinkCheck();
 		$linkCheckWithXSS->setTestUrl('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$linkCheckWithXSS->setResultUrl('<script>alert("Ooops!!!");</script>');
 		$linkCheckWithXSS->setHttpStatusCode(500);
@@ -77,7 +87,7 @@ class Tx_DfTools_View_LinkCheck_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 					'testUrl' => 'FooBar',
 					'resultUrl' => 'FooBar',
 					'httpStatusCode' => 200,
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => '',
 				),
 			),
@@ -88,7 +98,7 @@ class Tx_DfTools_View_LinkCheck_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 					'testUrl' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
 					'resultUrl' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 					'httpStatusCode' => 500,
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 				),
 			)
@@ -99,7 +109,7 @@ class Tx_DfTools_View_LinkCheck_ArrayViewTest extends Tx_Extbase_Tests_Unit_Base
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
 	 *
-	 * @param Tx_DfTools_Domain_Model_LinkCheck $linkCheck
+	 * @param LinkCheck $linkCheck
 	 * @param array $expected
 	 * @return void
 	 */

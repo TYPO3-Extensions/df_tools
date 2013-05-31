@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,21 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\View\RedirectTestArrayView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_View_RedirectTest_ArrayView
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestArrayViewTest
  */
-class Tx_DfTools_View_RedirectTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RedirectTestArrayViewTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_View_RedirectTest_ArrayView
+	 * @var \SGalinski\DfTools\View\RedirectTestArrayView
 	 */
 	protected $fixture;
 
@@ -40,7 +48,7 @@ class Tx_DfTools_View_RedirectTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 	 * @return void
 	 */
 	public function setUp() {
-		$class = $this->buildAccessibleProxy('Tx_DfTools_View_RedirectTest_ArrayView');
+		$class = $this->buildAccessibleProxy('SGalinski\DfTools\View\RedirectTestArrayView');
 		$this->fixture = $this->getMockBuilder($class)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -58,23 +66,23 @@ class Tx_DfTools_View_RedirectTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 	 * @return array
 	 */
 	public function recordsCanBeRenderedDataProvider() {
-		$category = new Tx_DfTools_Domain_Model_RedirectTestCategory();
+		$category = new RedirectTestCategory();
 		$category->setCategory('FooBar');
 
-		$redirectTestNormal = new Tx_DfTools_Domain_Model_RedirectTest();
+		$redirectTestNormal = new RedirectTest();
 		$redirectTestNormal->setTestUrl('FooBar');
 		$redirectTestNormal->setExpectedUrl('FooBar');
 		$redirectTestNormal->setHttpStatusCode(200);
 		$redirectTestNormal->setCategory($category);
 
-		$redirectTestWithoutCategory = new Tx_DfTools_Domain_Model_RedirectTest();
+		$redirectTestWithoutCategory = new RedirectTest();
 		$redirectTestWithoutCategory->setTestUrl('FooBar');
 		$redirectTestWithoutCategory->setExpectedUrl('FooBar');
 		$redirectTestWithoutCategory->setHttpStatusCode(404);
 		$redirectTestWithoutCategory->setTestResult(1);
 		$redirectTestWithoutCategory->setTestMessage('FooBar');
 
-		$redirectTestWithXSS = new Tx_DfTools_Domain_Model_RedirectTest();
+		$redirectTestWithXSS = new RedirectTest();
 		$redirectTestWithXSS->setTestUrl('<img src="" onerror="alert(\'Ooops!!!\');"/>');
 		$redirectTestWithXSS->setExpectedUrl('<script>alert("Ooops!!!");</script>');
 		$redirectTestWithXSS->setHttpStatusCode(500);
@@ -88,7 +96,7 @@ class Tx_DfTools_View_RedirectTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 					'testUrl' => 'FooBar',
 					'expectedUrl' => 'FooBar',
 					'httpStatusCode' => 200,
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => '',
 					'categoryId' => NULL,
 				),
@@ -112,7 +120,7 @@ class Tx_DfTools_View_RedirectTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 					'testUrl' => htmlspecialchars('<img src="" onerror="alert(\'Ooops!!!\');"/>'),
 					'expectedUrl' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 					'httpStatusCode' => 500,
-					'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+					'testResult' => AbstractService::SEVERITY_UNTESTED,
 					'testMessage' => htmlspecialchars('<script>alert("Ooops!!!");</script>'),
 					'categoryId' => '',
 				),
@@ -123,7 +131,7 @@ class Tx_DfTools_View_RedirectTest_ArrayViewTest extends Tx_Extbase_Tests_Unit_B
 	/**
 	 * @dataProvider recordsCanBeRenderedDataProvider
 	 * @test
-	 * @param Tx_DfTools_Domain_Model_RedirectTest $redirectTest
+	 * @param RedirectTest $redirectTest
 	 * @param array $expected
 	 * @return void
 	 */

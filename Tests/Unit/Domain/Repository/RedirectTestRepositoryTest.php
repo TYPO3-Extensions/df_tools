@@ -26,16 +26,9 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Repository\AbstractRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -118,9 +111,9 @@ class RedirectTestRepositoryTest extends BaseTestCase {
 	public function findSortedInRangeByCategoryWithSingleSorter() {
 		$statement = 'SELECT tx_dftools_domain_model_redirecttest.* ' .
 			'FROM tx_dftools_domain_model_redirecttest ' .
-				'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
-					'ON tx_dftools_domain_model_redirecttest.category = ' .
-						'tx_dftools_domain_model_redirecttestcategory.uid AND foo = bar ' .
+			'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
+			'ON tx_dftools_domain_model_redirecttest.category = ' .
+			'tx_dftools_domain_model_redirecttestcategory.uid AND foo = bar ' .
 			'WHERE 1=1 AND foo = bar ' .
 			'ORDER BY tx_dftools_domain_model_redirecttestcategory.category ASC, field ASC ' .
 			'LIMIT 10, 20';
@@ -138,9 +131,9 @@ class RedirectTestRepositoryTest extends BaseTestCase {
 	public function findSortedInRangeByCategoryWithMultipleSorters() {
 		$statement = 'SELECT tx_dftools_domain_model_redirecttest.* ' .
 			'FROM tx_dftools_domain_model_redirecttest ' .
-				'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
-					'ON tx_dftools_domain_model_redirecttest.category = ' .
-						'tx_dftools_domain_model_redirecttestcategory.uid AND foo = bar ' .
+			'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
+			'ON tx_dftools_domain_model_redirecttest.category = ' .
+			'tx_dftools_domain_model_redirecttestcategory.uid AND foo = bar ' .
 			'WHERE 1=1 AND foo = bar ' .
 			'ORDER BY tx_dftools_domain_model_redirecttestcategory.category ASC, field ASC, field DESC ' .
 			'LIMIT 10, 20';
@@ -158,9 +151,9 @@ class RedirectTestRepositoryTest extends BaseTestCase {
 	public function findSortedInRangeByCategoryWithCategoryIdSorterAndAnother() {
 		$statement = 'SELECT tx_dftools_domain_model_redirecttest.* ' .
 			'FROM tx_dftools_domain_model_redirecttest ' .
-				'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
-					'ON tx_dftools_domain_model_redirecttest.category = ' .
-						'tx_dftools_domain_model_redirecttestcategory.uid AND foo = bar ' .
+			'LEFT JOIN tx_dftools_domain_model_redirecttestcategory ' .
+			'ON tx_dftools_domain_model_redirecttest.category = ' .
+			'tx_dftools_domain_model_redirecttestcategory.uid AND foo = bar ' .
 			'WHERE 1=1 AND foo = bar ' .
 			'ORDER BY tx_dftools_domain_model_redirecttestcategory.category DESC, field ASC ' .
 			'LIMIT 10, 20';

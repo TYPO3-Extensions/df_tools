@@ -1,11 +1,6 @@
 <?php
 
-if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
-}
-
-/** @var $TCA array */
-$TCA['tx_dftools_domain_model_redirecttestcategory'] = array(
+return array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttestcategory',
 		'label' => 'category',

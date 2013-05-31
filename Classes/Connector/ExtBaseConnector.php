@@ -55,23 +55,24 @@ class ExtBaseConnector implements SingletonInterface {
 	 *
 	 * @var \TYPO3\CMS\Extbase\Core\Bootstrap
 	 */
-	protected $bootStrap = NULL;
+	protected $bootStrap;
 
 	/**
 	 * Object Manager
 	 *
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
-	protected $objectManager = NULL;
+	protected $objectManager;
 
 	/**
 	 * Initializes the instance
 	 */
 	public function __construct() {
-		$this->objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+		/** @var ObjectManager objectManager */
+		$this->objectManager = $objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 
 		/** @var $bootStrap Bootstrap */
-		$bootStrap = $this->objectManager->create('TYPO3\CMS\Extbase\Core\Bootstrap');
+		$bootStrap = $objectManager->get('TYPO3\CMS\Extbase\Core\Bootstrap');
 		$this->injectBootstrap($bootStrap);
 	}
 
@@ -132,11 +133,7 @@ class ExtBaseConnector implements SingletonInterface {
 	public function setParameters(array $parameters) {
 		/** @var $extensionService ExtensionService */
 		$extensionService = $this->objectManager->get('TYPO3\CMS\Extbase\Service\ExtensionService');
-		$parameterNamespace = $extensionService->getPluginNamespace(
-			$this->extensionKey,
-			$this->moduleOrPluginKey
-		);
-
+		$parameterNamespace = $extensionService->getPluginNamespace($this->extensionKey, $this->moduleOrPluginKey);
 		$_POST[$parameterNamespace] = $parameters;
 	}
 
