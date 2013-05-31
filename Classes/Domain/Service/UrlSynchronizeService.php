@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Service;
+namespace SGalinski\DfTools\Domain\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -34,61 +34,30 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Dbal\Database\DatabaseConnection;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Synchronization Service For The Link Check Aggregate
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class UrlSynchronizeService implements SingletonInterface {
 	/**
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\RecordSetRepository
 	 */
 	protected $recordSetRepository;
 
 	/**
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $linkCheckRepository;
 
 	/**
+	 * @inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
-
-	/**
-	 * Injects the link check test repository
-	 *
-	 * @param LinkCheckRepository $linkCheckRepository
-	 * @return void
-	 */
-	public function injectLinkCheckRepository(LinkCheckRepository $linkCheckRepository) {
-		$this->linkCheckRepository = $linkCheckRepository;
-	}
-
-	/**
-	 * Injects the record set repository
-	 *
-	 * @param RecordSetRepository $recordSetRepository
-	 * @return void
-	 */
-	public function injectRecordSetRepository(RecordSetRepository $recordSetRepository) {
-		$this->recordSetRepository = $recordSetRepository;
-	}
-
-	/**
-	 * Injects the object manager
-	 *
-	 * @param ObjectManagerInterface $objectManager
-	 * @return void
-	 */
-	public function injectObjectManager(ObjectManagerInterface $objectManager) {
-		$this->objectManager = $objectManager;
-	}
 
 	/**
 	 * Returns the existing raw url data without the record sets!

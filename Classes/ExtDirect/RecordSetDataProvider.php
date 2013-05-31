@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\ExtDirect;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -30,9 +30,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * ExtDirect Data Provider For The Record Sets
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RecordSetDataProvider extends AbstractDataProvider {
 	/**
@@ -42,7 +39,6 @@ class RecordSetDataProvider extends AbstractDataProvider {
 	 * @return array
 	 */
 	public function read($data) {
-		/** @noinspection PhpUndefinedFieldInspection */
 		$parameters = array(
 			'identity' => intval($data->identity),
 		);

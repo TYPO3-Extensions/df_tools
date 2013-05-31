@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Test case for class Tx_DfTools_Domain_Model_RedirectTestCategory.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestCategoryTest
  */
-class Tx_DfTools_Domain_Model_RedirectTestCategoryTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RedirectTestCategoryTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Model_RedirectTestCategory
+	 * @var \SGalinski\DfTools\Domain\Model\RedirectTestCategory
 	 */
 	protected $fixture;
 
@@ -40,7 +42,7 @@ class Tx_DfTools_Domain_Model_RedirectTestCategoryTest extends Tx_Extbase_Tests_
 	 * @return void
 	 */
 	public function setUp() {
-		$this->fixture = new Tx_DfTools_Domain_Model_RedirectTestCategory();
+		$this->fixture = new RedirectTestCategory();
 	}
 
 	/**

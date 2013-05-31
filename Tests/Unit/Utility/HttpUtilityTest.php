@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,29 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Utility_HttpUtility.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class HttpUtilityTest
  */
-class Tx_DfTools_Utility_HttpUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class HttpUtilityTest extends BaseTestCase {
 	/**
-	 * @var tslib_fe
+	 * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
 	 */
 	protected $backupTSFE = NULL;
 
@@ -65,7 +81,7 @@ class Tx_DfTools_Utility_HttpUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestC
 		$_SERVER['HTTP_HOST'] = 'localhost';
 		return array(
 			'starts with /' => array(
-				t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'foo/bar',
+				GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'foo/bar',
 				'/foo/bar',
 			),
 			'starts with http' => array(
@@ -84,7 +100,7 @@ class Tx_DfTools_Utility_HttpUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 * @return void
 	 */
 	public function stringIsPrefixedWithHost($expected, $input) {
-		$result = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost($input);
+		$result = HttpUtility::prefixStringWithCurrentHost($input);
 		$this->assertSame($expected, $result);
 	}
 
@@ -95,7 +111,7 @@ class Tx_DfTools_Utility_HttpUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	public function stringIsPrefixedWithHostButWithoutValidEnvironmentSiteUrlButWithConfiguredBaseUrl() {
 		$_SERVER['HTTP_HOST'] = '';
 		$GLOBALS['TSFE']->baseUrl = 'http://www.example.org/';
-		$result = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost('/foo/bar/');
+		$result = HttpUtility::prefixStringWithCurrentHost('/foo/bar/');
 		$this->assertSame('http://www.example.org/foo/bar/', $result);
 	}
 
@@ -106,18 +122,18 @@ class Tx_DfTools_Utility_HttpUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	public function stringIsPrefixedWithHostButWithoutValidEnvironmentSiteUrlButWithConfiguredAbsRefPrefix() {
 		$_SERVER['HTTP_HOST'] = '';
 		$GLOBALS['TSFE']->absRefPrefix = 'http://www.example.org/';
-		$result = Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost('/foo/bar/');
+		$result = HttpUtility::prefixStringWithCurrentHost('/foo/bar/');
 		$this->assertSame('http://www.example.org/foo/bar/', $result);
 	}
 
 	/**
 	 * @test
-	 * @expectedException RuntimeException
+	 * @expectedException \RuntimeException
 	 * @return void
 	 */
 	public function stringIsPrefixedWithHostButWithoutSiteUrlInformations() {
 		$_SERVER['HTTP_HOST'] = $GLOBALS['TSFE']->absRefPrefix = $GLOBALS['TSFE']->baseUrl = '';
-		Tx_DfTools_Utility_HttpUtility::prefixStringWithCurrentHost('/foo/bar/');
+		HttpUtility::prefixStringWithCurrentHost('/foo/bar/');
 	}
 }
 

@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\MVC\Web;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) Stefan Galinski <sgalinski@df.eu>
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *  All rights reserved
  *
  *  This class is a backport of the corresponding class of FLOW3.

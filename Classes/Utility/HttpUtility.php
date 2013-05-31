@@ -5,8 +5,7 @@ namespace SGalinski\DfTools\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
- *
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -32,9 +31,6 @@ use TYPO3\CMS\Frontend\Page\PageGenerator;
 
 /**
  * Collection of smaller http utility functions
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 final class HttpUtility {
 	/**

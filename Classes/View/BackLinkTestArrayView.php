@@ -1,11 +1,11 @@
 <?php
 
-namespace SGalinski\DfTools\View\LinkCheck;
+namespace SGalinski\DfTools\View;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,17 +25,14 @@ namespace SGalinski\DfTools\View\LinkCheck;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use SGalinski\DfTools\Domain\Model\LinkCheck;
+
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
 use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\View\AbstractArrayView;
 
 /**
  * Custom View
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
-class ArrayView extends AbstractArrayView {
+class BackLinkTestArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -45,15 +42,14 @@ class ArrayView extends AbstractArrayView {
 		$namespace = $this->getNamespace();
 		$configuration = array(
 			'update' => array(
-				$namespace . '[linkCheck][__identity]',
-				$namespace . '[linkCheck][testUrl]',
-				$namespace . '[linkCheck][resultUrl]',
-				$namespace . '[linkCheck][httpStatusCode]'
+				$namespace . '[backLinkTest][__identity]',
+				$namespace . '[backLinkTest][testUrl]',
+				$namespace . '[backLinkTest][expectedUrl]',
+				$namespace . '[backLinkTest][comment]',
 			),
 			'create' => array(
-				$namespace . '[newLinkCheck][testUrl]',
-				$namespace . '[newLinkCheck][resultUrl]',
-				$namespace . '[newLinkCheck][httpStatusCode]',
+				$namespace . '[newBackLinkTest][testUrl]',
+				$namespace . '[newBackLinkTest][expectedUrl]',
 			),
 		);
 
@@ -61,23 +57,23 @@ class ArrayView extends AbstractArrayView {
 	}
 
 	/**
-	 * Renders an link check test into a plain array
+	 * Renders a redirect test into a plain array
 	 *
-	 * @param LinkCheck $record
+	 * @param BackLinkTest $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {
 		return array(
 			'__identity' => intval($record->getUid()),
 			'testUrl' => htmlspecialchars($record->getTestUrl()),
-			'resultUrl' => htmlspecialchars($record->getResultUrl()),
-			'httpStatusCode' => intval($record->getHttpStatusCode()),
+			'expectedUrl' => htmlspecialchars($record->getExpectedUrl()),
 			'testResult' => intval($record->getTestResult()),
 			'testMessage' => htmlspecialchars(
 				LocalizationUtility::localizeParameterDrivenString(
 					$record->getTestMessage(), 'df_tools'
 				)
 			),
+			'comment' => htmlspecialchars($record->getComment()),
 		);
 	}
 }

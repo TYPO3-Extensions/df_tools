@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service\UrlChecker;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,31 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Service_UrlChecker_AbstractService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractServiceTest
  */
-class Tx_DfTools_Service_UrlChecker_AbstractServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class AbstractServiceTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @var \SGalinski\DfTools\Service\UrlChecker\AbstractService
 	 */
 	protected $fixture;
 
@@ -41,7 +59,7 @@ class Tx_DfTools_Service_UrlChecker_AbstractServiceTest extends Tx_Extbase_Tests
 	 */
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_UrlChecker_AbstractService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlChecker\AbstractService');
 		$this->fixture = $this->getMockBuilder($proxyClass)
 			->setMethods(array('init', 'resolveUrl'))
 			->disableOriginalConstructor()

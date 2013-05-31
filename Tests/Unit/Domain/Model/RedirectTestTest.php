@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,20 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
  * Test case for class Tx_DfTools_Domain_Model_RedirectTest.
  *
  * @author Stefan Galinski <sgalinski@df.eu>
  * @package df_tools
  */
-class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RedirectTestTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Model_RedirectTest
+	 * @var \SGalinski\DfTools\Domain\Model\RedirectTest
 	 */
 	protected $fixture;
 
@@ -40,7 +47,7 @@ class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_Bas
 	 * @return void
 	 */
 	public function setUp() {
-		$this->fixture = new Tx_DfTools_Domain_Model_RedirectTest();
+		$this->fixture = new RedirectTest();
 		$this->fixture->setTestUrl('FooBar');
 		$this->fixture->setExpectedUrl('FooBar');
 		$this->fixture->setHttpStatusCode(200);
@@ -110,7 +117,7 @@ class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_Bas
 	 * @return void
 	 */
 	public function setCategoryWorks() {
-		$testData = new Tx_DfTools_Domain_Model_RedirectTestCategory();
+		$testData = new RedirectTestCategory();
 		$this->fixture->setCategory($testData);
 		$this->assertSame($testData, $this->fixture->getCategory());
 	}
@@ -138,8 +145,8 @@ class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_Bas
 	 * @return void
 	 */
 	public function transformToArrayWorksWithCategory() {
-		/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
-		$category = $this->getAccessibleMock('Tx_DfTools_Domain_Model_RedirectTestCategory', array('dummy'));
+		/** @var $category RedirectTestCategory */
+		$category = $this->getAccessibleMock('SGalinski\DfTools\Domain\Model\RedirectTestCategory', array('dummy'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$category->_set('uid', 1);
@@ -160,11 +167,11 @@ class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_Bas
 
 	/**
 	 * @param mixed $resolveUrlOutput
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @return AbstractService
 	 */
 	protected function getUrlCheckerService($resolveUrlOutput) {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -181,15 +188,15 @@ class Tx_DfTools_Domain_Model_RedirectTestTest extends Tx_Extbase_Tests_Unit_Bas
 		return array(
 			'url mismatch' => array(
 				array('http_code' => 200, 'url' => 'UnknownUrl'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR,
+				AbstractService::SEVERITY_ERROR,
 			),
 			'http code mismatch' => array(
 				array('http_code' => 999, 'url' => 'FooBar'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_WARNING,
+				AbstractService::SEVERITY_WARNING,
 			),
 			'test works' => array(
 				array('http_code' => 200, 'url' => 'FooBar'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				AbstractService::SEVERITY_OK,
 			),
 		);
 	}

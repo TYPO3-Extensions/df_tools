@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -27,8 +27,8 @@ namespace SGalinski\DfTools\Controller;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\TestableInterface;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\UrlChecker\AbstractService;
+use SGalinski\DfTools\UrlChecker\Factory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -37,9 +37,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Abstract Controller
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractController extends ActionController {
 	/**
@@ -163,7 +160,7 @@ abstract class AbstractController extends ActionController {
 	 */
 	protected function getUrlCheckerService() {
 		/** @var $factory Factory */
-		$factory = $this->objectManager->get('SGalinski\DfTools\Service\UrlChecker\Factory');
+		$factory = $this->objectManager->get('SGalinski\DfTools\UrlChecker\Factory');
 		return $factory->get();
 	}
 }

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,16 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Test case for class Tx_DfTools_Domain_Model_ContentComparisonTest.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ContentComparisonTestTest
  */
-class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class ContentComparisonTestTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Model_ContentComparisonTest
+	 * @var \SGalinski\DfTools\Domain\Model\ContentComparisonTest
 	 */
 	protected $fixture;
 
@@ -41,7 +44,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	 */
 	public function setUp() {
 		$GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'] = -1;
-		$this->fixture = new Tx_DfTools_Domain_Model_ContentComparisonTest();
+		$this->fixture = new ContentComparisonTest();
 		$this->fixture->setTestUrl('FooBar');
 		$this->fixture->setCompareUrl('FooBar');
 	}
@@ -124,7 +127,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 	 * @return void
 	 */
 	public function instanceCanBeTransformToAnArray() {
-		$contentComparisonTest = new Tx_DfTools_Domain_Model_ContentComparisonTest;
+		$contentComparisonTest = new ContentComparisonTest;
 		$contentComparisonTest->setTestUrl('fooBar1');
 		$contentComparisonTest->setCompareUrl('fooBar2');
 		$contentComparisonTest->setTestContent('fooBar3');
@@ -149,11 +152,11 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 
 	/**
 	 * @param mixed $resolveUrlOutput
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @return AbstractService
 	 */
 	protected function getUrlCheckerService($resolveUrlOutput) {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -174,7 +177,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK, $result);
+		$this->assertSame(AbstractService::SEVERITY_OK, $result);
 		$this->assertSame('Foo; Bar; Narf', $this->fixture->getTestContent());
 	}
 
@@ -189,7 +192,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK, $result);
+		$this->assertSame(AbstractService::SEVERITY_OK, $result);
 		$this->assertSame('', $this->fixture->getDifference());
 	}
 
@@ -223,7 +226,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR, $result);
+		$this->assertSame(AbstractService::SEVERITY_ERROR, $result);
 		$this->assertContains('Foo; Bar', $this->fixture->getDifference());
 	}
 
@@ -238,7 +241,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR, $result);
+		$this->assertSame(AbstractService::SEVERITY_ERROR, $result);
 		$this->assertContains('Narf', $this->fixture->getDifference());
 	}
 
@@ -253,7 +256,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR, $result);
+		$this->assertSame(AbstractService::SEVERITY_ERROR, $result);
 		echo($this->fixture->getDifference());
 		$this->assertSame('', $this->fixture->getDifference());
 	}
@@ -269,7 +272,7 @@ class Tx_DfTools_Domain_Model_ContentComparisonTestTest extends Tx_Extbase_Tests
 		$this->fixture->test($urlCheckerService);
 
 		$result = $this->fixture->getTestResult();
-		$this->assertSame(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK, $result);
+		$this->assertSame(AbstractService::SEVERITY_OK, $result);
 	}
 
 	/**

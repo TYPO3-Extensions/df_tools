@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,20 +26,50 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Service\UrlParserService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+
 /**
- * Test case for class Tx_DfTools_Service_UrlParserService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class UrlParserServiceTest
  */
-class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class UrlParserServiceTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_UrlParserService
+	 * @var \SGalinski\DfTools\Service\UrlParserService
 	 */
 	protected $fixture;
 
 	/**
-	 * @var t3lib_db
+	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection
 	 */
 	protected $savedDB;
 
@@ -48,7 +80,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$this->savedDB = $GLOBALS['TYPO3_DB'];
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_UrlParserService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlParserService');
 		$this->fixture = $this->getMock($proxyClass, array('getPageSelectInstance'));
 	}
 
@@ -65,11 +97,11 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function tcaParserCanBeInjected() {
-		$tcaParser = new Tx_DfTools_Service_TcaParserService();
+		$tcaParser = new TcaParserService();
 		$this->fixture->injectTcaParser($tcaParser);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertInstanceOf('Tx_DfTools_Service_TcaParserService', $this->fixture->_get('tcaParser'));
+		$this->assertInstanceOf('SGalinski\DfTools\Service\UrlParserService', $this->fixture->_get('tcaParser'));
 	}
 
 	/**
@@ -77,10 +109,10 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function fetchUrlsFromDatabaseBuildsItsWhereClause() {
-		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
+		$dbMock = $this->getMock('TYPO3\CMS\Core\Database\DatabaseConnection', array('exec_SELECTgetRows'));
 		$GLOBALS['TYPO3_DB'] = $dbMock;
 
-		$pageSelect = $this->getMock('t3lib_pageSelect');
+		$pageSelect = $this->getMock('TYPO3\CMS\Frontend\Page\PageRepository');
 		$pageSelect->expects($this->once())->method('enableFields')
 			->will($this->returnValue(((' AND 1=1'))));
 		$this->fixture->expects($this->once())->method('getPageSelectInstance')
@@ -255,7 +287,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 			),
 		);
 
-		$pageSelect = $this->getMock('t3lib_pageSelect');
+		$pageSelect = $this->getMock('TYPO3\CMS\Frontend\Page\PageRepository');
 		$pageSelect->expects($this->once())->method('enableFields')
 			->will($this->returnValue(((' AND 1=1'))));
 		$this->fixture->expects($this->once())->method('getPageSelectInstance')
@@ -264,7 +296,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 AND 1=1';
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
+		$dbMock = $this->getMock('TYPO3\CMS\Core\Database\DatabaseConnection', array('exec_SELECTgetRows'));
 		$GLOBALS['TYPO3_DB'] = $dbMock;
 
 		$dbMock->expects($this->once())->method('exec_SELECTgetRows')
@@ -298,7 +330,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 			),
 		);
 
-		$pageSelect = $this->getMock('t3lib_pageSelect');
+		$pageSelect = $this->getMock('TYPO3\CMS\Frontend\Page\PageRepository');
 		$pageSelect->expects($this->once())->method('enableFields')
 			->will($this->returnValue(((' AND 1=1'))));
 		$this->fixture->expects($this->once())->method('getPageSelectInstance')
@@ -307,7 +339,7 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$whereClause = 'doktype = 3 && urltype != 3 && urltype != 0 AND 1=1 AND uid IN (1, 2)';
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$dbMock = $this->getMock('t3lib_db', array('exec_SELECTgetRows'));
+		$dbMock = $this->getMock('TYPO3\CMS\Core\Database\DatabaseConnection', array('exec_SELECTgetRows'));
 		$GLOBALS['TYPO3_DB'] = $dbMock;
 
 		$dbMock->expects($this->once())->method('exec_SELECTgetRows')
@@ -328,12 +360,12 @@ class Tx_DfTools_Service_UrlParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 */
 	public function fetchUrlMergesUrlsFromSources() {
 		$this->fixture = $this->getMock(
-			'Tx_DfTools_Service_UrlParserService',
+			'SGalinski\DfTools\Service\UrlParserService',
 			array('fetchLinkCheckLinkType', 'fetchUrlsFromDatabase')
 		);
 
-		/** @var $tcaParser Tx_DfTools_Service_TcaParserService */
-		$tcaParser = $this->getMock('Tx_DfTools_Service_TcaParserService', array('findFields'));
+		/** @var $tcaParser TcaParserService */
+		$tcaParser = $this->getMock('SGalinski\DfTools\Service\TcaParserService', array('findFields'));
 		$this->fixture->injectTcaParser($tcaParser);
 
 		$tableFields = array('pages' => array('field1', 'field2'), 'tt_content' => array('field1'));

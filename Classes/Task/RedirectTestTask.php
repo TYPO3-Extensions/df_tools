@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Task;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,13 +25,11 @@ namespace SGalinski\DfTools\Task;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Scheduler task to execute the redirect tests
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RedirectTestTask extends AbstractTask {
 	/**

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,22 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Test case for class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestCategoryRepositoryTest
  */
-class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RedirectTestCategoryRepositoryTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $fixture;
 
@@ -41,7 +50,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx
 	 */
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
-			'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository',
+			'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository',
 			array('createQuery', 'findByCategory', 'getPageSelectInstance'),
 			array($this->objectManager)
 		);
@@ -60,7 +69,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx
 	 */
 	public function categoriesBeginningWithAWordAreReturned() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockQuery = $this->getMockBuilder('Tx_Extbase_Persistence_Query')
+		$mockQuery = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\Query')
 			->setMethods(array('like', 'execute'))
 			->disableOriginalConstructor()
 			->getMock();
@@ -88,7 +97,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx
 			'WHERE tx_dftools_domain_model_redirecttest.uid IS NULL AND FooBar ';
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockQuery = $this->getMockBuilder('Tx_Extbase_Persistence_Query')
+		$mockQuery = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\Query')
 			->setMethods(array('statement', 'execute'))
 			->disableOriginalConstructor()
 			->getMock();
@@ -107,13 +116,13 @@ class Tx_DfTools_Domain_Repository_RedirectTestCategoryRepositoryTest extends Tx
 	}
 
 	/**
-	 * @expectedException Tx_DfTools_Exception_GenericException
+	 * @expectedException GenericException
 	 * @test
 	 * @return void
 	 */
 	public function uniqueCategoryNameCheckThrowsExceptionIfTheGivenCategoryAlreadyExists() {
-		$objectCollection = new Tx_Extbase_Persistence_ObjectStorage();
-		$objectCollection->attach(new stdClass(''));
+		$objectCollection = new ObjectStorage();
+		$objectCollection->attach(new \stdClass(''));
 
 		$this->fixture->expects($this->once())->method('findByCategory')
 			->will($this->returnValue($objectCollection));

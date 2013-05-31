@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -33,34 +33,20 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Controller for the ContentComparisonTest domain model
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class ContentComparisonTestController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'SGalinski\DfTools\View\ContentComparisonTest\ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\ContentComparisonTestArrayView';
 
 	/**
 	 * contentComparisonTestRepository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository
 	 */
 	protected $contentComparisonTestRepository;
-
-	/**
-	 * Initializes the current action
-	 *
-	 * @param ContentComparisonTestRepository $contentComparisonTestRepository
-	 * @return void
-	 */
-	public function injectContentComparisonTestRepository(
-		ContentComparisonTestRepository $contentComparisonTestRepository
-	) {
-		$this->contentComparisonTestRepository = $contentComparisonTestRepository;
-	}
 
 	/**
 	 * @return void

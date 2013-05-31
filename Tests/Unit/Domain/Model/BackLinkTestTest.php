@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,16 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Test case for class Tx_DfTools_Domain_Model_BackLinkTest.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class BackLinkTestTest
  */
-class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class BackLinkTestTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Model_BackLinkTest
+	 * @var \SGalinski\DfTools\Domain\Model\BackLinkTest
 	 */
 	protected $fixture;
 
@@ -40,7 +43,7 @@ class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_Bas
 	 * @return void
 	 */
 	public function setUp() {
-		$this->fixture = new Tx_DfTools_Domain_Model_BackLinkTest();
+		$this->fixture = new BackLinkTest();
 		$this->fixture->setTestUrl('FooBar');
 		$this->fixture->setExpectedUrl('http://foo.bar/test/');
 		$this->fixture->setTestResult(1);
@@ -119,11 +122,11 @@ class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_Bas
 
 	/**
 	 * @param mixed $resolveUrlOutput
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @return AbstractService
 	 */
 	protected function getUrlCheckerService($resolveUrlOutput) {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -140,17 +143,17 @@ class Tx_DfTools_Domain_Model_BackLinkTestTest extends Tx_Extbase_Tests_Unit_Bas
 		return array(
 			'url in content' => array(
 				array('content' => 'Anything is fine: <a href="http://foo.bar/test/">test</a> or not?'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				AbstractService::SEVERITY_OK,
 				'http://foo.bar/test/'
 			),
 			'url not in content' => array(
 				array('content' => 'Anything is fine or not?'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR,
+				AbstractService::SEVERITY_ERROR,
 				'http://foo.bar/test/'
 			),
 			'regular expression' => array(
 				array('content' => 'Anything is fine: <a href="https://foo.bar/test/">test</a> or not?'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				AbstractService::SEVERITY_OK,
 				'https?:\/\/foo.bar/.+'
 			),
 		);

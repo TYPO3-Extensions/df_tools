@@ -1,11 +1,11 @@
 <?php
 
-namespace SGalinski\DfTools\View\RecordSet;
+namespace SGalinski\DfTools\View;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,18 +25,15 @@ namespace SGalinski\DfTools\View\RecordSet;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\View\AbstractArrayView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Custom View
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
-class ArrayView extends AbstractArrayView {
+class RecordSetArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *

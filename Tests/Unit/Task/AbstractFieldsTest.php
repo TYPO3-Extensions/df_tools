@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Task;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,51 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Hooks\ProcessDatamap;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Service\UrlParserService;
+use SGalinski\DfTools\Task\AbstractFields;
+use SGalinski\DfTools\Task\AbstractTask;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
- * Test case for class Tx_DfTools_Task_AbstractFields.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractFieldsTest
  */
-class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class AbstractFieldsTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Task_AbstractFields
+	 * @var \SGalinski\DfTools\Task\AbstractFields
 	 */
 	protected $fixture;
 
@@ -40,7 +78,7 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 * @return void
 	 */
 	public function setUp() {
-		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Task_AbstractFields', array('dummy'));
+		$this->fixture = $this->getAccessibleMock('SGalinski\DfTools\Task\AbstractFields', array('dummy'));
 		$this->fixture->setFieldPrefix('FieldPrefix');
 	}
 
@@ -108,7 +146,7 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 */
 	public function getAdditionalFieldsReturnsTheFieldConfigurationInEditState() {
 		$this->addFakeSchedulerMainModule();
-		$schedulerModule = new tx_scheduler_Module();
+		$schedulerModule = new SchedulerModuleController();
 		$schedulerModule->CMD = 'edit';
 
 		$fieldName = 'FieldPrefixNotificationEmailAddress';
@@ -123,8 +161,8 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 			)
 		);
 
-		/** @var $task Tx_DfTools_Task_AbstractTask */
-		$task = $this->getMockBuilder('Tx_DfTools_Task_AbstractTask')
+		/** @var $task AbstractTask */
+		$task = $this->getMockBuilder('SGalinski\DfTools\Task\AbstractTask')
 			->setMethods(array('execute', 'sendNotificationEmail'))->disableOriginalConstructor()->getMock();
 		$task->setNotificationEmailAddress('FooBar');
 
@@ -141,7 +179,7 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 */
 	public function getAdditionalFieldsReturnsTheFieldConfigurationInAddState() {
 		$this->addFakeSchedulerMainModule();
-		$schedulerModule = new tx_scheduler_Module();
+		$schedulerModule = new SchedulerModuleController();
 
 		$fieldName = 'FieldPrefixNotificationEmailAddress';
 		$expectedFieldConfiguration = array(
@@ -155,9 +193,9 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 			)
 		);
 
-		/** @var $task Tx_DfTools_Task_AbstractTask */
+		/** @var $task AbstractTask */
 		$taskInfo = array();
-		$task = $this->getMockBuilder('Tx_DfTools_Task_AbstractTask')
+		$task = $this->getMockBuilder('SGalinski\DfTools\Task\AbstractTask')
 			->setMethods(array('execute', 'sendNotificationEmail'))->disableOriginalConstructor()->getMock();
 		$fieldConfiguration = $this->fixture->getAdditionalFields($taskInfo, $task, $schedulerModule);
 
@@ -195,7 +233,7 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 */
 	public function validateAdditionalFields($expected, $input) {
 		$this->addFakeSchedulerMainModule();
-		$schedulerModule = new tx_scheduler_Module();
+		$schedulerModule = new SchedulerModuleController();
 		$submittedData = array(
 			'FieldPrefixNotificationEmailAddress' => $input,
 		);
@@ -209,8 +247,8 @@ class Tx_DfTools_Task_AbstractFieldsTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 * @return void
 	 */
 	public function saveAdditionalFields() {
-		/** @var $task Tx_DfTools_Task_AbstractTask */
-		$task = $this->getMockBuilder('Tx_DfTools_Task_AbstractTask')
+		/** @var $task AbstractTask */
+		$task = $this->getMockBuilder('SGalinski\DfTools\Task\AbstractTask')
 			->setMethods(array('execute', 'sendNotificationEmail'))->disableOriginalConstructor()->getMock();
 		$submittedData = array('FieldPrefixNotificationEmailAddress' => 'mail@example.org');
 		$this->fixture->saveAdditionalFields($submittedData, $task);

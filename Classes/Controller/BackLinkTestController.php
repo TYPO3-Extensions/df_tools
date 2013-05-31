@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -33,32 +33,20 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Controller for the BackLinkTest domain model
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class BackLinkTestController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'SGalinski\DfTools\View\BackLinkTest\ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\BackLinkTestArrayView';
 
 	/**
 	 * Instance of the back link test repository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\BackLinkTestRepository
 	 */
 	protected $backLinkTestRepository;
-
-	/**
-	 * Injects the back link test repository
-	 *
-	 * @param BackLinkTestRepository $backLinkTestRepository
-	 * @return void
-	 */
-	public function injectBackLinkTestRepository(BackLinkTestRepository $backLinkTestRepository) {
-		$this->backLinkTestRepository = $backLinkTestRepository;
-	}
 
 	/**
 	 * @return void

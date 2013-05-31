@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,14 +25,12 @@ namespace SGalinski\DfTools\Utility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Dbal\Database\DatabaseConnection;
 
 /**
  * Collection of smaller page utility functions
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 final class PageUtility {
 	/**

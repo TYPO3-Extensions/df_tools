@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service\UrlChecker;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,34 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Service_UrlChecker_Factory.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class FactoryTest
  */
-class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class FactoryTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_UrlChecker_Factory
+	 * @var \SGalinski\DfTools\Service\UrlChecker\Factory
 	 */
 	protected $fixture;
 
@@ -48,7 +69,7 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 		$this->backupCurlUse = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'];
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_UrlChecker_Factory');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlChecker\Factory');
 		$this->fixture = $this->getMockBuilder($proxyClass)
 			->setMethods(array('dummy'))
 			->disableOriginalConstructor()
@@ -68,13 +89,13 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 	 * @return void
 	 */
 	public function injectObjectManagerSetsObjectManager() {
-		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
-		$objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('dummy'));
+		/** @var $objectManager ObjectManager */
+		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('dummy'));
 		$this->fixture->injectObjectManager($objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$objectManager = $this->fixture->_get('objectManager');
-		$this->assertInstanceOf('Tx_Extbase_Object_ObjectManager', $objectManager);
+		$this->assertInstanceOf('TYPO3\CMS\Extbase\Object\ObjectManager', $objectManager);
 	}
 
 	/**
@@ -83,13 +104,13 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 	public function getReturnsUrlCheckerServiceDataProvider() {
 		return array(
 			'no type' => array(
-				'', 'Tx_DfTools_Service_UrlChecker_StreamService'
+				'', 'SGalinski\DfTools\Service\UrlChecker\StreamService'
 			),
 			'native type' => array(
-				FALSE, 'Tx_DfTools_Service_UrlChecker_StreamService'
+				FALSE, 'SGalinski\DfTools\Service\UrlChecker\StreamService'
 			),
 			'curl type' => array(
-				TRUE, 'Tx_DfTools_Service_UrlChecker_CurlService'
+				TRUE, 'SGalinski\DfTools\Service\UrlChecker\CurlService'
 			),
 		);
 	}
@@ -105,11 +126,11 @@ class Tx_DfTools_Service_UrlChecker_FactoryTest extends Tx_Extbase_Tests_Unit_Ba
 	public function getReturnsUrlCheckerService($type, $expectedClass) {
 		$GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] = $type;
 
-		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
-		$objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('get'));
+		/** @var $objectManager ObjectManager */
+		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
 		$this->fixture->injectObjectManager($objectManager);
 
-		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_UrlChecker_AbstractService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\UrlChecker\AbstractService');
 		$service = $this->getMock($proxyClass, array('init', 'resolveUrl'));
 
 		/** @noinspection PhpUndefinedMethodInspection */

@@ -5,8 +5,7 @@ namespace SGalinski\DfTools\ViewHelpers;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
- *
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,6 +24,7 @@ namespace SGalinski\DfTools\ViewHelpers;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -33,9 +33,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Example:
  * {namespace rs=Tx_DfTools_ViewHelpers}
  * <rs:addInlineLanguageLabelFile file="Private/Language/locallang.xml" />
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class AddInlineLanguageLabelFileViewHelper extends AbstractViewHelper {
 	/**

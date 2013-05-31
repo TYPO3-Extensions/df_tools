@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\ExtDirect;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -26,27 +26,23 @@ namespace SGalinski\DfTools\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Connector\ExtBaseConnector;
 use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Abstract ExtDirect Data Provider
- *
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractDataProvider {
 	/**
 	 * BootStrap Instance
 	 *
-	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Connector\ExtBaseConnector
 	 */
-	protected $extBaseConnector = NULL;
+	protected $extBaseConnector;
 
 	/**
 	 * Constructor

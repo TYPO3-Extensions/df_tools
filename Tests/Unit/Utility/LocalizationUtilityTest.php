@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,13 +26,28 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Utility_LocalizationUtility.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class LocalizationUtilityTest
  */
-class Tx_DfTools_Utility_LocalizationUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class LocalizationUtilityTest extends BaseTestCase {
 	/**
 	 * @return array
 	 */
@@ -69,7 +86,7 @@ class Tx_DfTools_Utility_LocalizationUtilityTest extends Tx_Extbase_Tests_Unit_B
 	 * @return void
 	 */
 	public function localizableStringCanBeCreated($expected, $label, array $parameters) {
-		$result = Tx_DfTools_Utility_LocalizationUtility::createLocalizableParameterDrivenString(
+		$result = LocalizationUtility::createLocalizableParameterDrivenString(
 			$label,
 			$parameters
 		);
@@ -85,7 +102,7 @@ class Tx_DfTools_Utility_LocalizationUtilityTest extends Tx_Extbase_Tests_Unit_B
 	 * @return void
 	 */
 	public function localizableStringWithNonExistingLabel() {
-		$result = Tx_DfTools_Utility_LocalizationUtility::localizeParameterDrivenString('FooBar', 'df_tools');
+		$result = LocalizationUtility::localizeParameterDrivenString('FooBar', 'df_tools');
 		$this->assertSame('FooBar', $result);
 	}
 }

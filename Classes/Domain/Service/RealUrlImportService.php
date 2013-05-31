@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Service;
+namespace SGalinski\DfTools\Domain\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -37,63 +37,31 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * RealUrl Import Service
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RealUrlImportService implements SingletonInterface {
 	/**
 	 * Instance of the redirect test repository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
 	 */
-	protected $redirectTestRepository = NULL;
+	protected $redirectTestRepository;
 
 	/**
 	 * Instance of the redirect test category repository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
-	protected $redirectTestCategoryRepository = NULL;
+	protected $redirectTestCategoryRepository;
 
 	/**
 	 * Instance of the object manager
 	 *
+	 * @inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
-	protected $objectManager = NULL;
-
-	/**
-	 * Injects the redirect test repository
-	 *
-	 * @param RedirectTestRepository $redirectTestRepository
-	 * @return void
-	 */
-	public function injectRedirectTestRepository(RedirectTestRepository $redirectTestRepository) {
-		$this->redirectTestRepository = $redirectTestRepository;
-	}
-
-	/**
-	 * Injects the redirect test category repository
-	 *
-	 * @param RedirectTestCategoryRepository $redirectTestCategoryRepository
-	 * @return void
-	 */
-	public function injectRedirectTestCategoryRepository(
-		RedirectTestCategoryRepository $redirectTestCategoryRepository
-	) {
-		$this->redirectTestCategoryRepository = $redirectTestCategoryRepository;
-	}
-
-	/**
-	 * Injects the object manager
-	 *
-	 * @param ObjectManager $objectManager
-	 * @return void
-	 */
-	public function injectObjectManager(ObjectManager $objectManager) {
-		$this->objectManager = $objectManager;
-	}
+	protected $objectManager;
 
 	/**
 	 * Returns all realUrl redirects

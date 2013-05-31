@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -28,39 +28,27 @@ namespace SGalinski\DfTools\Controller;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
-use SGalinski\DfTools\Service\LinkCheckService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
-use SGalinski\DfTools\Service\UrlSynchronizeService;
+use SGalinski\DfTools\Domain\Service\LinkCheckService;
+use SGalinski\DfTools\Domain\Service\UrlSynchronizeService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use SGalinski\DfTools\Utility\LocalizationUtility;
 use SGalinski\DfTools\Utility\PageUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Controller for the LinkCheck domain model
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class LinkCheckController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'SGalinski\DfTools\View\LinkCheck\ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\LinkCheckArrayView';
 
 	/**
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $linkCheckRepository;
-
-	/**
-	 * Injects the link check test repository
-	 *
-	 * @param LinkCheckRepository $linkCheckRepository
-	 * @return void
-	 */
-	public function injectLinkCheckRepository(LinkCheckRepository $linkCheckRepository) {
-		$this->linkCheckRepository = $linkCheckRepository;
-	}
 
 	/**
 	 * @return void
@@ -151,7 +139,7 @@ class LinkCheckController extends AbstractController {
 		$this->view = NULL;
 
 		/** @var $linkCheckService LinkCheckService */
-		$linkCheckService = $this->objectManager->get('SGalinski\DfTools\Service\LinkCheckService');
+		$linkCheckService = $this->objectManager->get('SGalinski\DfTools\Domain\Service\LinkCheckService');
 		$rawUrls = $linkCheckService->fetchAllRawUrlsFromTheDatabase(
 			$this->extensionConfiguration['excludedTables'],
 			$this->extensionConfiguration['excludedTableFields']
@@ -159,7 +147,9 @@ class LinkCheckController extends AbstractController {
 
 		/** @var $urlSynchronizationService UrlSynchronizeService */
 		$existingLinkChecks = $this->linkCheckRepository->findAll();
-		$urlSynchronizationService = $this->objectManager->get('SGalinski\DfTools\Service\UrlSynchronizeService');
+		$urlSynchronizationService = $this->objectManager->get(
+			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService'
+		);
 		$urlSynchronizationService->synchronize($rawUrls, $existingLinkChecks);
 	}
 
@@ -174,11 +164,12 @@ class LinkCheckController extends AbstractController {
 		$this->view = NULL;
 
 		/** @var $linkCheckService LinkCheckService */
-		$linkCheckService = $this->objectManager->get('SGalinski\DfTools\Service\LinkCheckService');
+		$linkCheckService = $this->objectManager->get('SGalinski\DfTools\Domain\Service\LinkCheckService');
 		$rawUrls = $linkCheckService->getUrlsFromSingleRecord($table, $identity);
 
 		/** @var $urlSynchronizationService UrlSynchronizeService */
-		$urlSynchronizationService = $this->objectManager->get('SGalinski\DfTools\Service\UrlSynchronizeService');
+		$class = 'SGalinski\DfTools\Domain\Service\UrlSynchronizeService';
+		$urlSynchronizationService = $this->objectManager->get($class);
 		$urlSynchronizationService->synchronizeGroupOfUrls($rawUrls);
 	}
 

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,49 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Service\UrlParserService;
+use SGalinski\DfTools\Service\UrlSynchronizeService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+
 /**
- * Test case for class Tx_DfTools_Service_UrlSynchronizeService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class UrlSynchronizeServiceTest
  */
-class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class UrlSynchronizeServiceTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_UrlSynchronizeService
+	 * @var \SGalinski\DfTools\Service\UrlSynchronizeService
 	 */
 	protected $fixture;
 
@@ -41,12 +77,12 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
-			'Tx_DfTools_Service_UrlSynchronizeService',
+			'SGalinski\DfTools\Service\UrlSynchronizeService',
 			array('fetchExistingRawRecordSets', 'fetchExistingRawUrls')
 		);
 
-		/** @var $objectManager Tx_Extbase_Object_ObjectManager */
-		$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+		/** @var $objectManager ObjectManager */
+		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$this->fixture->injectObjectManager($objectManager);
 	}
 
@@ -62,8 +98,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 * @return void
 	 */
 	public function testInjectLinkCheckRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_LinkCheckRepository */
-		$class = 'Tx_DfTools_Domain_Repository_LinkCheckRepository';
+		/** @var $repository LinkCheckRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\LinkCheckRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectLinkCheckRepository($repository);
 
@@ -76,8 +112,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 * @return void
 	 */
 	public function testInjectRecordSetRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_RecordSetRepository */
-		$class = 'Tx_DfTools_Domain_Repository_RecordSetRepository';
+		/** @var $repository RecordSetRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\RecordSetRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectRecordSetRepository($repository);
 
@@ -120,7 +156,7 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$this->fixture->expects($this->once())->method('fetchExistingRawRecordSets')
 			->will($this->returnValue($existingRawRecordSets));
 
-		$persistenceManager = $this->getMock('Tx_Extbase_Persistence_Manager', array('getBackend'));
+		$persistenceManager = $this->getMock('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager', array('getBackend'));
 		$backend = $this->getMock(
 			'Tx_Extbase_Persistence_BackendInterface',
 			array(
@@ -135,12 +171,12 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	}
 
 	/**
-	 * @return Tx_DfTools_Domain_Repository_RecordSetRepository
+	 * @return RecordSetRepository
 	 */
 	protected function prepareRecordSetRepository() {
-		/** @var $recordSetRepository Tx_DfTools_Domain_Repository_RecordSetRepository */
+		/** @var $recordSetRepository RecordSetRepository */
 		$recordSetRepository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_RecordSetRepository',
+			'SGalinski\DfTools\Domain\Repository\RecordSetRepository',
 			array('add', 'remove', 'findByUid'),
 			array($this->objectManager)
 		);
@@ -150,12 +186,12 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	}
 
 	/**
-	 * @return Tx_DfTools_Domain_Repository_LinkCheckRepository
+	 * @return LinkCheckRepository
 	 */
 	protected function prepareLinkCheckRepository() {
-		/** @var $linkCheckRepository Tx_DfTools_Domain_Repository_LinkCheckRepository */
+		/** @var $linkCheckRepository LinkCheckRepository */
 		$linkCheckRepository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_LinkCheckRepository',
+			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository',
 			array('add', 'update', 'remove', 'findInListByTestUrl'),
 			array($this->objectManager)
 		);
@@ -165,26 +201,26 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	}
 
 	/**
-	 * @return Tx_Extbase_Persistence_QueryResult
+	 * @return QueryResult
 	 */
 	protected function getExistingUrls() {
-		$relatedRecordSet = new Tx_DfTools_Domain_Model_RecordSet();
+		$relatedRecordSet = new RecordSet();
 		$relatedRecordSet->setTableName('pages');
 		$relatedRecordSet->setField('url');
 		$relatedRecordSet->setIdentifier(3);
 
-		/** @var $testRecord1 Tx_DfTools_Domain_Model_LinkCheck */
-		$testRecord1 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		/** @var $testRecord1 LinkCheck */
+		$testRecord1 = $this->getAccessibleMock('SGalinski\DfTools\Domain\Model\LinkCheck', array('dummy'));
 		$testRecord1->setTestUrl('http://foo.bar');
 		$testRecord1->addRecordSet($relatedRecordSet);
 
-		/** @var $testRecord2 Tx_DfTools_Domain_Model_LinkCheck */
-		$testRecord2 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		/** @var $testRecord2 LinkCheck */
+		$testRecord2 = $this->getAccessibleMock('SGalinski\DfTools\Domain\Model\LinkCheck', array('dummy'));
 		$testRecord2->setTestUrl('http://bar.foo');
 		$testRecord2->addRecordSet($relatedRecordSet);
 
-		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
-		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+		/** @var $queryResult QueryResult */
+		$queryResult = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\QueryResult')
 			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
 		$queryResult->offsetSet(0, $testRecord1);
 		$queryResult->offsetSet(1, $testRecord2);
@@ -229,7 +265,7 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
 		$recordSetRepository->expects($this->once())->method('findByUid')
-			->will($this->returnValue(new Tx_DfTools_Domain_Model_RecordSet()));
+			->will($this->returnValue(new RecordSet()));
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(array(
@@ -242,8 +278,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			),
 		), $queryResult);
 
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+		/** @var $linkCheck LinkCheck */
+		/** @var $recordSet RecordSet */
 
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
@@ -296,8 +332,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			),
 		), $queryResult);
 
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+		/** @var $linkCheck LinkCheck */
+		/** @var $recordSet RecordSet */
 
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
@@ -353,8 +389,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			),
 		), $queryResult);
 
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+		/** @var $linkCheck LinkCheck */
+		/** @var $recordSet RecordSet */
 
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
@@ -412,8 +448,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			),
 		), $queryResult);
 
-		/** @var $linkCheck Tx_DfTools_Domain_Model_LinkCheck */
-		/** @var $recordSet Tx_DfTools_Domain_Model_RecordSet */
+		/** @var $linkCheck LinkCheck */
+		/** @var $recordSet RecordSet */
 
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
@@ -450,16 +486,16 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			'http://ying.yang' => array(),
 		);
 
-		/** @var $testRecord1 Tx_DfTools_Domain_Model_LinkCheck */
-		$testRecord1 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		/** @var $testRecord1 LinkCheck */
+		$testRecord1 = $this->getAccessibleMock('SGalinski\DfTools\Domain\Model\LinkCheck', array('dummy'));
 		$testRecord1->setTestUrl('http://foo.bar');
 
-		/** @var $testRecord2 Tx_DfTools_Domain_Model_LinkCheck */
-		$testRecord2 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		/** @var $testRecord2 LinkCheck */
+		$testRecord2 = $this->getAccessibleMock('SGalinski\DfTools\Domain\Model\LinkCheck', array('dummy'));
 		$testRecord2->setTestUrl('http://ying.yang');
 
-		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
-		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+		/** @var $queryResult QueryResult */
+		$queryResult = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\QueryResult')
 			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
 		$queryResult->offsetSet(0, $testRecord1);
 		$queryResult->offsetSet(1, $testRecord2);
@@ -485,18 +521,18 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizeGroupOfUrlsWithOneRemovableLinkTest() {
 		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Service_UrlSynchronizeService', array('synchronize'));
+		$this->fixture = $this->getAccessibleMock('SGalinski\DfTools\Service\UrlSynchronizeService', array('synchronize'));
 
 		$rawUrls = array(
 			'http://ying.yang' => array(),
 		);
 
-		/** @var $testRecord1 Tx_DfTools_Domain_Model_LinkCheck */
-		$testRecord1 = $this->getAccessibleMock('Tx_DfTools_Domain_Model_LinkCheck', array('dummy'));
+		/** @var $testRecord1 LinkCheck */
+		$testRecord1 = $this->getAccessibleMock('SGalinski\DfTools\Domain\Model\LinkCheck', array('dummy'));
 		$testRecord1->setTestUrl('http://ying.yang');
 
-		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
-		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+		/** @var $queryResult QueryResult */
+		$queryResult = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\QueryResult')
 			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
 		$queryResult->offsetSet(0, $testRecord1);
 
@@ -517,7 +553,7 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 	 */
 	public function synchronizeGroupOfUrlsWithOneAddedLinkTest() {
 		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Service_UrlSynchronizeService', array('synchronize'));
+		$this->fixture = $this->getAccessibleMock('SGalinski\DfTools\Service\UrlSynchronizeService', array('synchronize'));
 
 		$rawUrls = array(
 			'http://bar.foo' => array(
@@ -525,8 +561,8 @@ class Tx_DfTools_Service_UrlSynchronizeServiceTest extends Tx_Extbase_Tests_Unit
 			),
 		);
 
-		/** @var $queryResult Tx_Extbase_Persistence_QueryResult */
-		$queryResult = $this->getMockBuilder('Tx_Extbase_Persistence_QueryResult')
+		/** @var $queryResult QueryResult */
+		$queryResult = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\QueryResult')
 			->setMethods(array('initialize'))->disableOriginalConstructor()->getMock();
 		$queryResult->offsetSet(0, NULL);
 		$queryResult->offsetUnset(0);

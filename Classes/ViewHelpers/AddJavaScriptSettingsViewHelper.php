@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\ViewHelpers;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,6 +25,7 @@ namespace SGalinski\DfTools\ViewHelpers;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Backend\Utility\IconUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
@@ -34,9 +35,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Example:
  * {namespace df=Tx_DfTools_ViewHelpers}
  * <df:addJavaScriptSettings />
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class AddJavaScriptSettingsViewHelper extends AbstractViewHelper {
 	/**

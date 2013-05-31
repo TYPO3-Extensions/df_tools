@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Service;
+namespace SGalinski\DfTools\Connector;
 
 /***************************************************************
  *  Copyright notice
@@ -35,7 +35,7 @@ use TYPO3\CMS\Extbase\Service\ExtensionService;
 /**
  * Utility class to simplify the execution of extbase actions from external sources (e.g. from Ext.Direct)
  */
-class ExtBaseConnectorService implements SingletonInterface {
+class ExtBaseConnector implements SingletonInterface {
 	/**
 	 * Extension Key
 	 *
@@ -150,13 +150,14 @@ class ExtBaseConnectorService implements SingletonInterface {
 	 */
 	public function runControllerAction($controller, $action) {
 		if ($controller === '' || $action === '') {
-			throw new \InvalidArgumentException('ExtDirect: Invalid Controller/Action Combination!');
+			throw new \InvalidArgumentException('Invalid Controller/Action Combination!');
 		}
 
 		$response = $this->bootStrap->run(
 			'', array(
 				'extensionName' => $this->extensionKey,
 				'pluginName' => $this->moduleOrPluginKey,
+				'vendorName' => 'SGalinski',
 				'switchableControllerActions' => array(
 					$controller => array($action)
 				),

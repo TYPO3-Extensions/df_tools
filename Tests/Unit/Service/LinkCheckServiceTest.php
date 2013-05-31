@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,25 +26,51 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use SGalinski\DfTools\Service\UrlParserService;
+
 /**
- * Test case for class Tx_DfTools_Service_LinkCheckService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class LinkCheckServiceTest
  */
-class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class LinkCheckServiceTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_LinkCheckService
+	 * @var \SGalinski\DfTools\Service\LinkCheckService
 	 */
 	protected $fixture;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_LinkCheckRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
 	protected $testRepository;
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
 
@@ -52,20 +80,20 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture = $this->getMock(
-			$this->buildAccessibleProxy('Tx_DfTools_Service_LinkCheckService'),
+			$this->buildAccessibleProxy('SGalinski\DfTools\Service\LinkCheckService'),
 			array('findExistingRawUrlsByTableAndUid', 'getRecordByTableAndId', 'findExistingRawUrlsByTestUrls')
 		);
 
-		/** @var $repository Tx_DfTools_Domain_Repository_LinkCheckRepository */
+		/** @var $repository LinkCheckRepository */
 		$this->testRepository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_LinkCheckRepository',
+			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository',
 			array('dummy'),
 			array($this->objectManager)
 		);
 		$this->fixture->injectLinkCheckRepository($this->testRepository);
 
-		/** @var $repository Tx_Extbase_Object_ObjectManager */
-		$this->objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager', array('create', 'get'));
+		/** @var $repository ObjectManager */
+		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('create', 'get'));
 		$this->fixture->injectObjectManager($this->objectManager);
 	}
 
@@ -81,8 +109,8 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function testInjectLinkCheckRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_LinkCheckRepository */
-		$class = 'Tx_DfTools_Domain_Repository_LinkCheckRepository';
+		/** @var $repository LinkCheckRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\LinkCheckRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectLinkCheckRepository($repository);
 
@@ -95,8 +123,8 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	public function testInjectObjectManager() {
-		/** @var $repository Tx_Extbase_Object_ObjectManager */
-		$class = 'Tx_Extbase_Object_ObjectManager';
+		/** @var $repository ObjectManager */
+		$class = 'TYPO3\CMS\Extbase\Object\ObjectManager';
 		$objectManager = $this->getMock($class, array('dummy'));
 		$this->fixture->injectObjectManager($objectManager);
 
@@ -114,7 +142,7 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 		$preparedExcludedTablesString = array('tt_content', 'pages');
 		$preparedExcludedTableFieldsString = array('field1', 'field2', 'field3');
 
-		$urlParserService = $this->getMock('Tx_DfTools_Service_UrlParserService');
+		$urlParserService = $this->getMock('SGalinski\DfTools\Service\UrlParserService');
 		$urlParserService->expects($this->once())->method('fetchUrls')
 			->with($preparedExcludedTablesString, $preparedExcludedTableFieldsString);
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -144,7 +172,7 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 *
 	 * @param string $table
 	 * @param int $identitiy
-	 * @param PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $fetchLinkCheckTypeCallAmounts
+	 * @param \PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $fetchLinkCheckTypeCallAmounts
 	 * @return void
 	 */
 	public function urlsFromASingleRecordCanBeFetched($table, $identitiy, $fetchLinkCheckTypeCallAmounts) {
@@ -161,7 +189,7 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 			),
 		);
 
-		$urlParserService = $this->getMock('Tx_DfTools_Service_UrlParserService');
+		$urlParserService = $this->getMock('SGalinski\DfTools\Service\UrlParserService');
 		$urlParserService->expects($fetchLinkCheckTypeCallAmounts)->method('fetchLinkCheckLinkType')
 			->will($this->returnValue(array()));
 		$urlParserService->expects($this->once())->method('parseRows')
@@ -210,21 +238,21 @@ class Tx_DfTools_Service_LinkCheckServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 */
 	public function recordSetsOfALinkCheckCanBeReturnedInAPlainStructure() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$recordSet1 = new Tx_DfTools_Domain_Model_RecordSet();
+		$recordSet1 = new RecordSet();
 		$recordSet1->setTableName('tt_content');
 		$recordSet1->setField('bodytext');
 		$recordSet1->setIdentifier(12);
 
-		$recordSet2 = new Tx_DfTools_Domain_Model_RecordSet();
+		$recordSet2 = new RecordSet();
 		$recordSet2->setTableName('pages');
 		$recordSet2->setField('header');
 		$recordSet2->setIdentifier(25);
 
-		$storage = new Tx_Extbase_Persistence_ObjectStorage();
+		$storage = new ObjectStorage();
 		$storage->attach($recordSet1);
 		$storage->attach($recordSet2);
 
-		$linkCheck = new Tx_DfTools_Domain_Model_LinkCheck();
+		$linkCheck = new LinkCheck();
 		$linkCheck->setRecordSets($storage);
 
 		$expectedPlainRecordSets = array(

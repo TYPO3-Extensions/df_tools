@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Service;
+namespace SGalinski\DfTools\Parser;
 
 /***************************************************************
  *  Copyright notice
@@ -33,17 +33,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
- * Url Parser Service
+ * Url Parser
  *
  * Fetches all urls defined inside the database. Needs an instance of the tca parser
  * to work correctly.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
-class UrlParserService implements SingletonInterface {
+class UrlParser implements SingletonInterface {
 	/**
-	 * @var \SGalinski\DfTools\Service\TcaParserService
+	 * @inject
+	 * @var \SGalinski\DfTools\Parser\TcaParser
 	 */
 	protected $tcaParser = NULL;
 
@@ -67,14 +65,6 @@ class UrlParserService implements SingletonInterface {
 	}
 
 	/**
-	 * @param TcaParserService $tcaParser
-	 * @return void
-	 */
-	public function injectTcaParser(TcaParserService $tcaParser) {
-		$this->tcaParser = $tcaParser;
-	}
-
-	/**
 	 * Fetches all URLs from the database
 	 *
 	 * @param array $excludedTables
@@ -82,11 +72,7 @@ class UrlParserService implements SingletonInterface {
 	 * @return array
 	 */
 	public function fetchUrls(array $excludedTables = array(), array $excludedTableFields = array()) {
-		$tablesWithFields = TcaUtility::getTextFields(
-			$this->tcaParser,
-			$excludedTables,
-			$excludedTableFields
-		);
+		$tablesWithFields = TcaUtility::getTextFields($this->tcaParser, $excludedTables, $excludedTableFields);
 
 		$urls = array();
 		foreach ((array) $tablesWithFields as $table => $fields) {
@@ -230,9 +216,9 @@ class UrlParserService implements SingletonInterface {
 		if ($identities !== NULL) {
 			$pageFilter = ' AND uid IN (' . implode(', ', $identities) . ')';
 		}
+
 		/** @var $dbConnection DatabaseConnection */
 		$dbConnection = $GLOBALS['TYPO3_DB'];
-
 		$rows = $dbConnection->exec_SELECTgetRows(
 			'uid, url, urltype',
 			'pages',

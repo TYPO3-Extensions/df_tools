@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -35,9 +35,6 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  * Note: This record should be a value object (Tx_Extbase_DomainObject_AbstractValueObject), but
  * unfortunately there is a show-stopper bug. You cannot edit value objects, because the record
  * related to the transferred __identity can't be found.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RedirectTestCategory extends AbstractEntity {
 	/**

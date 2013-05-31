@@ -1,11 +1,11 @@
 <?php
 
-namespace SGalinski\DfTools\View\RedirectTestCategory;
+namespace SGalinski\DfTools\View;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,16 +25,14 @@ namespace SGalinski\DfTools\View\RedirectTestCategory;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\View\AbstractArrayView;
+
+use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\Utility\LocalizationUtility;
 
 /**
  * Custom View
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
-class ArrayView extends AbstractArrayView {
+class RedirectTestArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -44,12 +42,18 @@ class ArrayView extends AbstractArrayView {
 		$namespace = $this->getNamespace();
 		$configuration = array(
 			'update' => array(
-				$namespace . '[redirectTestCategory][__identity]',
-				$namespace . '[redirectTestCategory][category]',
+				$namespace . '[redirectTest][__identity]',
+				$namespace . '[redirectTest][testUrl]',
+				$namespace . '[redirectTest][expectedUrl]',
+				$namespace . '[redirectTest][httpStatusCode]',
+				$namespace . '[redirectTest][category][__identity]',
+				$namespace . '[newCategory][category]',
 			),
 			'create' => array(
-				$namespace . '[newRedirectTestCategory][category]',
-			)
+				$namespace . '[newRedirectTest][testUrl]',
+				$namespace . '[newRedirectTest][expectedUrl]',
+				$namespace . '[newRedirectTest][httpStatusCode]',
+			),
 		);
 
 		return $configuration;
@@ -58,13 +62,24 @@ class ArrayView extends AbstractArrayView {
 	/**
 	 * Renders a redirect test into a plain array
 	 *
-	 * @param RedirectTestCategory $record
+	 * @param RedirectTest $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {
+		$category = $record->getCategory();
+
 		return array(
 			'__identity' => intval($record->getUid()),
-			'category' => htmlspecialchars($record->getCategory()),
+			'testUrl' => htmlspecialchars($record->getTestUrl()),
+			'expectedUrl' => htmlspecialchars($record->getExpectedUrl()),
+			'httpStatusCode' => intval($record->getHttpStatusCode()),
+			'testResult' => intval($record->getTestResult()),
+			'testMessage' => htmlspecialchars(
+				LocalizationUtility::localizeParameterDrivenString(
+					$record->getTestMessage(), 'df_tools'
+				)
+			),
+			'categoryId' => ($category === NULL ? '' : $category->getUid()),
 		);
 	}
 }

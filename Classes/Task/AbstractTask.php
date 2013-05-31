@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Task;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -26,17 +26,14 @@ namespace SGalinski\DfTools\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Connector\ExtBaseConnector;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Scheduler\Task;
 
 /**
  * Abstract Task For The TYPO3 Scheduler Extension
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractTask extends Task {
 	/**
@@ -47,14 +44,14 @@ abstract class AbstractTask extends Task {
 	/**
 	 * Returns an initialized extbase connector
 	 *
-	 * @return ExtBaseConnectorService
+	 * @return ExtBaseConnector
 	 */
 	protected function getExtBaseConnector() {
 		// this must be set for cronjobs or extbase will fail
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
-		/** @var $extBaseConnector ExtBaseConnectorService */
-		$extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Service\ExtBaseConnectorService');
+		/** @var $extBaseConnector ExtBaseConnector */
+		$extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Connector\ExtBaseConnector');
 		$extBaseConnector->setExtensionKey('DfTools');
 		$extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
 

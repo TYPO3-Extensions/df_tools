@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -26,13 +26,10 @@ namespace SGalinski\DfTools\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Parser\TcaParser;
 
 /**
  * Collection of smaller tca utility functions
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 final class TcaUtility {
 	/**
@@ -53,14 +50,13 @@ final class TcaUtility {
 	/**
 	 * Returns a list of available plain text table fields without special meanings
 	 *
-	 * @param TcaParserService $tcaParser
+	 * @param TcaParser $tcaParser
 	 * @param array $excludedTables
 	 * @param array $excludedTableFields
 	 * @return array
 	 */
 	public static function getTextFields(
-		TcaParserService $tcaParser, array $excludedTables = array(),
-		array $excludedTableFields = array()
+		TcaParser $tcaParser, array $excludedTables = array(), array $excludedTableFields = array()
 	) {
 		$tcaParser->setExcludedTables($excludedTables);
 		$tcaParser->setAllowedTypes(array('input', 'text'));

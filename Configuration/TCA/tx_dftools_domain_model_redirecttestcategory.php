@@ -9,12 +9,12 @@ $TCA['tx_dftools_domain_model_redirecttestcategory'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_redirecttestcategory',
 		'label' => 'category',
-		'dividers2tabs' => true,
+		'dividers2tabs' => TRUE,
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'versioningWS' => 2,
 		'versioning_followPages' => TRUE,
-		'searchFields' =>  'category',
+		'searchFields' => 'category',
 		'origUid' => 't3_origuid',
 		'languageField' => 'sys_language_uid',
 		'transOrigPointerField' => 'l10n_parent',
@@ -70,7 +70,7 @@ $TCA['tx_dftools_domain_model_redirecttestcategory'] = array(
 				),
 				'foreign_table' => 'tx_dftools_domain_model_redirecttestcategory',
 				'foreign_table_where' => 'AND tx_dftools_domain_model_redirecttestcategory.pid=###CURRENT_PID### ' .
-					' AND tx_dftools_domain_model_redirecttestcategory.sys_language_uid IN (-1,0)',
+				' AND tx_dftools_domain_model_redirecttestcategory.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l10n_diffsource' => array(

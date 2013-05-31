@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,20 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Special Test Case For ExtDirect
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ExtBaseConnectorTestCase
  */
-abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit_BaseTestCase {
+abstract class ExtBaseConnectorTestCase extends BaseTestCase {
 	/**
 	 * @var object
 	 */
 	protected $fixture;
 
 	/**
-	 * @var Tx_DfTools_Service_ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
 	 */
 	protected $extBaseConnector;
 
@@ -45,7 +46,7 @@ abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit
 	 * @return void
 	 */
 	public function setUp() {
-		$this->extBaseConnector = $this->getMock('Tx_DfTools_Service_ExtBaseConnectorService');
+		$this->extBaseConnector = $this->getMock('SGalinski\DfTools\Service\ExtBaseConnectorService');
 	}
 
 	/**
@@ -62,11 +63,11 @@ abstract class Tx_DfTools_ExtBaseConnectorTestCase extends Tx_Extbase_Tests_Unit
 	 * @param string $action
 	 * @param array $parameters
 	 * @param mixed $returnValue
-	 * @param Exception $exception optional
+	 * @param \Exception $exception optional
 	 * @return void
 	 */
 	protected function addMockedExtBaseConnector($controller, $action, array $parameters = array(), $returnValue = NULL, $exception = NULL) {
-		/** @var $mockedMethod PHPUnit_Framework_MockObject_Builder_InvocationMocker */
+		/** @var $mockedMethod \PHPUnit_Framework_MockObject_Builder_InvocationMocker */
 		/** @noinspection PhpUndefinedMethodInspection */
 		$mockedMethod = $this->extBaseConnector->expects($this->once())->method('runControllerAction');
 		$mockedMethod->with($controller, $action);

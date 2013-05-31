@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,13 +26,29 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Utility_TcaUtility.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class TcaUtilityTest
  */
-class Tx_DfTools_Utility_TcaUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class TcaUtilityTest extends BaseTestCase {
 	/**
 	 * @return array
 	 */
@@ -72,7 +90,7 @@ class Tx_DfTools_Utility_TcaUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestCa
 	 * @return void
 	 */
 	public function filterCallbackFiltersCorrectly($expected, array $input) {
-		$this->assertSame($expected, Tx_DfTools_Utility_TcaUtility::filterCallback($input));
+		$this->assertSame($expected, TcaUtility::filterCallback($input));
 	}
 }
 

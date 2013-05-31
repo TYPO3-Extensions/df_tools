@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,18 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Test case for class Tx_DfTools_Domain_Model_LinkCheck.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class LinkCheckTest
  */
-class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class LinkCheckTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Model_LinkCheck
+	 * @var \SGalinski\DfTools\Domain\Model\LinkCheck
 	 */
 	protected $fixture;
 
@@ -40,7 +45,7 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function setUp() {
-		$this->fixture = new Tx_DfTools_Domain_Model_LinkCheck();
+		$this->fixture = new LinkCheck();
 		$this->fixture->setTestUrl('FooBar');
 		$this->fixture->setResultUrl('FooBar');
 		$this->fixture->setHttpStatusCode(200);
@@ -109,8 +114,8 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function recordSetsCanBeSet() {
-		$objectStorage = new Tx_Extbase_Persistence_ObjectStorage();
-		$objectStorage->attach((new Tx_DfTools_Domain_Model_RecordSet()));
+		$objectStorage = new ObjectStorage();
+		$objectStorage->attach((new RecordSet()));
 		$this->fixture->setRecordSets($objectStorage);
 
 		$this->assertSame($objectStorage, $this->fixture->getRecordSets());
@@ -121,7 +126,7 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function recordSetCanBeAdded() {
-		$recordSet = new Tx_DfTools_Domain_Model_RecordSet();
+		$recordSet = new RecordSet();
 		$objectStorage = $this->fixture->getRecordSets();
 
 		$this->fixture->addRecordSet($recordSet);
@@ -135,7 +140,7 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function recordSetCanBeRemoved() {
-		$recordSet = new Tx_DfTools_Domain_Model_RecordSet();
+		$recordSet = new RecordSet();
 		$objectStorage = $this->fixture->getRecordSets();
 
 		$objectStorage->attach($recordSet);
@@ -154,7 +159,7 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 			'testUrl' => 'FooBar',
 			'resultUrl' => 'FooBar',
 			'httpStatusCode' => 200,
-			'testResult' => Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_UNTESTED,
+			'testResult' => AbstractService::SEVERITY_UNTESTED,
 			'testMessage' => ''
 		);
 
@@ -163,12 +168,12 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 
 	/**
 	 * @param mixed $resolveUrlOutput
-	 * @param PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls
-	 * @return Tx_DfTools_Service_UrlChecker_AbstractService
+	 * @param \PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls
+	 * @return AbstractService
 	 */
-	protected function getUrlCheckerService($resolveUrlOutput, PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls) {
-		/** @var $urlCheckerService Tx_DfTools_Service_UrlChecker_AbstractService */
-		$class = 'Tx_DfTools_Service_UrlChecker_AbstractService';
+	protected function getUrlCheckerService($resolveUrlOutput, \PHPUnit_Framework_MockObject_Matcher_InvokedCount $amountOfCalls) {
+		/** @var $urlCheckerService AbstractService */
+		$class = 'SGalinski\DfTools\Service\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -185,23 +190,23 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 		return array(
 			'url mismatch' => array(
 				array('http_code' => 200, 'url' => 'UnknownUrl'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_WARNING,
+				AbstractService::SEVERITY_WARNING,
 			),
 			'http code mismatch with 404' => array(
 				array('http_code' => 404, 'url' => 'FooBar'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_ERROR,
+				AbstractService::SEVERITY_ERROR,
 			),
 			'test works with http code 200' => array(
 				array('http_code' => 200, 'url' => 'FooBar'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				AbstractService::SEVERITY_OK,
 			),
 			'test works with http code 301' => array(
 				array('http_code' => 301, 'url' => 'FooBar'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				AbstractService::SEVERITY_OK,
 			),
 			'test works with http code 302' => array(
 				array('http_code' => 302, 'url' => 'FooBar'),
-				Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_OK,
+				AbstractService::SEVERITY_OK,
 			),
 		);
 	}
@@ -225,11 +230,11 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function testIsNotExecutedBecauseItHasAnIgnoreState() {
-		$this->fixture->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_IGNORE);
+		$this->fixture->setTestResult(AbstractService::SEVERITY_IGNORE);
 		$urlCheckerService = $this->getUrlCheckerService(array(), $this->never());
 		$this->fixture->test($urlCheckerService);
 		$this->assertSame(
-			Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_IGNORE,
+			AbstractService::SEVERITY_IGNORE,
 			$this->fixture->getTestResult()
 		);
 	}
@@ -239,11 +244,11 @@ class Tx_DfTools_Domain_Model_LinkCheckTest extends Tx_Extbase_Tests_Unit_BaseTe
 	 * @return void
 	 */
 	public function testIsExecutedButTheRecordIsInFalsePositiveStateAndDoesNotUpdateItsState() {
-		$this->fixture->setTestResult(Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO);
+		$this->fixture->setTestResult(AbstractService::SEVERITY_INFO);
 		$urlCheckerService = $this->getUrlCheckerService(array(), $this->once());
 		$this->fixture->test($urlCheckerService);
 		$this->assertSame(
-			Tx_DfTools_Service_UrlChecker_AbstractService::SEVERITY_INFO,
+			AbstractService::SEVERITY_INFO,
 			$this->fixture->getTestResult()
 		);
 	}

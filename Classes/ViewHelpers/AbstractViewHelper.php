@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\ViewHelpers;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -32,9 +32,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Abstract View Helper
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractViewHelper extends AbstractBackendViewHelper {
 	/**

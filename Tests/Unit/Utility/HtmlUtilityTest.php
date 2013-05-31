@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,13 +26,24 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Utility_HtmlUtility.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class HtmlUtilityTest
  */
-class Tx_DfTools_Utility_HtmlUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class HtmlUtilityTest extends BaseTestCase {
 	/**
 	 * @return array
 	 */
@@ -86,7 +99,7 @@ class Tx_DfTools_Utility_HtmlUtilityTest extends Tx_Extbase_Tests_Unit_BaseTestC
 	 * @return void
 	 */
 	public function typo3SearchBlocksAreParsed($expectedParts, $content) {
-		$parts = Tx_DfTools_Utility_HtmlUtility::getTypo3SearchBlocksFromContent($content);
+		$parts = HtmlUtility::getTypo3SearchBlocksFromContent($content);
 		$this->assertSame($expectedParts, $parts);
 	}
 }

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Task;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,53 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Hooks\ProcessDatamap;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Service\UrlParserService;
+use SGalinski\DfTools\Task\AbstractFields;
+use SGalinski\DfTools\Task\AbstractTask;
+use SGalinski\DfTools\Task\LinkCheckSynchronizeTask;
+use SGalinski\DfTools\Task\RedirectTestTask;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+
 /**
- * Test case for class Tx_DfTools_Task_RedirectTestTask.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestTaskTest
  */
-class Tx_DfTools_Task_RedirectTestTaskTest extends Tx_DfTools_ExtBaseConnectorTestCase {
+class RedirectTestTaskTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var Tx_DfTools_Task_RedirectTestTask
+	 * @var \SGalinski\DfTools\Task\RedirectTestTask
 	 */
 	protected $fixture;
 
@@ -43,7 +83,7 @@ class Tx_DfTools_Task_RedirectTestTaskTest extends Tx_DfTools_ExtBaseConnectorTe
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture = $this->getMockBuilder($this->buildAccessibleProxy('Tx_DfTools_Task_RedirectTestTask'))
+		$this->fixture = $this->getMockBuilder($this->buildAccessibleProxy('SGalinski\DfTools\Task\RedirectTestTask'))
 			->setMethods(array('sendMail', 'getExtBaseConnector'))->disableOriginalConstructor()->getMock();
 		$this->fixture->expects($this->once())->method('getExtBaseConnector')
 			->will($this->returnValue($this->extBaseConnector));

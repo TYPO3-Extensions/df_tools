@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -30,25 +30,23 @@ use SGalinski\DfTools\Domain\Model\RedirectTest;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Domain\Service\RealUrlImportService;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Controller for the RedirectTest domain model
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RedirectTestController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'SGalinski\DfTools\View\RedirectTest\ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\RedirectTestArrayView';
 
 	/**
 	 * Instance of the redirect test repository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
 	 */
 	protected $redirectTestRepository;
@@ -56,31 +54,10 @@ class RedirectTestController extends AbstractController {
 	/**
 	 * Instance of the redirect test category repository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $redirectTestCategoryRepository;
-
-	/**
-	 * Injects the redirect test repository
-	 *
-	 * @param RedirectTestRepository $redirectTestRepository
-	 * @return void
-	 */
-	public function injectRedirectTestRepository(RedirectTestRepository $redirectTestRepository) {
-		$this->redirectTestRepository = $redirectTestRepository;
-	}
-
-	/**
-	 * Injects the redirect test category repository
-	 *
-	 * @param RedirectTestCategoryRepository $redirectTestCategoryRepository
-	 * @return void
-	 */
-	public function injectRedirectTestCategoryRepository(
-		RedirectTestCategoryRepository $redirectTestCategoryRepository
-	) {
-		$this->redirectTestCategoryRepository = $redirectTestCategoryRepository;
-	}
 
 	/**
 	 * Returns an instance of the realUrl import service
@@ -88,7 +65,7 @@ class RedirectTestController extends AbstractController {
 	 * @return RealUrlImportService
 	 */
 	public function getRealUrlImportService() {
-		return $this->objectManager->get('SGalinski\DfTools\Service\RealUrlImportService');
+		return $this->objectManager->get('SGalinski\DfTools\Domain\Service\RealUrlImportService');
 	}
 
 	/**

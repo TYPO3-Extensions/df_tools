@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Service;
+namespace SGalinski\DfTools\Parser;
 
 /***************************************************************
  *  Copyright notice
@@ -30,14 +30,11 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * TCA Parser Service
+ * TCA Parser
  *
  * Fetch all text input fields from the TCA configuration and so on...
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
-class TcaParserService implements SingletonInterface {
+class TcaParser implements SingletonInterface {
 	/**
 	 * List of allowed types
 	 *

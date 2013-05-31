@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,30 +26,58 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use SGalinski\DfTools\Service\UrlParserService;
+
 /**
- * Test case for class Tx_DfTools_Service_RealUrlImportService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RealUrlImportServiceTest
  */
-class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RealUrlImportServiceTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_RealUrlImportService
+	 * @var \SGalinski\DfTools\Service\RealUrlImportService
 	 */
 	protected $fixture;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
 	 */
 	protected $testRepository;
 
 	/**
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $categoryRepository;
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManager
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
 
@@ -57,26 +87,26 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture = $this->getMock(
-			$this->buildAccessibleProxy('Tx_DfTools_Service_RealUrlImportService'),
+			$this->buildAccessibleProxy('SGalinski\DfTools\Service\RealUrlImportService'),
 			array('getRealUrlRedirects', 'doesRedirectTestWithUrlAlreadyExists', 'getCategoryByCategoryField')
 		);
 
-		/** @var $repository Tx_DfTools_Domain_Repository_RedirectTestRepository */
+		/** @var $repository RedirectTestRepository */
 		$this->testRepository = $this->getMock(
-			'Tx_DfTools_Domain_Repository_RedirectTestRepository',
+			'SGalinski\DfTools\Domain\Repository\RedirectTestRepository',
 			array('add'),
 			array($this->objectManager)
 		);
 		$this->fixture->injectRedirectTestRepository($this->testRepository);
 
-		/** @var $repository Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository';
+		/** @var $repository RedirectTestCategoryRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$this->categoryRepository = $this->getMock($class, array('add'), array($this->objectManager));
 		$this->fixture->injectRedirectTestCategoryRepository($this->categoryRepository);
 
-		/** @var $repository Tx_Extbase_Object_ObjectManager */
+		/** @var $repository ObjectManager */
 		$this->objectManager = $this->getMock(
-			'Tx_Extbase_Object_ObjectManager',
+			'TYPO3\CMS\Extbase\Object\ObjectManager',
 			array('create')
 		);
 		$this->fixture->injectObjectManager($this->objectManager);
@@ -94,8 +124,8 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	 * @return void
 	 */
 	public function testInjectRedirectTestRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_RedirectTestRepository */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestRepository';
+		/** @var $repository RedirectTestRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectRedirectTestRepository($repository);
 
@@ -108,8 +138,8 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	 * @return void
 	 */
 	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository */
-		$class = 'Tx_DfTools_Domain_Repository_RedirectTestCategoryRepository';
+		/** @var $repository RedirectTestCategoryRepository */
+		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
 		$this->fixture->injectRedirectTestCategoryRepository($repository);
 
@@ -122,8 +152,8 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	 * @return void
 	 */
 	public function testInjectObjectManager() {
-		/** @var $repository Tx_Extbase_Object_ObjectManager */
-		$class = 'Tx_Extbase_Object_ObjectManager';
+		/** @var $repository ObjectManager */
+		$class = 'TYPO3\CMS\Extbase\Object\ObjectManager';
 		$objectManager = $this->getMock($class, array('dummy'));
 		$this->fixture->injectObjectManager($objectManager);
 
@@ -167,8 +197,8 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	 * @return void
 	 */
 	public function importFromRealUrlWithoutAnExistingCategoryAndAlreadySyncedRedirects() {
-		/** @var $category Tx_DfTools_Domain_Model_RedirectTestCategory */
-		$category = $this->getMockBuilder('Tx_DfTools_Domain_Model_RedirectTestCategory')
+		/** @var $category RedirectTestCategory */
+		$category = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTestCategory')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$category->setCategory('RealUrl');
 		$this->objectManager->expects($this->once())->method('create')
@@ -204,9 +234,9 @@ class Tx_DfTools_Service_RealUrlImportServiceTest extends Tx_Extbase_Tests_Unit_
 	 */
 	public function importFromRealUrlWithAnExistingCategoryAndNonSyncedRedirects() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$category = $this->getMockBuilder('Tx_DfTools_Domain_Model_RedirectTestCategory')
+		$category = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTestCategory')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
-		$testRecord = $this->getMockBuilder('Tx_DfTools_Domain_Model_RedirectTest')
+		$testRecord = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTest')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$this->objectManager->expects($this->any())->method('create')->will($this->returnValue($testRecord));
 

@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,36 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+
 /**
- * Test case for class Tx_DfTools_Service_ExtBaseConnectorService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ExtBaseConnectorServiceTest
  */
-class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class ExtBaseConnectorServiceTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Service_ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
 	 */
 	protected $fixture;
 
@@ -40,7 +63,7 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'Tx_DfTools_Service_ExtBaseConnectorService';
+		$class = 'SGalinski\DfTools\Service\ExtBaseConnectorService';
 		$this->fixture = $this->getAccessibleMock($class, array('initialize', 'handleWebRequest'));
 
 		$this->fixture->setExtensionKey('Foo');
@@ -91,11 +114,11 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 	 * @return void
 	 */
 	protected function prepareRunControllerAndActionTests() {
-		$extensionService = $this->getMock('Tx_Extbase_Service_ExtensionService');
+		$extensionService = $this->getMock('TYPO3\CMS\Extbase\Service\ExtensionService');
 		$extensionService->expects($this->once())->method('getPluginNamespace')
 			->will($this->returnValue('tx_foo_tools_footools'));
 
-		$objectManager = $this->getMock('Tx_Extbase_Object_ObjectManager');
+		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$objectManager->expects($this->once())->method('get')->will($this->returnValue($extensionService));
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -134,7 +157,7 @@ class Tx_DfTools_Service_ExtBaseConnectorServiceTest extends Tx_Extbase_Tests_Un
 
 	/**
 	 * @dataProvider testExecutionOfControllerAndActionWithIncorrectParametersDataProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException \InvalidArgumentException
 	 * @test
 	 *
 	 * @param string $controller

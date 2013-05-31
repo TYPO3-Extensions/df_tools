@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Hooks;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -26,29 +26,25 @@ namespace SGalinski\DfTools\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Service\ExtBaseConnectorService;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Hooks for synchronize urls directly on-the-fly while editing
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class ProcessDatamap {
 	/**
 	 * BootStrap Instance
 	 *
-	 * @var \SGalinski\DfTools\Service\ExtBaseConnectorService
+	 * @var \SGalinski\DfTools\Connector\ExtBaseConnector
 	 */
-	protected $extBaseConnector = NULL;
+	protected $extBaseConnector;
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Service\ExtBaseConnectorService');
+		$this->extBaseConnector = GeneralUtility::makeInstance('SGalinski\DfTools\Connector\ExtBaseConnector');
 		$this->extBaseConnector->setExtensionKey('DfTools');
 		$this->extBaseConnector->setModuleOrPluginKey('tools_DfToolsTools');
 	}

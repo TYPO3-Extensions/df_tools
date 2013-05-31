@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,20 +26,50 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+use SGalinski\DfTools\Service\UrlParserService;
+
 /**
- * Test case for class Tx_DfTools_Service_TcaParserService.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class TcaParserServiceTest
  */
-class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class TcaParserServiceTest extends BaseTestCase {
 	/**
 	 * @var array
 	 */
 	protected $backupTCA = NULL;
 
 	/**
-	 * @var Tx_DfTools_Service_TcaParserService
+	 * @var \SGalinski\DfTools\Service\TcaParserService
 	 */
 	protected $fixture;
 
@@ -47,7 +79,7 @@ class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->backupTCA = $GLOBALS['TCA'];
-		$proxyClass = $this->buildAccessibleProxy('Tx_DfTools_Service_TcaParserService');
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Service\TcaParserService');
 		$this->fixture = $this->getMock($proxyClass, array('dummy'));
 	}
 
@@ -114,7 +146,7 @@ class Tx_DfTools_Service_TcaParserServiceTest extends Tx_Extbase_Tests_Unit_Base
 	 * @return void
 	 */
 	protected function prepareTcaConfiguration() {
-		$file = t3lib_extMgm::extPath('df_tools') . 'Tests/Fixture/serializedTcaConfiguration.txt';
+		$file = ExtensionManagementUtility::extPath('df_tools') . 'Tests/Fixture/serializedTcaConfiguration.txt';
 		$tcaConfiguration = unserialize(file_get_contents($file));
 		$GLOBALS['TCA'] = $tcaConfiguration['TCA'];
 	}

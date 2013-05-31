@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Task;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -34,9 +34,6 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask as SchedulerAbstractTask;
 
 /**
  * Additional fields for the scheduler redirect test task
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractFields implements AdditionalFieldProviderInterface {
 	/**

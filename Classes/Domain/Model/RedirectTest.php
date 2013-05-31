@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -26,16 +26,13 @@ namespace SGalinski\DfTools\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\UrlChecker\AbstractService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use SGalinski\DfTools\Utility\LocalizationUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
  * Redirect Test
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RedirectTest extends AbstractEntity implements TestableInterface {
 	/**

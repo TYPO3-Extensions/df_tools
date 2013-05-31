@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,25 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 /**
- * Test case for class Tx_DfTools_Domain_Repository_RedirectTestRepository.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class RedirectTestRepositoryTest
  */
-class Tx_DfTools_Domain_Repository_RedirectTestRepositoryTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class RedirectTestRepositoryTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Repository_RedirectTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestRepository
 	 */
 	protected $fixture;
 
@@ -41,7 +53,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepositoryTest extends Tx_Extbase
 	 */
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
-			'Tx_DfTools_Domain_Repository_RedirectTestRepository',
+			'SGalinski\DfTools\Domain\Repository\RedirectTestRepository',
 			array('createQuery', 'getPageSelectInstance'),
 			array($this->objectManager)
 		);
@@ -59,8 +71,8 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepositoryTest extends Tx_Extbase
 	 * @return void
 	 */
 	public function dataMapperCanBeInjected() {
-		/** @var $dataMapper Tx_Extbase_Persistence_Mapper_DataMapper */
-		$dataMapper = $this->getMock('Tx_Extbase_Persistence_Mapper_DataMapper', array('dummy'));
+		/** @var $dataMapper DataMapper */
+		$dataMapper = $this->getMock('TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper', array('dummy'));
 		$this->fixture->injectDataMapper($dataMapper);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -68,18 +80,18 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepositoryTest extends Tx_Extbase
 	}
 
 	/**
-	 * @return Tx_Extbase_Persistence_Query
+	 * @return Query
 	 */
 	protected function prepareFindSortedInRangeTests() {
-		/** @var $pageSelectInstance t3lib_pageSelect */
-		$pageSelectInstance = $this->getMock('t3lib_pageSelect', array('enableFields'));
+		/** @var $pageSelectInstance PageRepository */
+		$pageSelectInstance = $this->getMock('TYPO3\CMS\Frontend\Page\PageRepository', array('enableFields'));
 
-		/** @var $dataMapper Tx_Extbase_Persistence_Mapper_DataMapper */
-		$class = 'Tx_Extbase_Persistence_Mapper_DataMapper';
+		/** @var $dataMapper DataMapper */
+		$class = 'TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper';
 		$dataMapper = $this->getMock($class, array('convertPropertyNameToColumnName'));
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockQuery = $this->getMockBuilder('Tx_Extbase_Persistence_Query')
+		$mockQuery = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\Query')
 			->setMethods(array('execute', 'statement'))
 			->disableOriginalConstructor()
 			->getMock();
@@ -92,7 +104,7 @@ class Tx_DfTools_Domain_Repository_RedirectTestRepositoryTest extends Tx_Extbase
 			->will($this->returnValue($pageSelectInstance));
 
 		$dataMapper->expects($this->any())->method('convertPropertyNameToColumnName')
-			->with($this->isType('string'), 'Tx_DfTools_Domain_Model_RedirectTest')
+			->with($this->isType('string'), 'SGalinski\DfTools\Domain\Model\RedirectTest')
 			->will($this->returnValue('field'));
 		$this->fixture->injectDataMapper($dataMapper);
 

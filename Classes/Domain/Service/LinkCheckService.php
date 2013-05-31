@@ -1,6 +1,6 @@
 <?php
 
-namespace SGalinski\DfTools\Service;
+namespace SGalinski\DfTools\Domain\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -29,6 +29,7 @@ namespace SGalinski\DfTools\Service;
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Parser\UrlParser;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -37,44 +38,23 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * LinkCheck Service
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class LinkCheckService implements SingletonInterface {
 	/**
 	 * Instance of the link check repository
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository
 	 */
-	protected $linkCheckRepository = NULL;
+	protected $linkCheckRepository;
 
 	/**
 	 * Instance of the object manager
 	 *
+	 * @inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
-	protected $objectManager = NULL;
-
-	/**
-	 * Injects the redirect test category repository
-	 *
-	 * @param LinkCheckRepository $linkCheckRepository
-	 * @return void
-	 */
-	public function injectLinkCheckRepository(LinkCheckRepository $linkCheckRepository) {
-		$this->linkCheckRepository = $linkCheckRepository;
-	}
-
-	/**
-	 * Injects the object manager
-	 *
-	 * @param ObjectManager $objectManager
-	 * @return void
-	 */
-	public function injectObjectManager(ObjectManager $objectManager) {
-		$this->objectManager = $objectManager;
-	}
+	protected $objectManager;
 
 	/**
 	 * Returns all parsed urls in the complete database
@@ -94,8 +74,8 @@ class LinkCheckService implements SingletonInterface {
 			$excludedTableFields = explode(',', trim($excludedTableFieldsString, ','));
 		}
 
-		/** @var $urlParser UrlParserService */
-		$urlParser = $this->objectManager->get('SGalinski\DfTools\Service\UrlParserService');
+		/** @var $urlParser UrlParser */
+		$urlParser = $this->objectManager->get('SGalinski\DfTools\Parser\UrlParser');
 		return $urlParser->fetchUrls($excludedTables, $excludedTableFields);
 	}
 
@@ -109,8 +89,8 @@ class LinkCheckService implements SingletonInterface {
 	public function getUrlsFromSingleRecord($table, $identity) {
 		$record = $this->getRecordByTableAndId($table, $identity);
 
-		/** @var $urlParser UrlParserService */
-		$urlParser = $this->objectManager->get('SGalinski\DfTools\Service\UrlParserService');
+		/** @var $urlParser UrlParser */
+		$urlParser = $this->objectManager->get('SGalinski\DfTools\Parser\UrlParser');
 
 		$rawUrls = array();
 		if ($table === 'pages') {

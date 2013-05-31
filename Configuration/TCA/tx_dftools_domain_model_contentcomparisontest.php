@@ -9,7 +9,7 @@ $TCA['tx_dftools_domain_model_contentcomparisontest'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:df_tools/Resources/Private/Language/locallang_db.xml:tx_dftools_domain_model_contentcomparisontest',
 		'label' => 'test_url',
-		'dividers2tabs' => true,
+		'dividers2tabs' => TRUE,
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'versioningWS' => 2,
@@ -71,7 +71,7 @@ $TCA['tx_dftools_domain_model_contentcomparisontest'] = array(
 				),
 				'foreign_table' => 'tx_dftools_domain_model_contentcomparisontest',
 				'foreign_table_where' => 'AND tx_dftools_domain_model_contentcomparisontest.pid=###CURRENT_PID### ' .
-					' AND tx_dftools_domain_model_contentcomparisontest.sys_language_uid IN (-1,0)',
+				' AND tx_dftools_domain_model_contentcomparisontest.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l10n_diffsource' => array(

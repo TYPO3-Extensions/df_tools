@@ -1,11 +1,11 @@
 <?php
 
-namespace SGalinski\DfTools\View\ContentComparisonTest;
+namespace SGalinski\DfTools\View;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,18 +25,13 @@ namespace SGalinski\DfTools\View\ContentComparisonTest;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
-use SGalinski\DfTools\Utility\LocalizationUtility;
-use SGalinski\DfTools\View\AbstractArrayView;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 
 /**
  * Custom View
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
-class ArrayView extends AbstractArrayView {
+class RedirectTestCategoryArrayView extends AbstractArrayView {
 	/**
 	 * Returns the hmac configuration
 	 *
@@ -46,18 +41,12 @@ class ArrayView extends AbstractArrayView {
 		$namespace = $this->getNamespace();
 		$configuration = array(
 			'update' => array(
-				$namespace . '[contentComparisonTest][__identity]',
-				$namespace . '[contentComparisonTest][testUrl]',
-				$namespace . '[contentComparisonTest][compareUrl]',
-				$namespace . '[contentComparisonTest][difference]',
+				$namespace . '[redirectTestCategory][__identity]',
+				$namespace . '[redirectTestCategory][category]',
 			),
 			'create' => array(
-				$namespace . '[newContentComparisonTest][testUrl]',
-				$namespace . '[newContentComparisonTest][compareUrl]',
-				$namespace . '[newContentComparisonTest][difference]',
-				$namespace . '[newContentComparisonTest][testResult]',
-				$namespace . '[newContentComparisonTest][testMessage]',
-			),
+				$namespace . '[newRedirectTestCategory][category]',
+			)
 		);
 
 		return $configuration;
@@ -66,21 +55,13 @@ class ArrayView extends AbstractArrayView {
 	/**
 	 * Renders a redirect test into a plain array
 	 *
-	 * @param ContentComparisonTest $record
+	 * @param RedirectTestCategory $record
 	 * @return array
 	 */
 	protected function getPlainRecord($record) {
 		return array(
 			'__identity' => intval($record->getUid()),
-			'testUrl' => htmlspecialchars($record->getTestUrl()),
-			'compareUrl' => htmlspecialchars($record->getCompareUrl()),
-			'difference' => GeneralUtility::removeXSS($record->getDifference()),
-			'testResult' => intval($record->getTestResult()),
-			'testMessage' => htmlspecialchars(
-				LocalizationUtility::localizeParameterDrivenString(
-					$record->getTestMessage(), 'df_tools'
-				)
-			),
+			'category' => htmlspecialchars($record->getCategory()),
 		);
 	}
 }

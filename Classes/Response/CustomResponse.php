@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Response;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -25,13 +25,11 @@ namespace SGalinski\DfTools\Response;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Extbase\Mvc\Web\Response;
 
 /**
  * Custom response class with array output
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class CustomResponse extends Response {
 	/**

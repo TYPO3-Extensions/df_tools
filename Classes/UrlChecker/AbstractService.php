@@ -1,11 +1,11 @@
 <?php
 
-namespace SGalinski\DfTools\Service\UrlChecker;
+namespace SGalinski\DfTools\UrlChecker;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -30,9 +30,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Abstract Url Checker Service
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractService implements SingletonInterface {
 	const SEVERITY_UNTESTED = 9;
@@ -89,12 +86,6 @@ abstract class AbstractService implements SingletonInterface {
 	public function __construct() {
 		$this->userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; de-DE) ' .
 			'AppleWebKit/534.17 (KHTML, like Gecko) Chrome/10.0.649.0 Safari/534.17';
-	}
-
-	/**
-	 * Destructor
-	 */
-	public function __destruct() {
 	}
 
 	/**

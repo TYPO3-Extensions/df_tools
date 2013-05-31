@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,19 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+
 /**
- * Test case for class Tx_DfTools_Domain_Repository_AbstractRepository.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class AbstractRepositoryTest
  */
-class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class AbstractRepositoryTest extends BaseTestCase {
 	/**
-	 * @var Tx_DfTools_Domain_Repository_AbstractRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\AbstractRepository
 	 */
 	protected $fixture;
 
@@ -41,7 +47,7 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 */
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
-			'Tx_DfTools_Domain_Repository_AbstractRepository',
+			'SGalinski\DfTools\Domain\Repository\AbstractRepository',
 			array('createQuery'),
 			array($this->objectManager)
 		);
@@ -59,14 +65,14 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	 * @return void
 	 */
 	public function getPageSelectInstanceReturnsAt3libPageSelectInstance() {
-		$this->assertInstanceOf('t3lib_pageSelect', $this->fixture->getPageSelectInstance());
+		$this->assertInstanceOf('TYPO3\CMS\Frontend\Page\PageRepository', $this->fixture->getPageSelectInstance());
 	}
 
 	/**
-	 * @return Tx_Extbase_Persistence_Query|PHPUnit_Framework_MockObject_MockObject
+	 * @return Query|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected function prepareFindSortedInRangeTests() {
-		$mockQuery = $this->getMockBuilder('Tx_Extbase_Persistence_Query')
+		$mockQuery = $this->getMockBuilder('TYPO3\CMS\Extbase\Persistence\Generic\Query')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->fixture->expects($this->once())->method('createQuery')->will($this->returnValue($mockQuery));
@@ -100,7 +106,7 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	public function findSortedInRangeWithValidValues() {
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
-			->with(array('field1' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING));
+			->with(array('field1' => QueryInterface::ORDER_ASCENDING));
 		$this->fixture->findSortedAndInRange(0, 200, array('field1' => TRUE));
 	}
 
@@ -111,7 +117,7 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 	public function findSortedInRangeWithDescendingSortingDirection() {
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
-			->with(array('field1' => Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING));
+			->with(array('field1' => QueryInterface::ORDER_DESCENDING));
 		$this->fixture->findSortedAndInRange(0, 200, array('field1' => FALSE));
 	}
 
@@ -123,8 +129,8 @@ class Tx_DfTools_Domain_Repository_AbstractRepositoryTest extends Tx_Extbase_Tes
 		$mockQuery = $this->prepareFindSortedInRangeTests();
 		$mockQuery->expects($this->once())->method('setOrderings')
 			->with(array(
-				'field1' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING,
-				'field2' => Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING
+				'field1' => QueryInterface::ORDER_ASCENDING,
+				'field2' => QueryInterface::ORDER_DESCENDING
 			));
 		$this->fixture->findSortedAndInRange('10', '20', array('field1' => TRUE, 'field2' => FALSE));
 	}

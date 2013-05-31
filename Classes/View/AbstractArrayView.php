@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\View;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -37,9 +37,6 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /**
  * Abstract View For The Rendering of Plain Records (array types of records)
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 abstract class AbstractArrayView extends AbstractView {
 	/**
@@ -48,6 +45,7 @@ abstract class AbstractArrayView extends AbstractView {
 	protected $requestHashService;
 
 	/**
+	 * @inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
@@ -57,16 +55,6 @@ abstract class AbstractArrayView extends AbstractView {
 	 */
 	public function __construct() {
 		$this->initializeObject();
-	}
-
-	/**
-	 * Injects the object manager
-	 *
-	 * @param ObjectManager $objectManager
-	 * @return void
-	 */
-	public function injectObjectManager(ObjectManager $objectManager) {
-		$this->objectManager = $objectManager;
 	}
 
 	/**

@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
  *
  *  All rights reserved
  *
@@ -31,34 +31,20 @@ use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 
 /**
  * Controller for the RedirectTestCategory domain model
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
  */
 class RedirectTestCategoryController extends AbstractController {
 	/**
 	 * @var string
 	 */
-	protected $defaultViewObjectName = 'SGalinski\DfTools\View\RedirectTestCategory\ArrayView';
+	protected $defaultViewObjectName = 'SGalinski\DfTools\View\RedirectTestCategoryArrayView';
 
 	/**
 	 * Repository Instance
 	 *
+	 * @inject
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $redirectTestCategoryRepository;
-
-	/**
-	 * Injects the repository
-	 *
-	 * @param RedirectTestCategoryRepository $redirectTestCategoryRepository
-	 * @return void
-	 */
-	public function injectRedirectTestCategoryRepository(
-		RedirectTestCategoryRepository $redirectTestCategoryRepository
-	) {
-		$this->redirectTestCategoryRepository = $redirectTestCategoryRepository;
-	}
 
 	/**
 	 * Returns all redirect test records

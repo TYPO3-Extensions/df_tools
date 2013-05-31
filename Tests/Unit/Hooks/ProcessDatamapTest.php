@@ -1,9 +1,11 @@
 <?php
 
+namespace SGalinski\DfTools\Tests\Unit\Hooks;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
  *
  *  All rights reserved
  *
@@ -24,15 +26,48 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Domain\Model\BackLinkTest;
+use SGalinski\DfTools\Domain\Model\LinkCheck;
+use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Domain\Repository\AbstractRepository;
+use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
+use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
+use SGalinski\DfTools\Exception\GenericException;
+use SGalinski\DfTools\Hooks\ProcessDatamap;
+use SGalinski\DfTools\Service\ExtBaseConnectorService;
+use SGalinski\DfTools\Service\LinkCheckService;
+use SGalinski\DfTools\Service\RealUrlImportService;
+use SGalinski\DfTools\Service\TcaParserService;
+use SGalinski\DfTools\Service\UrlChecker\AbstractService;
+use SGalinski\DfTools\Service\UrlChecker\CurlService;
+use SGalinski\DfTools\Service\UrlChecker\Factory;
+use SGalinski\DfTools\Service\UrlParserService;
+use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
+use SGalinski\DfTools\Utility\HtmlUtility;
+use SGalinski\DfTools\Utility\HttpUtility;
+use SGalinski\DfTools\Utility\LocalizationUtility;
+use SGalinski\DfTools\Utility\TcaUtility;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Query;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
+
 /**
- * Test case for class tx_DfTools_Hooks_ProcessDatamap.
- *
- * @author Stefan Galinski <sgalinski@df.eu>
- * @package df_tools
+ * Class ProcessDatamapTest
  */
-class Tx_DfTools_Hooks_ProcessDatamapTest extends Tx_DfTools_ExtBaseConnectorTestCase {
+class ProcessDatamapTest extends ExtBaseConnectorTestCase {
 	/**
-	 * @var tx_DfTools_Hooks_ProcessDatamap
+	 * @var \SGalinski\DfTools\Hooks\ProcessDatamap
 	 */
 	protected $fixture;
 
@@ -43,7 +78,7 @@ class Tx_DfTools_Hooks_ProcessDatamapTest extends Tx_DfTools_ExtBaseConnectorTes
 		parent::setUp();
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'tx_DfTools_Hooks_ProcessDatamap';
+		$class = 'SGalinski\DfTools\Hooks\ProcessDatamap';
 		$this->fixture = $this->getAccessibleMock($class, array('dummy'));
 		$this->fixture->_set('extBaseConnector', $this->extBaseConnector);
 	}
@@ -53,8 +88,8 @@ class Tx_DfTools_Hooks_ProcessDatamapTest extends Tx_DfTools_ExtBaseConnectorTes
 	 * @return void
 	 */
 	public function processDataMapAfterAllOperationsWorksWithUpdatedElement() {
-		/** @var $tceMain t3lib_TCEmain */
-		$tceMain = $this->getMockBuilder('t3lib_TCEmain')->disableOriginalConstructor()->getMock();
+		/** @var $tceMain DataHandler */
+		$tceMain = $this->getMockBuilder('TYPO3\CMS\Core\DataHandling\DataHandler')->disableOriginalConstructor()->getMock();
 		$tceMain->datamap = array(
 			'tt_content' => array(
 				12 => array(),
@@ -71,8 +106,8 @@ class Tx_DfTools_Hooks_ProcessDatamapTest extends Tx_DfTools_ExtBaseConnectorTes
 	 * @return void
 	 */
 	public function processDataMapAfterAllOperationsWorksWithNewElement() {
-		/** @var $tceMain t3lib_TCEmain */
-		$tceMain = $this->getMockBuilder('t3lib_TCEmain')->disableOriginalConstructor()->getMock();
+		/** @var $tceMain DataHandler */
+		$tceMain = $this->getMockBuilder('TYPO3\CMS\Core\DataHandling\DataHandler')->disableOriginalConstructor()->getMock();
 		$tceMain->substNEWwithIDs = array('NEW123' => 25);
 		$tceMain->datamap = array(
 			'tt_content' => array(
@@ -110,7 +145,7 @@ class Tx_DfTools_Hooks_ProcessDatamapTest extends Tx_DfTools_ExtBaseConnectorTes
 	 * @return void
 	 */
 	public function processCommandMapPostProcessWorksNotWithAUnknownOperation() {
-		$class = 'Tx_DfTools_Service_ExtBaseConnectorService';
+		$class = 'SGalinski\DfTools\Service\ExtBaseConnectorService';
 		$mockExtBaseConnector = $this->getMock($class, array('runControllerAction'));
 		$mockExtBaseConnector->expects($this->never())->method('runControllerAction');
 
