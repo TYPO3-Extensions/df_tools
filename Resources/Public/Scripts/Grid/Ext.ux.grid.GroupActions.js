@@ -7,7 +7,6 @@ Ext.ns('Ext.ux.grid');
  * Adds the possibility to define group actions
  *
  * @author Ing. Jozef Sakáloš
- * @author Stefan Galinski <sgalinski@df.eu>
  *
  * @license Ext.ux.grid.GroupActions is licensed under the terms of
  * the Open Source LGPL 3.0 license.  Commercial use is permitted to the extent
@@ -37,7 +36,7 @@ Ext.ux.grid.GroupActions = Ext.extend(Ext.util.Observable, {
 	 *
 	 * @cfg {String} hideMode
 	 */
-	hideMode:'visibility',
+	hideMode: 'visibility',
 
 	/**
 	 * Group Actions
@@ -124,7 +123,7 @@ Ext.ux.grid.GroupActions = Ext.extend(Ext.util.Observable, {
 	 * @param {String} template
 	 * @return {String}
 	 */
-	processActions:function(actions, template) {
+	processActions: function(actions, template) {
 		var definedActions = [];
 		Ext.each(actions, function(action) {
 			if (action.iconCls && Ext.isFunction(action.callback)) {
@@ -161,7 +160,7 @@ Ext.ux.grid.GroupActions = Ext.extend(Ext.util.Observable, {
 	 * @param {String} target
 	 * @return {void}
 	 */
-	onClick:function(e, target) {
+	onClick: function(e, target) {
 		var eventTarget = e.getTarget('.ux-grow-action-item');
 		var groupId = this.grid.getView().findGroup(target);
 

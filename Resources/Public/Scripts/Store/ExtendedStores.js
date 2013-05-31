@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -28,7 +28,6 @@ Ext.ns('TYPO3.DfTools');
  * The shared extension object used for the concrete store implementations
  *
  * @namespace TYPO3.DfTools
- * @author Stefan Galinski <sgalinski@df.eu>
  */
 TYPO3.DfTools.StoreExtension = {
 	/**
@@ -99,7 +98,6 @@ TYPO3.DfTools.StoreExtension = {
 	/**
 	 * Initialization of the events
 	 *
-	 * @private
 	 * @return {void}
 	 */
 	initEvents: function() {
@@ -111,7 +109,6 @@ TYPO3.DfTools.StoreExtension = {
 	/**
 	 * Initializes the writer
 	 *
-	 * @private
 	 * @return {Ext.data.JsonWriter}
 	 */
 	getWriter: function() {
@@ -124,7 +121,6 @@ TYPO3.DfTools.StoreExtension = {
 	/**
 	 * Initializes the reader
 	 *
-	 * @private
 	 * @return {Ext.data.JsonReader}
 	 */
 	getReader: function() {
@@ -148,13 +144,13 @@ TYPO3.DfTools.StoreExtension = {
 	 * @param {Object} batch
 	 * @return {Function}
 	 */
-	createCallback : function(action, rs, batch) {
+	createCallback: function(action, rs, batch) {
 		return (action === 'read') ? this.loadRecords : function(data, response, success) {
 
 			// TYPO3 MODIFICATION STARTS
 
-				// copy the record store to be able to access the records later on
-				// Note: The containing records are still the same with the applied changes!
+			// copy the record store to be able to access the records later on
+			// Note: The containing records are still the same with the applied changes!
 			var copiedRecords = rs;
 			if (success === true) {
 				if (Ext.isArray(rs)) {
@@ -166,10 +162,10 @@ TYPO3.DfTools.StoreExtension = {
 			}
 			// TYPO3 MODIFICATION ENDS
 
-				// calls: onCreateRecords | onUpdateRecords | onDestroyRecords
+			// calls: onCreateRecords | onUpdateRecords | onDestroyRecords
 			this['on' + Ext.util.Format.capitalize(action) + 'Records'](success, rs, [].concat(data));
 
-				// If success === false here, exception will have been called in DataProxy
+			// If success === false here, exception will have been called in DataProxy
 			if (success === true) {
 
 				// TYPO3 MODIFICATION STARTS
@@ -194,27 +190,24 @@ TYPO3.DfTools.StoreExtension = {
 	 * @return {void}
 	 */
 	onWrite: function(store, action, result, transaction, records) {
-		var tempRecords = records;
-		if (!Ext.isArray(records)) {
-			tempRecords = [records];
-		}
+		var tempRecords = (Ext.isArray(records) ? records : [records]);
 
 		var label = '';
 		if (action === Ext.data.Api.actions.update) {
-			label = TYPO3.lang['tx_dftools_common.updateSuccessful'];
+			label = TYPO3.l10n.localize('tx_dftools_common.updateSuccessful');
 			this.afterUpdate(tempRecords, result, transaction);
 
 		} else if (action === Ext.data.Api.actions.create) {
-			label = TYPO3.lang['tx_dftools_common.createSuccessful'];
+			label = TYPO3.l10n.localize('tx_dftools_common.createSuccessful');
 			this.afterCreate(tempRecords, result, transaction);
 
 		} else if (action === Ext.data.Api.actions.destroy) {
-			label = TYPO3.lang['tx_dftools_common.deleteSuccessful'];
+			label = TYPO3.l10n.localize('tx_dftools_common.deleteSuccessful');
 			this.afterDestroy(tempRecords, result, transaction);
 		}
 
 		if (label !== '') {
-			TYPO3.Flashmessage.display(TYPO3.Severity.ok, TYPO3.lang['tx_dftools_common.info'], label);
+			TYPO3.Flashmessage.display(TYPO3.Severity.ok, TYPO3.l10n.localize('tx_dftools_common.info'), label);
 		}
 	},
 
@@ -232,7 +225,12 @@ TYPO3.DfTools.StoreExtension = {
 	 * @return {void}
 	 */
 	onException: function(proxy, mode, action, misc, response, records) {
-		var header = TYPO3.lang['tx_dftools_common.exception'];
+		// don't show exceptions that are made already visible through the ExtDirect API itself
+		if (response.code === 'router') {
+			return;
+		}
+
+		var header = TYPO3.l10n.localize('tx_dftools_common.exception');
 		TYPO3.Flashmessage.display(TYPO3.Severity.error, header, response.message || records);
 
 		var tempRecords = records;
@@ -275,15 +273,17 @@ TYPO3.DfTools.StoreExtension = {
 	}
 };
 
+// Ext.apply doesn't work in IE8 if an constructor will be overridden
+TYPO3.DfTools.GroupingStoreTmp = Ext.extend(Ext.data.GroupingStore, TYPO3.DfTools.StoreExtension);
+
 /**
  * Enhanced group store with some additional features and fixed bugs.
  *
- * @author Stefan Galinski <sgalinski@df.eu>
  * @class TYPO3.DfTools.GroupingStore
  * @namespace TYPO3.DfTools
  * @extends Ext.data.GroupingStore
  */
-TYPO3.DfTools.GroupingStore = Ext.extend(Ext.data.GroupingStore, Ext.apply(TYPO3.DfTools.StoreExtension, {
+TYPO3.DfTools.GroupingStore = Ext.extend(TYPO3.DfTools.GroupingStoreTmp, {
 	/**
 	 * Constructor
 	 *
@@ -303,8 +303,7 @@ TYPO3.DfTools.GroupingStore = Ext.extend(Ext.data.GroupingStore, Ext.apply(TYPO3
 	},
 
 	/**
-	 * Regroup the group column based on the sorting information's. The sorting direction
-	 * direction is used and will be used for the grouping direction.
+	 * Regroup the group column based on the sorting information.
 	 *
 	 * @private
 	 * @return {void}
@@ -320,17 +319,19 @@ TYPO3.DfTools.GroupingStore = Ext.extend(Ext.data.GroupingStore, Ext.apply(TYPO3
 			this.groupBy(this.groupField, true);
 		}
 	}
-}));
+});
+
+// Ext.apply doesn't work in IE8 if an constructor will be overridden
+TYPO3.DfTools.DirectStoreTmp = Ext.extend(Ext.data.DirectStore, TYPO3.DfTools.StoreExtension);
 
 /**
- * Enhanced direct store with some additional features and fixed bugs.
+ * Enhanced direct store with some additional features and fixed bugs
  *
- * @author Stefan Galinski <sgalinski@df.eu>
  * @class TYPO3.DfTools.DirectStore
  * @namespace TYPO3.DfTools
  * @extends Ext.data.DirectStore
  */
-TYPO3.DfTools.DirectStore = Ext.extend(Ext.data.DirectStore, Ext.apply(TYPO3.DfTools.StoreExtension, {
+TYPO3.DfTools.DirectStore = Ext.extend(TYPO3.DfTools.DirectStoreTmp, {
 	/**
 	 * Constructor
 	 *
@@ -346,4 +347,4 @@ TYPO3.DfTools.DirectStore = Ext.extend(Ext.data.DirectStore, Ext.apply(TYPO3.DfT
 		TYPO3.DfTools.DirectStore.superclass.constructor.call(this, configuration);
 		this.initEvents();
 	}
-}));
+});

@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -33,7 +33,6 @@ Ext.ns('TYPO3.DfTools');
  * - Row Editor (provided by an external plugin; optional)
  * - Basic API for creating and deleting records via the store
  *
- * @author Stefan Galinski <sgalinski@df.eu>
  * @extends Ext.grid.GridPanel
  * @class TYPO3.DfTools.Grid
  * @namespace TYPO3.DfTools
@@ -62,6 +61,13 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 	 * @cfg {Boolean}
 	 */
 	useRowEditor: true,
+
+	/**
+	 * Indicator if the fitToParent plugin should be loaded (only useful inside the backend)
+	 *
+	 * @cfg {Boolean}
+	 */
+	useFitToParent: true,
 
 	/**
 	 * Constructor
@@ -102,7 +108,7 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 			configuration.plugins.push(new Ext.ux.plugins.FitToParent());
 		}
 
-		TYPO3.RsFetsy.Grid.superclass.constructor.call(this, configuration);
+		TYPO3.DfTools.Grid.superclass.constructor.call(this, configuration);
 	},
 
 	/**
@@ -121,10 +127,10 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 				store: this.store,
 				pageSize: this.store.baseParams.limit,
 				displayInfo: true,
-				afterPageText: TYPO3.lang['tx_dftools_common.pager.ofPages'],
-				beforePageText: TYPO3.lang['tx_dftools_common.pager.page'],
-				displayMsg: TYPO3.lang['tx_dftools_common.pager.displayAmountOfThis'],
-				emptyMsg: TYPO3.lang['tx_dftools_common.pager.noData'],
+				afterPageText: TYPO3.l10n.localize('tx_dftools_common.pager.ofPages'),
+				beforePageText: TYPO3.l10n.localize('tx_dftools_common.pager.page'),
+				displayMsg: TYPO3.l10n.localize('tx_dftools_common.pager.displayAmountOfThis'),
+				emptyMsg: TYPO3.l10n.localize('tx_dftools_common.pager.noData'),
 				items: (Ext.isArray(this.bbar) ? this.bbar : [])
 			};
 		}
@@ -140,7 +146,7 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 	 */
 	addRecord: function(record) {
 		if (this.useRowEditor) {
-			this.rowEditorPlugin.stopEditing(false);
+			this.rowEditorPlugin.stopEditing();
 		}
 
 		this.getStore().insert(0, record);
@@ -161,18 +167,18 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 	 */
 	deleteRecord: function(grid, rowIndex) {
 		if (this.useRowEditor) {
-			this.rowEditorPlugin.stopEditing(false);
+			this.rowEditorPlugin.stopEditing();
 		}
 
-		new TYPO3.Dialog.QuestionDialog({
-			title: TYPO3.lang['tx_dftools_common.deleteQuestion.title'],
-			msg: TYPO3.lang['tx_dftools_common.deleteQuestion.message'],
+		(new TYPO3.Dialog.QuestionDialog({
+			title: TYPO3.l10n.localize('tx_dftools_common.deleteQuestion.title'),
+			msg: TYPO3.l10n.localize('tx_dftools_common.deleteQuestion.message'),
 			buttons: Ext.Msg.YESNO,
 			scope: grid,
 			fn: function(answer) {
 				return this.onDeleteRecordQuestion(answer, rowIndex);
 			}
-		});
+		}));
 	},
 
 	/**
@@ -214,10 +220,10 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 				return '';
 			},
 
-			emptyGroupText: TYPO3.lang['tx_dftools_common.emptyGroup'],
+			emptyGroupText: TYPO3.l10n.localize('tx_dftools_common.emptyGroup'),
 			groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "' +
-				TYPO3.lang['tx_dftools_common.items'] + '" : "' +
-				TYPO3.lang['tx_dftools_common.item'] + '"]})'
+				TYPO3.l10n.localize('tx_dftools_common.items') + '" : "' +
+				TYPO3.l10n.localize('tx_dftools_common.item') + '"]})'
 		}, (viewConfiguration || {})));
 	},
 
@@ -232,10 +238,10 @@ TYPO3.DfTools.Grid = Ext.extend(Ext.grid.GridPanel, {
 			clicksToEdit: 2,
 			frameWidth: 4,
 			minButtonWidth: 100,
-			saveText: TYPO3.lang['tx_dftools_common.update'],
-			cancelText: TYPO3.lang['tx_dftools_common.cancel'],
-			commitChangesText: TYPO3.lang['tx_dftools_common.editor_cancelOrCommit'],
-			errorText: TYPO3.lang['tx_dftools_common.errors']
+			saveText: TYPO3.l10n.localize('tx_dftools_common.update'),
+			cancelText: TYPO3.l10n.localize('tx_dftools_common.cancel'),
+			commitChangesText: TYPO3.l10n.localize('tx_dftools_common.editor_cancelOrCommit'),
+			errorText: TYPO3.l10n.localize('tx_dftools_common.errors')
 		});
 	},
 
