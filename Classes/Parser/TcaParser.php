@@ -147,10 +147,10 @@ class TcaParser implements SingletonInterface {
 	/**
 	 * Returns all text based fields of the selected table
 	 *
-	 * @param array $callback
+	 * @param \Closure $callback
 	 * @return array
 	 */
-	public function findFields($callback = NULL) {
+	public function findFields(\Closure $callback = NULL) {
 		if (!is_array($GLOBALS['TCA'])) {
 			return array();
 		}
@@ -208,10 +208,12 @@ class TcaParser implements SingletonInterface {
 	 * @param array $allowedTypes
 	 * @param array $excludedEvals
 	 * @param array $excludedFields
-	 * @param array $callback
+	 * @param \Closure $callback
 	 * @return array
 	 */
-	protected function getFieldsFromTcaTable($table, $allowedTypes, $excludedEvals, $excludedFields, $callback = NULL) {
+	protected function getFieldsFromTcaTable(
+		$table, $allowedTypes, $excludedEvals, $excludedFields, \Closure $callback = NULL
+	) {
 		if (!is_array($GLOBALS['TCA'][$table]['columns']) || !count($allowedTypes)) {
 			return array();
 		}
@@ -227,7 +229,7 @@ class TcaParser implements SingletonInterface {
 				continue;
 			}
 
-			if ($callback !== NULL && count($callback)) {
+			if ($callback !== NULL && is_callable($callback)) {
 				if (call_user_func_array($callback, array($configuration, $field))) {
 					continue;
 				}

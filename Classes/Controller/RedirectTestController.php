@@ -30,7 +30,6 @@ use SGalinski\DfTools\Domain\Model\RedirectTest;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Domain\Service\RealUrlImportService;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -58,15 +57,6 @@ class RedirectTestController extends AbstractController {
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository
 	 */
 	protected $redirectTestCategoryRepository;
-
-	/**
-	 * Returns an instance of the realUrl import service
-	 *
-	 * @return RealUrlImportService
-	 */
-	public function getRealUrlImportService() {
-		return $this->objectManager->get('SGalinski\DfTools\Domain\Service\RealUrlImportService');
-	}
 
 	/**
 	 * @return void
@@ -153,33 +143,6 @@ class RedirectTestController extends AbstractController {
 			$redirectTest = $this->redirectTestRepository->findByUid(intval($identifier));
 			$this->redirectTestRepository->remove($redirectTest);
 		}
-	}
-
-	/**
-	 * Imports entries from the realUrl redirect table as redirect tests
-	 *
-	 * @return void
-	 */
-	public function importFromRealUrlAction() {
-		$importer = $this->getRealUrlImportService();
-		$importer->importFromRealUrl();
-		unset($importer);
-	}
-
-	/**
-	 * Runs all available tests
-	 *
-	 * @return void
-	 */
-	public function runAllTestsAction() {
-		/** @var $redirectTest RedirectTest */
-		$redirectTests = $this->redirectTestRepository->findAll();
-		$urlCheckerService = $this->getUrlCheckerService();
-		foreach ($redirectTests as $redirectTest) {
-			$redirectTest->test($urlCheckerService);
-			$this->redirectTestRepository->update($redirectTest);
-		}
-		$this->view->assign('records', $redirectTests);
 	}
 
 	/**

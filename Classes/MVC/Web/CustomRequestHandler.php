@@ -6,15 +6,13 @@ namespace SGalinski\DfTools\MVC\Web;
  *  Copyright notice
  *
  *  (c) Stefan Galinski <stefan.galinski@gmail.com>
- *  All rights reserved
  *
- *  This class is a backport of the corresponding class of FLOW3.
- *  All credits go to the v5 team.
+ *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -28,13 +26,16 @@ namespace SGalinski\DfTools\MVC\Web;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Exception;
 use TYPO3\CMS\Extbase\Mvc\Response;
 use TYPO3\CMS\Extbase\Mvc\Web\AbstractRequestHandler;
 use TYPO3\CMS\Extbase\Security\Channel\RequestHashService;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Custom request handler that circumvents the cli mode issues
@@ -42,21 +43,21 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 class CustomRequestHandler extends AbstractRequestHandler {
 
 	/**
-	 * @var ConfigurationManagerInterface
+	 * @inject
+	 * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
 	 */
 	protected $configurationManager;
 
 	/**
-	 * @param ConfigurationManagerInterface $configurationManager
-	 * @return void
+	 * @inject
+	 * @var \TYPO3\CMS\Extbase\Service\ExtensionService
 	 */
-	public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager) {
-		$this->configurationManager = $configurationManager;
-	}
+	protected $extensionService;
 
 	/**
 	 * Handles the web request. The response will automatically be sent to the client.
 	 *
+	 * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
 	 * @return Response
 	 */
 	public function handleRequest() {
@@ -66,17 +67,16 @@ class CustomRequestHandler extends AbstractRequestHandler {
 		$requestHashService = $this->objectManager->get('TYPO3\CMS\Extbase\Security\Channel\RequestHashService');
 		$requestHashService->verifyRequest($request);
 
-		if (TYPO3_MODE === 'FE') {
-			if ($this->isCacheable($request->getControllerName(), $request->getControllerActionName())) {
+		if ($this->environmentService->isEnvironmentInFrontendMode()) {
+			$isCachable = $this->extensionService->isActionCacheable(
+				NULL, NULL, $request->getControllerName(), $request->getControllerActionName()
+			);
+			if ($isCachable) {
 				$request->setIsCached(TRUE);
 			} else {
 				$contentObject = $this->configurationManager->getContentObject();
 				if ($contentObject->getUserObjectType() === ContentObjectRenderer::OBJECTTYPE_USER) {
 					$contentObject->convertToUserIntObject();
-
-					// @TODO implement the integration of adding cached header data in a nice way (see EXT:rs_fetsy)
-
-					// tslib_cObj::convertToUserIntObject() will recreate the object, so we have to stop the request here
 					return NULL;
 				}
 				$request->setIsCached(FALSE);
@@ -85,40 +85,15 @@ class CustomRequestHandler extends AbstractRequestHandler {
 
 		/** @var $response Response */
 		$response = $this->objectManager->get('SGalinski\DfTools\Response\CustomResponse');
-		$this->dispatcher->dispatch($request, $response);
-
-		return $response;
-	}
-
-	/**
-	 * Determines whether the current action can be cached
-	 *
-	 * @param string $controllerName
-	 * @param string $actionName
-	 * @return boolean TRUE if the given action should be cached, otherwise FALSE
-	 */
-	protected function isCacheable($controllerName, $actionName) {
-		$isCachable = TRUE;
-		if (VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
-			/** @var $extensionService ExtensionService */
-			$extensionService = $this->objectManager->get('TYPO3\CMS\Extbase\Service\ExtensionService');
-			$isCachable = $extensionService->isActionCacheable(NULL, NULL, $controllerName, $actionName);
-
-		} else {
-			$frameworkConfiguration = $this->configurationManager->getConfiguration(
-				ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-			);
-			if (isset($frameworkConfiguration['controllerConfiguration'][$controllerName]['nonCacheableActions'])
-				&& in_array(
-					$actionName,
-					$frameworkConfiguration['controllerConfiguration'][$controllerName]['nonCacheableActions']
-				)
-			) {
-				$isCachable = FALSE;
-			}
+		try {
+			$this->dispatcher->dispatch($request, $response);
+		} catch (Exception $exception) {
+			/** @var $tsfe TypoScriptFrontendController */
+			$tsfe = $GLOBALS['TSFE'];
+			$tsfe->pageNotFoundAndExit($exception->getMessage());
 		}
 
-		return $isCachable;
+		return $response;
 	}
 
 	/**
@@ -130,6 +105,7 @@ class CustomRequestHandler extends AbstractRequestHandler {
 		$configuration = $this->configurationManager->getConfiguration(
 			ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
 		);
+
 		return $configuration['extensionName'] === 'DfTools';
 	}
 

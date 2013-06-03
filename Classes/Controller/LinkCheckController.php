@@ -226,22 +226,6 @@ class LinkCheckController extends AbstractController {
 	}
 
 	/**
-	 * Runs all available tests
-	 *
-	 * @return void
-	 */
-	public function runAllTestsAction() {
-		/** @var $linkCheck LinkCheck */
-		$linkChecks = $this->linkCheckRepository->findAll();
-		$urlCheckerService = $this->getUrlCheckerService();
-		foreach ($linkChecks as $linkCheck) {
-			$linkCheck->test($urlCheckerService);
-			$this->linkCheckRepository->update($linkCheck);
-		}
-		$this->view->assign('records', $linkChecks);
-	}
-
-	/**
 	 * Runs a single test
 	 *
 	 * @param int $identity

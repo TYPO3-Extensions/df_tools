@@ -212,9 +212,7 @@ class UrlSynchronizeService implements SingletonInterface {
 	 * @return void
 	 */
 	protected function evaluateRecordSetDataOfUrl(
-		LinkCheck $linkTest,
-		array &$rawUrlData,
-		array &$existingRawRecordSets
+		LinkCheck $linkTest, array &$rawUrlData, array &$existingRawRecordSets
 	) {
 		$recordHasMissingRecordSets = FALSE;
 		$recordHasUnknownRecordSets = $this->removeUnknownRecordSetsFromUrlRecord($rawUrlData, $linkTest);

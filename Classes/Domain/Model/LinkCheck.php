@@ -81,7 +81,16 @@ class LinkCheck extends AbstractEntity implements TestableInterface {
 	 * @lazy
 	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\SGalinski\DfTools\Domain\Model\RecordSet>
 	 */
-	protected $recordSets = NULL;
+	protected $recordSets;
+
+	/**
+	 * Initilize the object
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->recordSets = new ObjectStorage();
+	}
 
 	/**
 	 * Setter for testUrl

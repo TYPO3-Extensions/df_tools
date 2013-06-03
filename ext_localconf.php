@@ -27,55 +27,6 @@ if (TYPO3_MODE === 'BE') {
 			'EXT:df_tools/Classes/Hooks/ProcessDatamap.php:SGalinski\DfTools\Hooks\ProcessDatamap';
 	}
 
-	// Scheduler registration
-	$prefix = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:';
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\RedirectTestTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_redirecttest.scheduler.name',
-		'description' => $prefix . 'tx_dftools_domain_model_redirecttest.scheduler.description',
-		'additionalFields' => 'SGalinski\DfTools\Task\RedirectTestFields'
-	);
-
-	$prefix = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:';
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\RedirectTestRealUrlImportTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_redirecttest.schedulerImport.name',
-		'description' => $prefix . 'tx_dftools_domain_model_redirecttest.schedulerImport.description'
-	);
-
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\ContentComparisonTestTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_contentcomparisontest.scheduler.name',
-		'description' => $prefix . 'tx_dftools_domain_model_contentcomparisontest.scheduler.description',
-		'additionalFields' => 'SGalinski\DfTools\Task\ContentComparisonTestFields'
-	);
-
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\ContentComparisonTestSynchronizeTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_contentcomparisontest.schedulerSync.name',
-		'description' => $prefix . 'tx_dftools_domain_model_contentcomparisontest.schedulerSync.description'
-	);
-
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\BackLinkTestTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_backlinktest.scheduler.name',
-		'description' => $prefix . 'tx_dftools_domain_model_backlinktest.scheduler.description',
-		'additionalFields' => 'SGalinski\DfTools\Task\BackLinkTestFields'
-	);
-
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\LinkCheckTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_linkcheck.scheduler.name',
-		'description' => $prefix . 'tx_dftools_domain_model_linkcheck.scheduler.description',
-		'additionalFields' => 'SGalinski\DfTools\Task\LinkCheckFields'
-	);
-
-	$TYPO3_CONF_VARS['SC_OPTIONS']['scheduler']['tasks']['SGalinski\DfTools\Task\LinkCheckSynchronizeTask'] = array(
-		'extension' => $_EXTKEY,
-		'title' => $prefix . 'tx_dftools_domain_model_linkcheck.schedulerSync.name',
-		'description' => $prefix . 'tx_dftools_domain_model_linkcheck.schedulerSync.description'
-	);
-
 	// Ext.Direct component registration
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerExtDirectComponent(
 		'TYPO3.DfTools.RedirectTest.DataProvider',
@@ -113,7 +64,21 @@ if (TYPO3_MODE === 'BE') {
 		'tools_DfToolsTools'
 	);
 
+	// fix for loading of EXT:tinymce_rte
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('RTE.default.useFEediting = 1');
+
+	// register commandlets
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+		'SGalinski\DfTools\Command\RedirectTestCommandController';
+
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+		'SGalinski\DfTools\Command\ContentComparisonTestCommandController';
+
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+		'SGalinski\DfTools\Command\BacklinkTestCommandController';
+
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+		'SGalinski\DfTools\Command\LinkCheckCommandController';
 }
 
 ?>

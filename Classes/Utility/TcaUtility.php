@@ -31,22 +31,7 @@ use SGalinski\DfTools\Parser\TcaParser;
 /**
  * Collection of smaller tca utility functions
  */
-final class TcaUtility {
-	/**
-	 * Callback filter for the Tca parser with special filter logic
-	 *
-	 * @param array $configuration
-	 * @return bool
-	 */
-	public static function filterCallback($configuration) {
-		$excluded = FALSE;
-		if (isset($configuration['config']['max']) && $configuration['config']['max'] <= 50) {
-			$excluded = TRUE;
-		}
-
-		return $excluded;
-	}
-
+class TcaUtility {
 	/**
 	 * Returns a list of available plain text table fields without special meanings
 	 *
@@ -69,7 +54,16 @@ final class TcaUtility {
 			)
 		);
 
-		return $tcaParser->findFields(array('Tx_DfTools_Utility_TcaUtility', 'filterCallback'));
+		$callback = function ($configuration) {
+			$excluded = FALSE;
+			if (isset($configuration['config']['max']) && $configuration['config']['max'] <= 50) {
+				$excluded = TRUE;
+			}
+
+			return $excluded;
+		};
+
+		return $tcaParser->findFields($callback);
 	}
 }
 

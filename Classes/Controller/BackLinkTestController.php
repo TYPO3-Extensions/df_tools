@@ -126,22 +126,6 @@ class BackLinkTestController extends AbstractController {
 	}
 
 	/**
-	 * Runs all available tests
-	 *
-	 * @return void
-	 */
-	public function runAllTestsAction() {
-		/** @var $backLinkTest BackLinkTest */
-		$backLinkTests = $this->backLinkTestRepository->findAll();
-		$urlCheckerService = $this->getUrlCheckerService();
-		foreach ($backLinkTests as $backLinkTest) {
-			$backLinkTest->test($urlCheckerService);
-			$this->backLinkTestRepository->update($backLinkTest);
-		}
-		$this->view->assign('records', $backLinkTests);
-	}
-
-	/**
 	 * Runs a single test
 	 *
 	 * @param int $identity

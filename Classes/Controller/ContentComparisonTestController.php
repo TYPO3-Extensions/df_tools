@@ -126,22 +126,6 @@ class ContentComparisonTestController extends AbstractController {
 	}
 
 	/**
-	 * Updates all test contents
-	 *
-	 * @return void
-	 */
-	public function updateAllTestContentsAction() {
-		/** @var $contentComparisonTest ContentComparisonTest */
-		$contentComparisonTests = $this->contentComparisonTestRepository->findAll();
-		$urlCheckerService = $this->getUrlCheckerService();
-		foreach ($contentComparisonTests as $contentComparisonTest) {
-			$contentComparisonTest->updateTestContent($urlCheckerService);
-			$this->contentComparisonTestRepository->update($contentComparisonTest);
-		}
-		$this->view->assign('records', $contentComparisonTests);
-	}
-
-	/**
 	 * Updates the test content of an action
 	 *
 	 * @param int $identity
@@ -154,22 +138,6 @@ class ContentComparisonTestController extends AbstractController {
 		$contentComparisonTest->updateTestContent($urlCheckerService);
 		$this->contentComparisonTestRepository->update($contentComparisonTest);
 		$this->view->assign('records', array($contentComparisonTest));
-	}
-
-	/**
-	 * Runs all available tests
-	 *
-	 * @return void
-	 */
-	public function runAllTestsAction() {
-		/** @var $contentComparisonTest ContentComparisonTest */
-		$contentComparisonTests = $this->contentComparisonTestRepository->findAll();
-		$urlCheckerService = $this->getUrlCheckerService();
-		foreach ($contentComparisonTests as $contentComparisonTest) {
-			$contentComparisonTest->test($urlCheckerService);
-			$this->contentComparisonTestRepository->update($contentComparisonTest);
-		}
-		$this->view->assign('records', $contentComparisonTests);
 	}
 
 	/**

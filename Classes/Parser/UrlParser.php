@@ -132,9 +132,10 @@ class UrlParser implements SingletonInterface {
 	 */
 	public function parseRows(array $rows, $table) {
 		$urls = array();
-		foreach ((array) $rows as $row) {
+		foreach ($rows as $row) {
 			$foundUrls = array();
-			$regularExpression = '#((https?|ftp)://[\w\d:\#\!@%/;\$\(\)~\_\?\+\-=\.&]{3,1015})#is';
+			$regularExpression =
+				'#((https?|ftp)://[\w\d:\#\!@%/;\$\(\)~\_\?\+\-=&]+\.[\w\d:\#\!@%/;\$\(\)~\_\?\+\-=&\.]+)#is';
 			foreach ($row as $field => $value) {
 				if ($field === 'uid') {
 					continue;
