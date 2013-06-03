@@ -36,7 +36,6 @@ use SGalinski\DfTools\View\RedirectTestArrayView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
@@ -70,22 +69,18 @@ class RedirectTestControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository RedirectTestRepository */
-		$this->repository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\RedirectTestRepository',
-			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRangeByCategory', 'countAll'),
-			array($this->objectManager)
-		);
-		$this->fixture->_set('repository', $this->repository);
+		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\RedirectTestRepository');
+		$this->fixture->_set('redirectTestRepository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->view = $this->getMock('SGalinski\DfTools\View\RedirectTestArrayView', array('assign'));
+		$this->view = $this->getMock('SGalinski\DfTools\View\RedirectTestArrayView');
 		$this->fixture->_set('view', $this->view);
 	}
 
 	/**
 	 * Returns a redirect test instance
 	 *
-	 * @return RedirectTest
+	 * @return RedirectTest|object
 	 */
 	protected function getRedirectTest() {
 		/** @var $redirectTest RedirectTest */
@@ -98,29 +93,6 @@ class RedirectTestControllerTest extends ControllerTestCase {
 		$redirectTest->setHttpStatusCode(200);
 
 		return $redirectTest;
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function testInjectRedirectTestCategoryRepository() {
-		/** @var $repository RedirectTestCategoryRepository */
-		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$repository = $this->getMock($class, array('dummy'), array($this->objectManager));
-		$this->fixture->injectRedirectTestCategoryRepository($repository);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame($repository, $this->fixture->_get('redirectTestCategoryRepository'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function realUrlImportServiceCanBeReturned() {
-		$service = $this->fixture->getRealUrlImportService();
-		$this->assertInstanceOf('SGalinski\DfTools\Domain\Service\RealUrlImportService', $service);
 	}
 
 	/**
@@ -157,10 +129,10 @@ class RedirectTestControllerTest extends ControllerTestCase {
 		$category = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTestCategory')
 			->disableOriginalClone()->getMock();
 
-		/** @var $categoryRepository RedirectTestCategoryRepository */
+		/** @var $categoryRepository RedirectTestCategoryRepository|object */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$categoryRepository = $this->getMock($class, array('add'), array($this->objectManager));
-		$this->fixture->injectRedirectTestCategoryRepository($categoryRepository);
+		$this->fixture->_set('redirectTestCategoryRepository', $categoryRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->addMockedCallToPersistAll();
@@ -200,25 +172,6 @@ class RedirectTestControllerTest extends ControllerTestCase {
 	 * @test
 	 * @return void
 	 */
-	public function importFromRealUrlUsesTheService() {
-		/** @var $objectManager ObjectManager */
-		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
-		$this->fixture->injectObjectManager($objectManager);
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$importService = $this->getMock(
-			'SGalinski\DfTools\Domain\Service\RealUrlImportService', array('importFromRealUrl')
-		);
-		$importService->expects($this->once())->method('importFromRealUrl');
-		$objectManager->expects($this->once())->method('get')->will($this->returnValue($importService));
-
-		$this->fixture->importFromRealUrlAction();
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
 	public function runTestWorks() {
 		/** @var $urlCheckerService AbstractService */
 		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
@@ -235,34 +188,6 @@ class RedirectTestControllerTest extends ControllerTestCase {
 			->will($this->returnValue($urlCheckerService));
 
 		$this->fixture->runTestAction(1);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function runAllTestsWorks() {
-		$redirectTest1 = $this->getRedirectTest();
-		$redirectTest2 = $this->getRedirectTest();
-
-		$testCollection = new ObjectStorage();
-		$testCollection->attach($redirectTest1);
-		$testCollection->attach($redirectTest2);
-
-		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
-		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll')
-			->will($this->returnValue($testCollection));
-		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
-		$this->fixture->expects($this->once())->method('getUrlCheckerService')
-			->will($this->returnValue($urlCheckerService));
-		$redirectTest1->expects($this->once())->method('test')->with($urlCheckerService);
-		$redirectTest2->expects($this->once())->method('test')->with($urlCheckerService);
-		$this->fixture->runAllTestsAction();
 	}
 }
 

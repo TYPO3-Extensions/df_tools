@@ -56,12 +56,12 @@ class AbstractDataProviderTest extends BaseTestCase {
 	 */
 	public function setUp() {
 		$this->backupTSFE = $GLOBALS['TSFE'];
+		$GLOBALS['TSFE'] = $this->getMock('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController');
 
+		$methods = array('updateRecord', 'createRecord', 'destroyRecords', 'isInFrontendMode', 'runTestForRecord');
 		$proxy = $this->buildAccessibleProxy('SGalinski\DfTools\ExtDirect\AbstractDataProvider');
 		$this->fixture = $this->getMockBuilder($proxy)
-			->setMethods(
-				array('updateRecord', 'createRecord', 'destroyRecords', 'isInFrontendMode', 'runTestForRecord')
-			)
+			->setMethods($methods)
 			->disableOriginalConstructor()->getMock();
 	}
 
@@ -75,7 +75,7 @@ class AbstractDataProviderTest extends BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException GenericException
+	 * @expectedException \SGalinski\DfTools\Exception\GenericException
 	 * @return void
 	 */
 	public function accessCheckFailsIfNoFrontendUserIsLoggedInIfCalledInFrontendMode() {

@@ -322,14 +322,15 @@ class UrlParserServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function fetchUrlMergesUrlsFromSources() {
-		$this->fixture = $this->getMock(
-			'SGalinski\DfTools\Parser\UrlParserService',
+		/** @var \SGalinski\DfTools\Parser\UrlParser|object $fixture */
+		$fixture = $this->getAccessibleMock(
+			'SGalinski\DfTools\Parser\UrlParser',
 			array('fetchLinkCheckLinkType', 'fetchUrlsFromDatabase')
 		);
 
 		/** @var $tcaParser TcaParser|object */
 		$tcaParser = $this->getMock('SGalinski\DfTools\Parser\TcaParser', array('findFields'));
-		$this->fixture->_set('tcaParser', $tcaParser);
+		$fixture->_set('tcaParser', $tcaParser);
 
 		$tableFields = array('pages' => array('field1', 'field2'), 'tt_content' => array('field1'));
 		$tcaParser->expects($this->once())->method('findFields')->will($this->returnValue($tableFields));
@@ -339,14 +340,14 @@ class UrlParserServiceTest extends BaseTestCase {
 			'pages3' => array('pages', 3),
 			'tt_content1' => array('tt_content', 1)),
 		);
-		$this->fixture->expects($this->exactly(2))->method('fetchUrlsFromDatabase')
+		$fixture->expects($this->exactly(2))->method('fetchUrlsFromDatabase')
 			->will($this->returnValue($urls));
 
 		$urls = array(
 			'http://foo.bar' => array('pages3' => array('pages', 3)),
 			'http://foo.bar2' => array('pages2' => array('pages', 2))
 		);
-		$this->fixture->expects($this->once())->method('fetchLinkCheckLinkType')
+		$fixture->expects($this->once())->method('fetchLinkCheckLinkType')
 			->will($this->returnValue($urls));
 
 		$expectedUrls = array(
@@ -359,7 +360,7 @@ class UrlParserServiceTest extends BaseTestCase {
 				'pages2' => array('pages', 2),
 			),
 		);
-		$this->assertSame($expectedUrls, $this->fixture->fetchUrls());
+		$this->assertSame($expectedUrls, $fixture->fetchUrls());
 	}
 }
 

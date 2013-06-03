@@ -224,21 +224,6 @@ class TcaParserTest extends BaseTestCase {
 	}
 
 	/**
-	 * Test callback filter
-	 *
-	 * @param array $configuration
-	 * @param string $field
-	 * @return boolean
-	 */
-	public function callbackFilter($configuration, $field) {
-		if ($field !== 'abstract') {
-			return TRUE;
-		}
-
-		return FALSE;
-	}
-
-	/**
 	 * @test
 	 * @return void
 	 */
@@ -250,8 +235,16 @@ class TcaParserTest extends BaseTestCase {
 			'pages_language_overlay' => array('abstract'),
 		);
 
+		$callbackFilter = function ($configuration, $field) {
+			if ($field !== 'abstract') {
+				return TRUE;
+			}
+
+			return FALSE;
+		};
+
 		$this->fixture->setAllowedTypes(array('input', 'text'));
-		$fields = $this->fixture->findFields(array($this, 'callbackFilter'));
+		$fields = $this->fixture->findFields($callbackFilter);
 		$this->assertSame($expected, $fields);
 	}
 

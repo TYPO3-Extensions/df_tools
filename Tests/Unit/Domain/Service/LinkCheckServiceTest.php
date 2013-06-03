@@ -28,7 +28,6 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Service;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Service\LinkCheckService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,11 +46,6 @@ class LinkCheckServiceTest extends BaseTestCase {
 	protected $fixture;
 
 	/**
-	 * @var \SGalinski\DfTools\Domain\Repository\LinkCheckRepository|object
-	 */
-	protected $testRepository;
-
-	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager|object
 	 */
 	protected $objectManager;
@@ -60,21 +54,11 @@ class LinkCheckServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture = $this->getMock(
+		$this->fixture = $this->getAccessibleMock(
 			$this->buildAccessibleProxy('SGalinski\DfTools\Domain\Service\LinkCheckService'),
 			array('findExistingRawUrlsByTableAndUid', 'getRecordByTableAndId', 'findExistingRawUrlsByTestUrls')
 		);
 
-		/** @var $repository LinkCheckRepository */
-		$this->testRepository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository',
-			array('dummy'),
-			array($this->objectManager)
-		);
-		$this->fixture->_set('testRepository', $this->testRepository);
-
-		/** @var $repository ObjectManager */
 		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('create', 'get'));
 		$this->fixture->_set('objectManager', $this->objectManager);
 	}
@@ -96,10 +80,9 @@ class LinkCheckServiceTest extends BaseTestCase {
 		$preparedExcludedTablesString = array('tt_content', 'pages');
 		$preparedExcludedTableFieldsString = array('field1', 'field2', 'field3');
 
-		$urlParserService = $this->getMock('SGalinski\DfTools\Parser\UrlParserService');
+		$urlParserService = $this->getMock('SGalinski\DfTools\Parser\UrlParser');
 		$urlParserService->expects($this->once())->method('fetchUrls')
 			->with($preparedExcludedTablesString, $preparedExcludedTableFieldsString);
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->objectManager->expects($this->once())->method('get')
 			->will($this->returnValue($urlParserService));
 
@@ -130,7 +113,6 @@ class LinkCheckServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function urlsFromASingleRecordCanBeFetched($table, $identitiy, $fetchLinkCheckTypeCallAmounts) {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('getRecordByTableAndId')
 			->will($this->returnValue(array()));
 
@@ -143,7 +125,7 @@ class LinkCheckServiceTest extends BaseTestCase {
 			),
 		);
 
-		$urlParserService = $this->getMock('SGalinski\DfTools\Parser\UrlParserService');
+		$urlParserService = $this->getMock('SGalinski\DfTools\Parser\UrlParser');
 		$urlParserService->expects($fetchLinkCheckTypeCallAmounts)->method('fetchLinkCheckLinkType')
 			->will($this->returnValue(array()));
 		$urlParserService->expects($this->once())->method('parseRows')
@@ -191,7 +173,6 @@ class LinkCheckServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function recordSetsOfALinkCheckCanBeReturnedInAPlainStructure() {
-		/** @noinspection PhpUndefinedMethodInspection */
 		$recordSet1 = new RecordSet();
 		$recordSet1->setTableName('tt_content');
 		$recordSet1->setField('bodytext');

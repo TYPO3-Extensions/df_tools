@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Tests\Unit\Connector;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinsk@gmail.com>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -27,28 +27,34 @@ namespace SGalinski\DfTools\Tests\Unit\Connector;
  ***************************************************************/
 
 use SGalinski\DfTools\Connector\ExtBaseConnector;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class ExtBaseConnectorTest
  */
 class ExtBaseConnectorTest extends BaseTestCase {
 	/**
-	 * @var \SGalinski\DfTools\Connector\ExtBaseConnector
+	 * @var \PHPUnit_Framework_MockObject_MockObject|\SGalinski\DfTools\Connector\ExtBaseConnector
 	 */
 	protected $fixture;
+
+	/**
+	 * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+	 */
+	protected $backupTSFE;
 
 	/**
 	 * @return void
 	 */
 	public function setUp() {
-		$class = 'SGalinski\DfTools\Connector\ExtBaseConnector';
+		$this->backupTSFE = $GLOBALS['TSFE'];
+		$GLOBALS['TSFE'] = $this->getMock('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController');
 
-		/** @var ExtBaseConnector $fixture */
-		$fixture = $this->getAccessibleMock($class, array('initialize', 'handleWebRequest'));
+		/** @var $fixture ExtBaseConnector */
+		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Connector\ExtBaseConnector');
+		$fixture = $this->getMockBuilder($proxyClass)->setMethods(array('dummy'))
+			->disableOriginalConstructor()->getMock();
 
 		$fixture->setExtensionKey('Foo');
 		$fixture->setModuleOrPluginKey('tools_FooTools');
@@ -59,7 +65,63 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function tearDown() {
+		$GLOBALS['TSFE'] = $this->backupTSFE;
 		unset($this->fixture);
+	}
+
+	/**
+	 * Returns a fake bootstrap
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @param mixed $returnValue
+	 * @return void
+	 */
+	protected function injectFakeBootStrap($controller, $action, $returnValue) {
+		/** @var $mockBootStrap \PHPUnit_Framework_MockObject_MockObject|Bootstrap */
+		$mockBootStrap = $this->getMock('TYPO3\CMS\Extbase\Core\Bootstrap', array('run'));
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$mockBootStrap->expects($this->once())
+			->method('run')
+			->will($this->returnValue($returnValue))
+			->with(
+				'', array(
+					'extensionName' => 'Foo',
+					'pluginName' => 'tools_FooTools',
+					'vendorName' => 'SGalinski',
+					'switchableControllerActions' => array(
+						$controller => array($action)
+					)
+				)
+			);
+
+		$this->fixture->injectBootStrap($mockBootStrap);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function objectCanBeInitialized() {
+		/** @var $fixture ExtBaseConnector */
+		$fixture = $this->getAccessibleMock('SGalinski\DfTools\Connector\ExtBaseConnector', array('dummy'));
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->assertInstanceOf('TYPO3\CMS\Extbase\Core\Bootstrap', $fixture->_get('bootStrap'));
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function testInjectBootStrap() {
+		/** @var $bootStrap Bootstrap */
+		$bootStrap = $this->getMock('TYPO3\CMS\Extbase\Core\Bootstrap', array('dummy'));
+		$this->fixture->injectBootStrap($bootStrap);
+
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->assertSame($bootStrap, $this->fixture->_get('bootStrap'));
 	}
 
 	/**
@@ -68,9 +130,7 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 */
 	public function setExtensionKeyWorks() {
 		$this->fixture->setExtensionKey('FooBar');
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame('FooBar', $this->fixture->_get('extensionKey'));
+		$this->assertSame('FooBar', $this->fixture->getExtensionKey());
 	}
 
 	/**
@@ -79,35 +139,7 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 */
 	public function setModuleOrPluginKeyWorks() {
 		$this->fixture->setModuleOrPluginKey('FooBar');
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame('FooBar', $this->fixture->_get('moduleOrPluginKey'));
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function setParametersWorks() {
-		$this->fixture->setParameters(array('FooBar'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->assertSame(array('FooBar'), $this->fixture->_get('parameters'));
-	}
-
-	/**
-	 * @return void
-	 */
-	protected function prepareRunControllerAndActionTests() {
-		$extensionService = $this->getMock('TYPO3\CMS\Extbase\Service\ExtensionService');
-		$extensionService->expects($this->once())->method('getPluginNamespace')
-			->will($this->returnValue('tx_foo_tools_footools'));
-
-		$objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager');
-		$objectManager->expects($this->once())->method('get')->will($this->returnValue($extensionService));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->_set('objectManager', $objectManager);
+		$this->assertSame('FooBar', $this->fixture->getModuleOrPluginKey());
 	}
 
 	/**
@@ -115,19 +147,29 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function testExecutionOfControllerAndAction() {
-		$this->prepareRunControllerAndActionTests();
+		$controller = 'TestController';
+		$action = 'TestAction';
+		$returnValue = array('foo', 'bar');
 
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->expects($this->once())->method('initialize')->with(
-			array(
-				'extensionName' => 'Foo',
-				'pluginName' => 'tools_FooTools',
-				'switchableControllerActions' => array(
-					'TestController' => array('TestAction')
-				),
-			)
-		);
-		$this->fixture->runControllerAction('TestController', 'TestAction');
+		$this->injectFakeBootStrap($controller, $action, $returnValue);
+		$response = $this->fixture->runControllerAction($controller, $action);
+
+		$this->assertSame($response, $returnValue);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function testExecutionOfControllerAndActionWithNonArrayResponse() {
+		$controller = 'TestController';
+		$action = 'TestAction';
+		$returnValue = TRUE;
+
+		$this->injectFakeBootStrap($controller, $action, $returnValue);
+		$response = $this->fixture->runControllerAction($controller, $action);
+
+		$this->assertSame($response, $returnValue);
 	}
 
 	/**
@@ -152,6 +194,9 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function testExecutionOfControllerAndActionWithIncorrectParameters($controller, $action) {
+		/** @var $mockBootStrap Bootstrap */
+		$mockBootStrap = $this->getMock('TYPO3\CMS\Extbase\Core\Bootstrap');
+		$this->fixture->injectBootStrap($mockBootStrap);
 		$this->fixture->runControllerAction($controller, $action);
 	}
 
@@ -160,12 +205,27 @@ class ExtBaseConnectorTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function parametersCanBeSet() {
-		$this->prepareRunControllerAndActionTests();
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->_set('objectManager', $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('dummy')));
 		$parameters = array('foo' => 'bar', 'my' => 'cat');
+		unset($GLOBALS['TSFE']);
 		$this->fixture->setParameters($parameters);
-
-		$this->fixture->runControllerAction('Foo', 'Bar');
 		$this->assertSame($_POST['tx_foo_tools_footools'], $parameters);
+	}
+
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function multipleSetParametersCallUnsetThePostInformation() {
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->fixture->_set('objectManager', $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('dummy')));
+		$parameters = array('foo' => 'bar');
+		$parameters2 = array('my' => 'cat');
+		unset($GLOBALS['TSFE']);
+		$this->fixture->setParameters($parameters);
+		$this->fixture->setParameters($parameters2);
+		$this->assertSame($_POST['tx_foo_tools_footools'], $parameters2);
 	}
 }
 

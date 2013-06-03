@@ -43,7 +43,7 @@ final class LocalizationUtility {
 	public static function localizeParameterDrivenString($string, $extensionKey) {
 		$parts = explode('|!|', $string);
 		$label = array_shift($parts);
-		$translation = ExtbaseLocalizationUtility::translate($label, $extensionKey, $parts);
+		$translation = trim(ExtbaseLocalizationUtility::translate($label, $extensionKey, $parts));
 		if ($translation === '') {
 			$translation = $label;
 		}

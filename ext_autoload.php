@@ -7,12 +7,6 @@ return array(
 	'sgalinski\dftools\connector\extbaseconnector' => $extensionPath . 'Classes/Connector/ExtBaseConnector.php',
 	'sgalinski\dftools\extdirect\abstractdataprovider' => $extensionPath . 'Classes/ExtDirect/AbstractDataProvider.php',
 
-	// Required, because of the usage in phpunit before ExtBase is instantiated
-	// @TODO häääää?
-	'sgalinski\dftools\extbaseconnectortestcase' => $extensionPath . 'Tests/Unit/ExtBaseConnectorTestCase.php',
-	'sgalinski\dftools\controller\controllertestcase' => $extensionPath . 'Tests/Unit/Controller/ControllerTestCase.php',
-	'sgalinski\dftools\viewhelpers\viewhelpertestcase' => $extensionPath . 'Tests/Unit/ViewHelpers/ViewHelperTestCase.php',
-
 	// Required, because of the usage in the TCA
 	'sgalinski\dftools\parser\tcaparser' => $extensionPath . 'Classes/Parser/TcaParser.php',
 	'sgalinski\dftools\utility\tcautility' => $extensionPath . 'Classes/Utility/TcaUtility.php',

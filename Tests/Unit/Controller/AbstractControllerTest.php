@@ -83,23 +83,6 @@ class AbstractControllerTest extends ControllerTestCase {
 	}
 
 	/**
-	 * @expectedException \RuntimeException
-	 * @test
-	 * @return void
-	 */
-	public function errorActionThrowsRuntimeException() {
-		$mockMappingResults = $this->getMock('TYPO3\CMS\Extbase\Property\MappingResults', array('dummy'));
-		$this->fixture->_set('argumentsMappingResults', $mockMappingResults);
-
-		$arguments = $this->getMock('TYPO3\CMS\Extbase\Mvc\Controller\Arguments', array('dummy'));
-		$this->fixture->_set('arguments', $arguments);
-		$configuratioManager = $this->getMock('TYPO3\CMS\Extbase\Configuration\ConfigurationManager');
-		$this->fixture->_set('configurationManager', $configuratioManager);
-
-		$this->fixture->errorAction();
-	}
-
-	/**
 	 *
 	 * @return void
 	 */

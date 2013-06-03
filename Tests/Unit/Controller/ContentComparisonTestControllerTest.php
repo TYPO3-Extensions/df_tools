@@ -34,7 +34,6 @@ use SGalinski\DfTools\View\ContentComparisonTestArrayView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class ContentComparisonTestControllerTest
@@ -64,12 +63,8 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository ContentComparisonTestRepository */
-		$this->repository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository',
-			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange'),
-			array($this->objectManager)
-		);
-		$this->fixture->_set('repository', $this->repository);
+		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository');
+		$this->fixture->_set('contentComparisonTestRepository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('SGalinski\DfTools\View\ContentComparisonTestArrayView', array('assign'));
@@ -77,7 +72,7 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 	}
 
 	/**
-	 * @return ContentComparisonTest
+	 * @return ContentComparisonTest|object
 	 */
 	protected function getContentComparisonTest() {
 		/** @var $contentComparisonTest ContentComparisonTest */
@@ -166,34 +161,6 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 	 * @test
 	 * @return void
 	 */
-	public function updateAllTestContentsWorks() {
-		$contentComparisonTest1 = $this->getContentComparisonTest();
-		$contentComparisonTest2 = $this->getContentComparisonTest();
-
-		$testCollection = new ObjectStorage();
-		$testCollection->attach($contentComparisonTest1);
-		$testCollection->attach($contentComparisonTest2);
-
-		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
-		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll')
-			->will($this->returnValue($testCollection));
-		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
-		$this->fixture->expects($this->once())->method('getUrlCheckerService')
-			->will($this->returnValue($urlCheckerService));
-		$contentComparisonTest1->expects($this->once())->method('updateTestContent')->with($urlCheckerService);
-		$contentComparisonTest2->expects($this->once())->method('updateTestContent')->with($urlCheckerService);
-		$this->fixture->updateAllTestContentsAction();
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
 	public function runTestWorks() {
 		/** @var $urlCheckerService AbstractService */
 		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
@@ -210,34 +177,6 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 			->will($this->returnValue($urlCheckerService));
 
 		$this->fixture->runTestAction(1);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function runAllTestsWorks() {
-		$contentComparisonTest1 = $this->getContentComparisonTest();
-		$contentComparisonTest2 = $this->getContentComparisonTest();
-
-		$testCollection = new ObjectStorage();
-		$testCollection->attach($contentComparisonTest1);
-		$testCollection->attach($contentComparisonTest2);
-
-		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
-		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll')
-			->will($this->returnValue($testCollection));
-		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
-		$this->fixture->expects($this->once())->method('getUrlCheckerService')
-			->will($this->returnValue($urlCheckerService));
-		$contentComparisonTest1->expects($this->once())->method('test')->with($urlCheckerService);
-		$contentComparisonTest2->expects($this->once())->method('test')->with($urlCheckerService);
-		$this->fixture->runAllTestsAction();
 	}
 }
 

@@ -85,15 +85,15 @@ class LinkCheckDataProviderTest extends ExtBaseConnectorTestCase {
 	public function readHandlesParametersDataProvider() {
 		return array(
 			'ascending sort' => array(
-				array('start' => 0, 'limit' => 200, 'sort' => 'field1', 'dir' => 'ASC'),
+				(object) array('start' => 0, 'limit' => 200, 'sort' => 'field1', 'dir' => 'ASC'),
 				array('offset' => 0, 'limit' => 200, 'sortingField' => 'field1', 'sortAscending' => TRUE),
 			),
 			'descending sort' => array(
-				array('start' => 0, 'limit' => 200, 'sort' => 'field1', 'dir' => 'DESC'),
+				(object) array('start' => 0, 'limit' => 200, 'sort' => 'field1', 'dir' => 'DESC'),
 				array('offset' => 0, 'limit' => 200, 'sortingField' => 'field1', 'sortAscending' => FALSE),
 			),
 			'strange values' => array(
-				array('start' => 'abc', 'limit' => '200', 'sort' => 'field1', 'dir' => 'FOOBAR'),
+				(object) array('start' => 'abc', 'limit' => '200', 'sort' => 'field1', 'dir' => 'FOOBAR'),
 				array('offset' => 0, 'limit' => 200, 'sortingField' => 'field1', 'sortAscending' => FALSE),
 			),
 		);

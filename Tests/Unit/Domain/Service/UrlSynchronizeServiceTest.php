@@ -34,7 +34,6 @@ use SGalinski\DfTools\Domain\Service\UrlSynchronizeService;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -49,6 +48,11 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	protected $fixture;
 
 	/**
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager|object
+	 */
+	protected $objectManager;
+
+	/**
 	 * @return void
 	 */
 	public function setUp() {
@@ -57,9 +61,8 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 			array('fetchExistingRawRecordSets', 'fetchExistingRawUrls')
 		);
 
-		/** @var $objectManager ObjectManager */
-		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
-		$this->fixture->_set('objectManager', $objectManager);
+		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('dummy'));
+		$this->fixture->_set('objectManager', $this->objectManager);
 	}
 
 	/**
@@ -100,22 +103,12 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 			),
 		);
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->once())->method('fetchExistingRawRecordSets')
 			->will($this->returnValue($existingRawRecordSets));
 
-		$persistenceManager = $this->getMock(
-			'TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager', array('getBackend')
-		);
-		$backend = $this->getMock(
-			'Tx_Extbase_Persistence_BackendInterface',
-			array(
-				'setAggregateRootObjects', 'setDeletedObjects', 'commit', 'isNewObject',
-				'getIdentifierByObject', 'getObjectByIdentifier', 'replaceObject',
-			)
-		);
+		$persistenceManager = $this->getMock('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
+		$backend = $this->getMock('Tx_Extbase_Persistence_BackendInterface');
 		$persistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($backend));
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->fixture->expects($this->any())->method('getPersistenceManager')
 			->will($this->returnValue($persistenceManager));
 	}
@@ -124,13 +117,8 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return RecordSetRepository
 	 */
 	protected function prepareRecordSetRepository() {
-		/** @var $recordSetRepository RecordSetRepository */
-		$recordSetRepository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\RecordSetRepository',
-			array('add', 'remove', 'findByUid'),
-			array($this->objectManager)
-		);
-		$this->fixture->injectRecordSetRepository($recordSetRepository);
+		$recordSetRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\RecordSetRepository');
+		$this->fixture->_set('recordSetRepository', $recordSetRepository);
 
 		return $recordSetRepository;
 	}
@@ -139,13 +127,8 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return LinkCheckRepository
 	 */
 	protected function prepareLinkCheckRepository() {
-		/** @var $linkCheckRepository LinkCheckRepository */
-		$linkCheckRepository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository',
-			array('add', 'update', 'remove', 'findInListByTestUrl'),
-			array($this->objectManager)
-		);
-		$this->fixture->injectLinkCheckRepository($linkCheckRepository);
+		$linkCheckRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\LinkCheckRepository');
+		$this->fixture->_set('linkCheckRepository', $linkCheckRepository);
 
 		return $linkCheckRepository;
 	}
@@ -218,8 +201,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$recordSetRepository = $this->prepareRecordSetRepository();
 		$recordSetRepository->expects($this->once())->method('add');
 		$recordSetRepository->expects($this->never())->method('remove');
-		$recordSetRepository->expects($this->once())->method('findByUid')
-			->will($this->returnValue(new RecordSet()));
+		$recordSetRepository->expects($this->once())->method('findByUid')->will($this->returnValue(new RecordSet()));
 
 		$queryResult = $this->getExistingUrls($linkCheckRepository);
 		$this->fixture->synchronize(
@@ -235,8 +217,6 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		);
 
 		/** @var $linkCheck LinkCheck */
-		/** @var $recordSet RecordSet */
-
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
@@ -293,8 +273,6 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		);
 
 		/** @var $linkCheck LinkCheck */
-		/** @var $recordSet RecordSet */
-
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
@@ -354,8 +332,6 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		);
 
 		/** @var $linkCheck LinkCheck */
-		/** @var $recordSet RecordSet */
-
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
@@ -417,8 +393,6 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		);
 
 		/** @var $linkCheck LinkCheck */
-		/** @var $recordSet RecordSet */
-
 		$queryResult->rewind();
 		$linkCheck = $queryResult->current();
 		$recordSets = $linkCheck->getRecordSets();
@@ -441,8 +415,10 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function synchronizeGroupOfUrlsWithOneUnknownOneExistingAndOneRemovableLinkTests() {
-		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock('Tx_DfTools_Service_UrlSynchronizeService', array('synchronize'));
+		/** @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService|object $fixture */
+		$this->fixture = $fixture = $this->getAccessibleMock(
+			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService', array('synchronize')
+		);
 
 		$rawUrls = array(
 			'http://foo.bar' => array(
@@ -473,7 +449,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$expectedQueryResult = clone $queryResult;
 		$expectedQueryResult->offsetUnset(1);
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->expects($this->once())->method('synchronize')->with($expectedRawUrls, $expectedQueryResult);
+		$fixture->expects($this->once())->method('synchronize')->with($expectedRawUrls, $expectedQueryResult);
 
 		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
@@ -481,7 +457,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
 			->will($this->returnValue($queryResult));
 
-		$this->fixture->synchronizeGroupOfUrls($rawUrls);
+		$fixture->synchronizeGroupOfUrls($rawUrls);
 	}
 
 	/**
@@ -489,8 +465,8 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function synchronizeGroupOfUrlsWithOneRemovableLinkTest() {
-		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock(
+		/** @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService|object $fixture */
+		$this->fixture = $fixture = $this->getAccessibleMock(
 			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService', array('synchronize')
 		);
 
@@ -508,7 +484,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$queryResult->offsetSet(0, $testRecord1);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->expects($this->never())->method('synchronize');
+		$fixture->expects($this->never())->method('synchronize');
 
 		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
@@ -516,7 +492,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
 			->will($this->returnValue($queryResult));
 
-		$this->fixture->synchronizeGroupOfUrls($rawUrls);
+		$fixture->synchronizeGroupOfUrls($rawUrls);
 	}
 
 	/**
@@ -524,8 +500,8 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function synchronizeGroupOfUrlsWithOneAddedLinkTest() {
-		unset($this->fixture);
-		$this->fixture = $this->getAccessibleMock(
+		/** @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService|object $fixture */
+		$this->fixture = $fixture = $this->getAccessibleMock(
 			'SGalinski\DfTools\Domain\Service\UrlSynchronizeService', array('synchronize')
 		);
 
@@ -542,7 +518,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$queryResult->offsetUnset(0);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture->expects($this->once())->method('synchronize')->with($rawUrls, $queryResult);
+		$fixture->expects($this->once())->method('synchronize')->with($rawUrls, $queryResult);
 
 		/** @var  $linkCheckRepository LinkCheckRepository|object */
 		$linkCheckRepository = $this->prepareLinkCheckRepository();
@@ -550,7 +526,7 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 		$linkCheckRepository->expects($this->once())->method('findInListByTestUrl')
 			->will($this->returnValue($queryResult));
 
-		$this->fixture->synchronizeGroupOfUrls($rawUrls);
+		$fixture->synchronizeGroupOfUrls($rawUrls);
 	}
 }
 

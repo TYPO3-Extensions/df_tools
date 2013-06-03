@@ -65,29 +65,19 @@ class RealUrlImportServiceTest extends BaseTestCase {
 	 */
 	public function setUp() {
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->fixture = $this->getMock(
+		$this->fixture = $this->getAccessibleMock(
 			$this->buildAccessibleProxy('SGalinski\DfTools\Domain\Service\RealUrlImportService'),
 			array('getRealUrlRedirects', 'doesRedirectTestWithUrlAlreadyExists', 'getCategoryByCategoryField')
 		);
 
-		/** @var $repository RedirectTestRepository */
-		$this->testRepository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\RedirectTestRepository',
-			array('add'),
-			array($this->objectManager)
-		);
-		$this->fixture->_set('testRepository', $this->testRepository);
+		$this->testRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\RedirectTestRepository');
+		$this->fixture->_set('redirectTestRepository', $this->testRepository);
 
-		/** @var $repository RedirectTestCategoryRepository */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
 		$this->categoryRepository = $this->getMock($class, array('add'), array($this->objectManager));
-		$this->fixture->_set('categoryRepository', $this->categoryRepository);
+		$this->fixture->_set('redirectTestCategoryRepository', $this->categoryRepository);
 
-		/** @var $repository ObjectManager */
-		$this->objectManager = $this->getMock(
-			'TYPO3\CMS\Extbase\Object\ObjectManager',
-			array('create')
-		);
+		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$this->fixture->_set('objectManager', $this->objectManager);
 	}
 
@@ -138,7 +128,7 @@ class RealUrlImportServiceTest extends BaseTestCase {
 		$category = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTestCategory')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$category->setCategory('RealUrl');
-		$this->objectManager->expects($this->once())->method('create')
+		$this->objectManager->expects($this->once())->method('get')
 			->will($this->returnValue($category));
 
 		$this->fixture->expects($this->once())->method('getCategoryByCategoryField')
@@ -175,7 +165,7 @@ class RealUrlImportServiceTest extends BaseTestCase {
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
 		$testRecord = $this->getMockBuilder('SGalinski\DfTools\Domain\Model\RedirectTest')
 			->setMethods(array('dummy'))->disableOriginalClone()->getMock();
-		$this->objectManager->expects($this->any())->method('create')->will($this->returnValue($testRecord));
+		$this->objectManager->expects($this->any())->method('get')->will($this->returnValue($testRecord));
 
 		$this->fixture->expects($this->once())->method('getCategoryByCategoryField')
 			->will($this->returnValue($category));

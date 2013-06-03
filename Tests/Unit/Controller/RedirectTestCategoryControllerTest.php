@@ -55,7 +55,7 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$class = 'Tx_DfTools_View_RedirectTestCategory_ArrayView';
+		$class = 'SGalinski\DfTools\View\RedirectTestCategoryArrayView';
 		$mockView = $this->getMock($class, array('assign'));
 		$this->fixture->_set('view', $mockView);
 	}
@@ -98,15 +98,11 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 		$objectCollection->attach(new RedirectTestCategory());
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockRepository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository',
-			array('findAllUnusedCategories', 'remove'),
-			array($this->objectManager)
-		);
+		$mockRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository');
 		$mockRepository->expects($this->once())->method('findAllUnusedCategories')
 			->will($this->returnValue($objectCollection));
 		$mockRepository->expects($this->exactly(2))->method('remove')
-			->with($this->isInstanceOf('Tx_DfTools_Domain_Model_RedirectTestCategory'));
+			->with($this->isInstanceOf('SGalinski\DfTools\Domain\Model\RedirectTestCategory'));
 
 		$this->fixture->_set('redirectTestCategoryRepository', $mockRepository);
 		$this->fixture->deleteUnusedCategoriesAction();

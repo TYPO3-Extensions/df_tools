@@ -29,7 +29,6 @@ namespace SGalinski\DfTools\Tests\Unit\View;
 use SGalinski\DfTools\Utility\HttpUtility;
 use SGalinski\DfTools\View\AbstractArrayView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Security\Channel\RequestHashService;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -64,10 +63,6 @@ class AbstractArrayViewTest extends BaseTestCase {
 	 * @return array plain record
 	 */
 	protected function prepareTestRenderProcess() {
-		/** @var $requestHashService RequestHashService|object */
-		$class = 'TYPO3\CMS\Extbase\Security\Channel\RequestHashService';
-		$requestHashService = $this->getMock($class, array('generateRequestHash'));
-
 		$plainRecord = array(
 			'__identity' => 202,
 			'testUrl' => 'FooBar',
@@ -103,10 +98,12 @@ class AbstractArrayViewTest extends BaseTestCase {
 		$this->fixture->expects($this->exactly(2))->method('getNamespace')
 			->will($this->returnValue($namespace));
 
-		$requestHashService->expects($this->exactly(2))->method('generateRequestHash')
+		$class = 'TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService';
+		$propertyMapper = $this->getMock($class);
+		$propertyMapper->expects($this->exactly(2))->method('generateTrustedPropertiesToken')
 			->with($this->anything(), $namespace)
 			->will($this->returnValue('hmac'));
-		$this->fixture->injectRequestHashService($requestHashService);
+		$this->fixture->_set('mvcPropertyMappingConfigurationService', $propertyMapper);
 
 		return $plainRecord;
 	}
@@ -145,8 +142,8 @@ class AbstractArrayViewTest extends BaseTestCase {
 			'total' => 199
 		);
 
-		$this->fixture->assign('records', (object) array(array('record1')));
-		$this->fixture->assign('totalRecords', (object) 199);
+		$this->fixture->assign('records', array(array('record1')));
+		$this->fixture->assign('totalRecords', 199);
 		$this->assertSame($expectedData, $this->fixture->render());
 	}
 }

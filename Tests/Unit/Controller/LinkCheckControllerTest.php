@@ -35,7 +35,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class LinkCheckControllerTest
@@ -72,25 +71,21 @@ class LinkCheckControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository LinkCheckRepository */
-		$this->repository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository',
-			array('findAll', 'findByUid', 'update', 'add', 'remove', 'findSortedAndInRange', 'countAll'),
-			array($this->objectManager)
-		);
-		$this->fixture->_set('repository', $this->repository);
+		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\LinkCheckRepository');
+		$this->fixture->_set('linkCheckRepository', $this->repository);
 
-		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager', array('get'));
+		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->view = $this->getMock('SGalinski\DfTools\View\LinkCheckArrayView', array('assign'));
+		$this->view = $this->getMock('SGalinski\DfTools\View\LinkCheckArrayView');
 		$this->fixture->_set('view', $this->view);
 	}
 
 	/**
 	 * Returns an link check test instance
 	 *
-	 * @return LinkCheck
+	 * @return LinkCheck|object
 	 */
 	protected function getLinkCheck() {
 		/** @var $linkCheck LinkCheck */
@@ -147,34 +142,6 @@ class LinkCheckControllerTest extends ControllerTestCase {
 			->will($this->returnValue($urlCheckerService));
 
 		$this->fixture->runTestAction(1);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function runAllTestsWorks() {
-		$linkCheck1 = $this->getLinkCheck();
-		$linkCheck2 = $this->getLinkCheck();
-
-		$testCollection = new ObjectStorage();
-		$testCollection->attach($linkCheck1);
-		$testCollection->attach($linkCheck2);
-
-		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
-		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll')
-			->will($this->returnValue($testCollection));
-		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
-		$this->fixture->expects($this->once())->method('getUrlCheckerService')
-			->will($this->returnValue($urlCheckerService));
-		$linkCheck1->expects($this->once())->method('test')->with($urlCheckerService);
-		$linkCheck2->expects($this->once())->method('test')->with($urlCheckerService);
-		$this->fixture->runAllTestsAction();
 	}
 
 	/**

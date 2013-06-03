@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Command;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) domainfactory GmbH (Stefan Galinski <stefan.galinski@gmail.com>)
+ *  (c) Stefan Galinski <stefan.galinski@gmail.com>
  *
  *  All rights reserved
  *
@@ -80,7 +80,7 @@ abstract class AbstractCommandController extends CommandController {
 	 * @param QueryResultInterface $testResults
 	 * @return array
 	 */
-	protected function checkTestResults(QueryResultInterface $testResults) {
+	protected function checkTestResults($testResults) {
 		$notifySeverities = array(
 			AbstractService::SEVERITY_EXCEPTION,
 			AbstractService::SEVERITY_ERROR,

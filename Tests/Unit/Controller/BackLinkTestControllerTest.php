@@ -63,15 +63,9 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
 		$this->fixture->_set('objectManager', $this->objectManager);
 
-		/** @var $repository BackLinkTestRepository */
-		$this->repository = $this->getMock(
-			'SGalinski\DfTools\Domain\Repository\BackLinkTestRepository',
-			array('findAll', 'findByUid', 'update', 'add', 'remove', 'countAll', 'findSortedAndInRange'),
-			array($this->objectManager)
-		);
-		$this->fixture->_set('repository', $this->repository);
+		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\BackLinkTestRepository');
+		$this->fixture->_set('backLinkTestRepository', $this->repository);
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$this->view = $this->getMock('SGalinski\DfTools\View\BackLinkTestArrayView', array('assign'));
 		$this->fixture->_set('view', $this->view);
 	}
@@ -79,7 +73,7 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 	/**
 	 * Returns a back link test instance
 	 *
-	 * @return BackLinkTest
+	 * @return BackLinkTest|object
 	 */
 	protected function getBackLinkTest() {
 		/** @var $backLinkTest BackLinkTest */
@@ -154,45 +148,17 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
 		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
 
-		/** @noinspection PhpUndefinedMethodInspection */
 		$backLinkTest = $this->getBackLinkTest();
 		$this->repository->expects($this->once())->method('findByUid')
 			->will($this->returnValue($backLinkTest))->with(1);
 
+		/** @noinspection PhpUndefinedMethodInspection */
 		$backLinkTest->expects($this->once())->method('test')->with($urlCheckerService);
 		$this->fixture->expects($this->once())->method('forward');
 		$this->fixture->expects($this->once())->method('getUrlCheckerService')
 			->will($this->returnValue($urlCheckerService));
 
 		$this->fixture->runTestAction(1);
-	}
-
-	/**
-	 * @test
-	 * @return void
-	 */
-	public function runAllTestsWorks() {
-		$backLinkTest1 = $this->getBackLinkTest();
-		$backLinkTest2 = $this->getBackLinkTest();
-
-		$testCollection = new ObjectStorage();
-		$testCollection->attach($backLinkTest1);
-		$testCollection->attach($backLinkTest2);
-
-		/** @var $urlCheckerService AbstractService */
-		$class = 'SGalinski\DfTools\UrlChecker\AbstractService';
-		$urlCheckerService = $this->getMock($class, array('init', 'resolveURL'));
-
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->repository->expects($this->once())->method('findAll')
-			->will($this->returnValue($testCollection));
-		$this->view->expects($this->once())->method('assign')
-			->with('records', $this->isInstanceOf('TYPO3\CMS\Extbase\Persistence\ObjectStorage'));
-		$this->fixture->expects($this->once())->method('getUrlCheckerService')
-			->will($this->returnValue($urlCheckerService));
-		$backLinkTest1->expects($this->once())->method('test')->with($urlCheckerService);
-		$backLinkTest2->expects($this->once())->method('test')->with($urlCheckerService);
-		$this->fixture->runAllTestsAction();
 	}
 }
 

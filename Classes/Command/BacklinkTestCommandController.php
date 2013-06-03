@@ -39,7 +39,7 @@ use TYPO3\CMS\Lang\LanguageService;
 class BacklinkTestCommandController extends AbstractCommandController {
 	/**
 	 * @inject
-	 * @var \SGalinski\DfTools\Domain\Repository\BacklinkTestRepository
+	 * @var \SGalinski\DfTools\Domain\Repository\BackLinkTestRepository
 	 */
 	protected $backlinkTestRepository;
 

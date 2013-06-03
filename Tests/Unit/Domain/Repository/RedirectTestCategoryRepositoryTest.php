@@ -111,7 +111,7 @@ class RedirectTestCategoryRepositoryTest extends BaseTestCase {
 	}
 
 	/**
-	 * @expectedException GenericException
+	 * @expectedException \SGalinski\DfTools\Exception\GenericException
 	 * @test
 	 * @return void
 	 */
