@@ -68,7 +68,8 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 				hideGroupedColumn: true
 			},
 
-			tbar: [{
+			tbar: [
+				{
 					id: 'tx_dftools-button-runTest',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.run + '"></span>'
@@ -76,7 +77,8 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 						+ TYPO3.lang['tx_dftools_domain_model_backlinktest.runTests'] + '</span>',
 					scope: this,
 					handler: this.onRunTests
-				}, {
+				},
+				{
 					id: 'tx_dftools-button-createRecord',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.create + '"></span>'
@@ -87,7 +89,8 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 				}
 			],
 
-			groupActions: [{
+			groupActions: [
+				{
 					iconCls: TYPO3.settings.DfTools.Sprites.run,
 					qtip: TYPO3.lang['tx_dftools_domain_model_backlinktest.runTests'],
 					scope: this,
@@ -193,26 +196,31 @@ TYPO3.DfTools.BackLinkTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					align: 'right',
 
 					app: this,
-					items: [{
+					items: [
+						{
 							getClass: this.observeTestState
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.comment,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.editComment'],
 							scope: this,
 							handler: this.onEditComment
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.destroy,
 							tooltip: TYPO3.lang['tx_dftools_common.delete'],
 							scope: this,
 							handler: function() {
 								this.grid.deleteRecord.apply(this.grid, arguments);
 							}
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.run,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.runTest'],
 							scope: this,
 							handler: this.onRunSingleTest
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.edit,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_backlinktest.edit'],
 							scope: this,

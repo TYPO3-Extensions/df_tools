@@ -28,13 +28,8 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Service;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Domain\Service\LinkCheckService;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class LinkCheckServiceTest

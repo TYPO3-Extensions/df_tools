@@ -31,27 +31,34 @@ Ext.ns('TYPO3.DfTools.LinkCheck');
  * @namespace TYPO3.DfTools.LinkCheck
  * @extends Ext.data.Record
  */
-TYPO3.DfTools.LinkCheck.Model = Ext.data.Record.create([{
+TYPO3.DfTools.LinkCheck.Model = Ext.data.Record.create([
+	{
 		name: '__identity',
 		type: 'int',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'testUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'resultUrl',
 		type: 'string'
-	}, {
+	},
+	{
 		name: 'httpStatusCode',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'testResult',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'testMessage',
 		type: 'string'
-	}, {
+	},
+	{
 		name: '__trustedProperties'
 	}
 ]);

@@ -26,8 +26,6 @@ namespace SGalinski\DfTools\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * ExtDirect Data Provider For The Redirect Test Categories
  */

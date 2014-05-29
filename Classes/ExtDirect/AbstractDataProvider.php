@@ -26,7 +26,6 @@ namespace SGalinski\DfTools\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Connector\ExtBaseConnector;
 use SGalinski\DfTools\Exception\GenericException;
 use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

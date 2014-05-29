@@ -31,28 +31,35 @@ Ext.ns('TYPO3.DfTools.ContentComparisonTest');
  * @namespace TYPO3.DfTools.ContentComparisonTest
  * @extends Ext.data.Record
  */
-TYPO3.DfTools.ContentComparisonTest.Model = Ext.data.Record.create([{
+TYPO3.DfTools.ContentComparisonTest.Model = Ext.data.Record.create([
+	{
 		name: '__identity',
 		type: 'int',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'testUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'compareUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'difference',
 		type: 'string'
-	}, {
+	},
+	{
 		name: 'testResult',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'testMessage',
 		type: 'string'
-	}, {
+	},
+	{
 		name: '__trustedProperties'
 	}
 ]);

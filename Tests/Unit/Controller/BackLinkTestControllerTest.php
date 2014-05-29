@@ -26,15 +26,8 @@ namespace SGalinski\DfTools\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Controller\BackLinkTestController;
 use SGalinski\DfTools\Domain\Model\BackLinkTest;
-use SGalinski\DfTools\Domain\Repository\BackLinkTestRepository;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\View\BackLinkTestArrayView;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class BackLinkTestControllerTest

@@ -26,13 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\ExtDirect\ContentComparisonTestDataProvider;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 
 /**
  * Class ContentComparisonTestDataProviderTest
@@ -104,11 +98,11 @@ class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 		/** @var /stdClass $record */
 		$record = array(
 			'records' => (object) array(
-				'__trustedProperties' => 'hmac',
-				'__identity' => 0,
-				'testUrl' => 'FooBar',
-				'compareUrl' => 'FooBar',
-			),
+					'__trustedProperties' => 'hmac',
+					'__identity' => 0,
+					'testUrl' => 'FooBar',
+					'compareUrl' => 'FooBar',
+				),
 		);
 
 		$this->fixture->create((object) $record);
@@ -132,11 +126,11 @@ class ContentComparisonTestDataProviderTest extends ExtBaseConnectorTestCase {
 		/** @var /stdClass $record */
 		$record = (object) array(
 			'records' => (object) array(
-				'__trustedProperties' => 'hmac',
-				'__identity' => 2,
-				'testUrl' => 'FooBar',
-				'compareUrl' => 'FooBar',
-			),
+					'__trustedProperties' => 'hmac',
+					'__identity' => 2,
+					'testUrl' => 'FooBar',
+					'compareUrl' => 'FooBar',
+				),
 		);
 
 		$this->fixture->update($record);

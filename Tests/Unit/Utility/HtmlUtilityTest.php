@@ -28,7 +28,6 @@ namespace SGalinski\DfTools\Tests\Unit\Utility;
 
 use SGalinski\DfTools\Utility\HtmlUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class HtmlUtilityTest

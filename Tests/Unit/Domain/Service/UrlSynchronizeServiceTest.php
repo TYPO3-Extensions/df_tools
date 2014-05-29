@@ -30,13 +30,8 @@ use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
-use SGalinski\DfTools\Domain\Service\UrlSynchronizeService;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class UrlSynchronizeServiceTest

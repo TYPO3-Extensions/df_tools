@@ -73,28 +73,32 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 				}
 			},
 
-			tbar: [{
+			tbar: [
+				{
 					id: 'tx_dftools-button-runTest',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.run + '"></span>'
-							+ '<span class="tx_dftools-button-text">'
-							+ TYPO3.lang['tx_dftools_domain_model_linkcheck.runTests'] + '</span>',
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_linkcheck.runTests'] + '</span>',
 					scope: this,
 					handler: this.onRunTests
-				}, {
+				},
+				{
 					xtype: 'tbfill'
-				}, {
+				},
+				{
 					id: 'tx_dftools-button-synchronize',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.refresh + '"></span>'
-							+ '<span class="tx_dftools-button-text">'
-							+ TYPO3.lang['tx_dftools_domain_model_linkcheck.synchronize'] + '</span>',
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_linkcheck.synchronize'] + '</span>',
 					scope: this,
 					handler: this.onSynchronize
 				}
 			],
 
-			groupActions: [{
+			groupActions: [
+				{
 					iconCls: TYPO3.settings.DfTools.Sprites.run,
 					qtip: TYPO3.lang['tx_dftools_domain_model_linkcheck.runTests'],
 					scope: this,
@@ -132,7 +136,7 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 * @param {Ext.ux.grid.RowExpander} rowExpander
 	 * @param {Ext.data.Record} record
 	 * @param {void}
-			*/
+	 */
 	createRecordSetGrid: function(rowExpander, record) {
 		var identity = record.get('__identity');
 
@@ -154,26 +158,30 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			frame: true,
 			border: false,
 
-			columns: [{
+			columns: [
+				{
 					id: 'humanReadableTableName',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.table_name'],
 					dataIndex: 'humanReadableTableName',
 					sortable: true,
 					width: 170
-				}, {
+				},
+				{
 					id: 'field',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.field'],
 					dataIndex: 'field',
 					sortable: true,
 					width: 130
-				}, {
+				},
+				{
 					id: 'identifier',
 					header: TYPO3.lang['tx_dftools_domain_model_recordset.identifier'],
 					dataIndex: 'identifier',
 					sortable: true,
 					width: 80,
 					align: 'center'
-				}, {
+				},
+				{
 					id: 'actions',
 					xtype: 'actioncolumn',
 					header: TYPO3.lang['tx_dftools_common.actions'],
@@ -182,13 +190,15 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					width: 50,
 					align: 'center',
 
-					items: [{
+					items: [
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.edit,
 							tooltip: TYPO3.lang['tx_dftools_common.editRecord'],
 							urlIdentity: identity,
 							scope: this,
 							handler: this.onOpenRecordSet
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.showPage,
 							tooltip: TYPO3.lang['tx_dftools_common.showPage'],
 							scope: this,
@@ -213,18 +223,18 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	onOpenRecordSet: function(grid, rowIndex) {
 		var dataSet = grid.getStore().getAt(rowIndex);
 		var url = 'alt_doc.php?edit[' + dataSet.get('tableName') +
-				'][' + dataSet.get('identifier') + ']=edit&returnUrl=' +
-				TYPO3.settings.DfTools.Settings.destroyWindowFile;
+			'][' + dataSet.get('identifier') + ']=edit&returnUrl=' +
+			TYPO3.settings.DfTools.Settings.destroyWindowFile;
 		window.open(url, 'newTYPO3frontendWindow').focus();
 	},
 
 	/**
-	* Opens a new window with the related page of the data set
-	*
-	* @param {Ext.grid.GridPanel} grid
-	* @param {int} rowIndex
-	* @return {void}
-	*/
+	 * Opens a new window with the related page of the data set
+	 *
+	 * @param {Ext.grid.GridPanel} grid
+	 * @param {int} rowIndex
+	 * @return {void}
+	 */
 	onShowPage: function(grid, rowIndex) {
 		var dataSet = grid.getStore().getAt(rowIndex);
 		var frontendWindow = window.open('', 'newTYPO3frontendWindow');
@@ -363,7 +373,7 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 */
 	toggleFalsePositiveClass: function(value, meta, record) {
 		var tooltip = '', iconClass = '';
-		if (record.get('testResult') ==  this.app.severityMap.INFO) {
+		if (record.get('testResult') == this.app.severityMap.INFO) {
 			tooltip = TYPO3.lang['tx_dftools_domain_model_linkcheck.resetFalsePositiveState'];
 			iconClass = TYPO3.settings.DfTools.Sprites.information;
 		} else {
@@ -391,7 +401,7 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			columns: [
 				new Ext.grid.RowNumberer({
 					width: 30
-				}), this.getRowExpander() ,{
+				}), this.getRowExpander() , {
 					id: 'testUrl',
 					header: TYPO3.lang['tx_dftools_domain_model_linkcheck.test_url'],
 					dataIndex: 'testUrl',
@@ -432,15 +442,19 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					align: 'right',
 
 					app: this,
-					items: [{
+					items: [
+						{
 							getClass: this.observeTestState
-						}, {
+						},
+						{
 							getClass: this.toggleIgnoreOberserve,
 							handler: this.onToggleIgnoreRecord.createDelegate(this)
-						}, {
+						},
+						{
 							getClass: this.toggleFalsePositiveClass,
 							handler: this.onToggleFalsePositiveAction.createDelegate(this)
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.run,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_linkcheck.runTest'],
 							scope: this,

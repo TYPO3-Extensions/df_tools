@@ -31,26 +31,32 @@ Ext.ns('TYPO3.DfTools.RecordSet');
  * @namespace TYPO3.DfTools.RecordSet
  * @extends Ext.data.Record
  */
-TYPO3.DfTools.RecordSet.Model = Ext.data.Record.create([{
+TYPO3.DfTools.RecordSet.Model = Ext.data.Record.create([
+	{
 		name: '__identity',
 		type: 'int',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'tableName',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'humanReadableTableName',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'field',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'identifier',
 		type: 'int'
-	}, {
+	},
+	{
 		name: '__trustedProperties'
 	}
 ]);

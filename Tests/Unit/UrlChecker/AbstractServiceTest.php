@@ -26,11 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class AbstractServiceTest

@@ -62,7 +62,7 @@ class AddJavaScriptSettingsViewHelper extends AbstractViewHelper {
 			),
 			'Settings' => array(
 				'destroyWindowFile' => '../' . ExtensionManagementUtility::siteRelPath('df_tools') .
-				'/Resources/Public/Templates/destroyWindow.html',
+					'/Resources/Public/Templates/destroyWindow.html',
 			),
 		);
 

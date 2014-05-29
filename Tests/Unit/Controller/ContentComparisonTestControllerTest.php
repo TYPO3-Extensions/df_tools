@@ -26,14 +26,9 @@ namespace SGalinski\DfTools\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Controller\ContentComparisonTestController;
 use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
 use SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\View\ContentComparisonTestArrayView;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 
 /**
  * Class ContentComparisonTestControllerTest

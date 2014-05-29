@@ -21,7 +21,7 @@ return array(
 			'endtime' => 'endtime',
 		),
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('df_tools') .
-		'Resources/Public/Icons/tx_dftools_domain_model_backlinktest.gif'
+			'Resources/Public/Icons/tx_dftools_domain_model_backlinktest.gif'
 	),
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
@@ -65,7 +65,7 @@ return array(
 				),
 				'foreign_table' => 'tx_dftools_domain_model_backlinktest',
 				'foreign_table_where' => 'AND tx_dftools_domain_model_backlinktest.pid=###CURRENT_PID### ' .
-				' AND tx_dftools_domain_model_backlinktest.sys_language_uid IN (-1,0)',
+					' AND tx_dftools_domain_model_backlinktest.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l10n_diffsource' => array(

@@ -27,7 +27,6 @@ namespace SGalinski\DfTools\Controller;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\ContentComparisonTest;
-use SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 

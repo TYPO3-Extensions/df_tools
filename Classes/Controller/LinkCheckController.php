@@ -27,7 +27,6 @@ namespace SGalinski\DfTools\Controller;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
-use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Service\LinkCheckService;
 use SGalinski\DfTools\Domain\Service\UrlSynchronizeService;
 use SGalinski\DfTools\UrlChecker\AbstractService;

@@ -26,11 +26,6 @@ namespace SGalinski\DfTools\Tests\Unit\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\ViewHelpers\AddCssFileViewHelper;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
-
 /**
  * Class AddCssFileViewHelperTest
  */

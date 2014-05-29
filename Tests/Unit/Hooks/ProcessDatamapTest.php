@@ -26,13 +26,8 @@ namespace SGalinski\DfTools\Tests\Unit\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Hooks\ProcessDatamap;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
-use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class ProcessDatamapTest

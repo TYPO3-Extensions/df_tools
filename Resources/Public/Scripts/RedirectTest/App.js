@@ -70,7 +70,8 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			cm: this.getColumnModel(),
 			fetchRowClass: this.fetchRowClass.createDelegate(this),
 
-			tbar: [{
+			tbar: [
+				{
 					id: 'tx_dftools-button-runTest',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.run + '"></span>'
@@ -78,7 +79,8 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 						+ TYPO3.lang['tx_dftools_domain_model_redirecttest.runTests'] + '</span>',
 					scope: this,
 					handler: this.onRunTests
-				}, {
+				},
+				{
 					id: 'tx_dftools-button-createRecord',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.create + '"></span>'
@@ -86,9 +88,11 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 						+ TYPO3.lang['tx_dftools_domain_model_redirecttest.create'] + '</span>',
 					scope: this,
 					handler: this.onAddRecord
-				}, {
+				},
+				{
 					xtype: 'tbfill'
-				}, {
+				},
+				{
 					id: 'tx_dftools-button-deleteCategories',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.destroy + '"></span>'
@@ -99,12 +103,14 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 				}
 			],
 
-			groupActions: [{
+			groupActions: [
+				{
 					iconCls: TYPO3.settings.DfTools.Sprites.run,
 					qtip: TYPO3.lang['tx_dftools_domain_model_redirecttest.runTests'],
 					scope: this,
 					callback: this.onRunTestsOfGroup
-				}, {
+				},
+				{
 					iconCls: TYPO3.settings.DfTools.Sprites.edit,
 					qtip: TYPO3.lang['tx_dftools_domain_model_redirecttestcategory.edit'],
 					visibleForGroups: ['categoryId'],
@@ -163,7 +169,7 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 			msg: TYPO3.lang['tx_dftools_domain_model_redirecttestcategory.massDeleteQuestion.message'],
 			buttons: Ext.Msg.YESNO,
 			scope: this,
-			fn: function (answer) {
+			fn: function(answer) {
 				if (answer === 'yes') {
 					this.deleteUnusedCategories();
 				}
@@ -344,21 +350,25 @@ TYPO3.DfTools.RedirectTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 					align: 'right',
 
 					app: this,
-					items: [{
+					items: [
+						{
 							getClass: this.observeTestState
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.destroy,
 							tooltip: TYPO3.lang['tx_dftools_common.delete'],
 							scope: this,
 							handler: function() {
 								this.grid.deleteRecord.apply(this.grid, arguments);
 							}
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.run,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_redirecttest.runTest'],
 							scope: this,
 							handler: this.onRunSingleTest
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.edit,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_redirecttest.edit'],
 							scope: this,

@@ -26,13 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\ExtDirect\BackLinkTestDataProvider;
 use SGalinski\DfTools\Tests\Unit\ExtBaseConnectorTestCase;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 
 /**
  * Class BackLinkTestDataProviderTest

@@ -61,28 +61,35 @@ TYPO3.DfTools.RedirectTestCategory.PopUpForm = Ext.extend(Ext.FormPanel, {
 			defaults: {
 				anchor: '100%'
 			},
-			items: [{
-				fieldLabel: TYPO3.lang['tx_dftools_domain_model_redirecttestcategory.category'],
-				name: 'category',
-				id: 'category',
-				allowBlank: false
-			}],
+			items: [
+				{
+					fieldLabel: TYPO3.lang['tx_dftools_domain_model_redirecttestcategory.category'],
+					name: 'category',
+					id: 'category',
+					allowBlank: false
+				}
+			],
 
-			buttons: [{
-				text: TYPO3.lang['tx_dftools_common.update'],
-				scope: this,
-				handler: this.updateAndClose
-			}, {
-				text: TYPO3.lang['tx_dftools_common.cancel'],
-				scope: this,
-				handler: this.close
-			}],
+			buttons: [
+				{
+					text: TYPO3.lang['tx_dftools_common.update'],
+					scope: this,
+					handler: this.updateAndClose
+				},
+				{
+					text: TYPO3.lang['tx_dftools_common.cancel'],
+					scope: this,
+					handler: this.close
+				}
+			],
 
-			keys: [{
-				key: Ext.EventObject.ENTER,
-				scope: this,
-				handler: this.updateAndClose
-			}]
+			keys: [
+				{
+					key: Ext.EventObject.ENTER,
+					scope: this,
+					handler: this.updateAndClose
+				}
+			]
 		}, configuration);
 
 		TYPO3.DfTools.RedirectTestCategory.PopUpForm.superclass.constructor.call(this, configuration);

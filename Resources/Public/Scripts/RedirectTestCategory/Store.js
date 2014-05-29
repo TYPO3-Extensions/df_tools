@@ -31,13 +31,16 @@ Ext.ns('TYPO3.DfTools.RedirectTestCategory');
  * @namespace TYPO3.DfTools.RedirectTestCategory
  * @extends Ext.data.Record
  */
-TYPO3.DfTools.RedirectTestCategory.Model = Ext.data.Record.create([{
+TYPO3.DfTools.RedirectTestCategory.Model = Ext.data.Record.create([
+	{
 		name: '__identity',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'category',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: '__trustedProperties'
 	}
 ]);

@@ -31,28 +31,35 @@ Ext.ns('TYPO3.DfTools.BackLinkTest');
  * @namespace TYPO3.DfTools.BackLinkTest
  * @extends Ext.data.Record
  */
-TYPO3.DfTools.BackLinkTest.Model = Ext.data.Record.create([{
+TYPO3.DfTools.BackLinkTest.Model = Ext.data.Record.create([
+	{
 		name: '__identity',
 		type: 'int',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'testUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'expectedUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'testResult',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'testMessage',
 		type: 'string'
-	}, {
+	},
+	{
 		name: 'comment',
 		type: 'string'
-	}, {
+	},
+	{
 		name: '__trustedProperties'
 	}
 ]);

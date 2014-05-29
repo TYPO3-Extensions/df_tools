@@ -29,11 +29,9 @@ namespace SGalinski\DfTools\Controller;
 use SGalinski\DfTools\Domain\Model\TestableInterface;
 use SGalinski\DfTools\UrlChecker\AbstractService;
 use SGalinski\DfTools\UrlChecker\Factory;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Abstract Controller

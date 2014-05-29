@@ -27,7 +27,6 @@ namespace SGalinski\DfTools\Domain\Model;
  ***************************************************************/
 
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\Utility\HttpUtility;
 use SGalinski\DfTools\Utility\LocalizationUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;

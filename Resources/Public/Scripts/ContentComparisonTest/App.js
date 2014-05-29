@@ -77,25 +77,29 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 				hideGroupedColumn: true
 			},
 
-			tbar: [{
+			tbar: [
+				{
 					id: 'tx_dftools-button-runTest',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.run + '"></span>'
-							+ '<span class="tx_dftools-button-text">'
-							+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTests'] + '</span>',
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTests'] + '</span>',
 					scope: this,
 					handler: this.onRunTests
-				}, {
+				},
+				{
 					id: 'tx_dftools-button-createRecord',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.create + '"></span>'
-							+ '<span class="tx_dftools-button-text">'
-							+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.create'] + '</span>',
+						+ '<span class="tx_dftools-button-text">'
+						+ TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.create'] + '</span>',
 					scope: this,
 					handler: this.onAddRecord
-				}, {
+				},
+				{
 					xtype: 'tbfill'
-				}, {
+				},
+				{
 					id: 'tx_dftools-button-massUpdateTestContent',
 					iconCls: '',
 					text: '<span class="' + TYPO3.settings.DfTools.Sprites.refresh + '"></span>'
@@ -106,7 +110,8 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 				}
 			],
 
-			bbar: [{
+			bbar: [
+				{
 					xtype: 'progress',
 					ref: '../progressBar',
 					width: 300,
@@ -114,7 +119,8 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 				}
 			],
 
-			groupActions: [{
+			groupActions: [
+				{
 					iconCls: TYPO3.settings.DfTools.Sprites.run,
 					qtip: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTests'],
 					scope: this,
@@ -338,24 +344,29 @@ TYPO3.DfTools.ContentComparisonTest.App = Ext.extend(TYPO3.DfTools.AbstractApp, 
 					align: 'right',
 
 					app: this,
-					items: [{
+					items: [
+						{
 							getClass: this.observeTestState
-						}, {
+						},
+						{
 							getClass: this.observeTestModeState,
 							handler: this.onUpdateTestContent.createDelegate(this)
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.destroy,
 							tooltip: TYPO3.lang['tx_dftools_common.delete'],
 							scope: this,
 							handler: function() {
 								this.grid.deleteRecord.apply(this.grid, arguments);
 							}
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.run,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.runTest'],
 							scope: this,
 							handler: this.onRunSingleTest
-						}, {
+						},
+						{
 							iconCls: TYPO3.settings.DfTools.Sprites.edit,
 							tooltip: TYPO3.lang['tx_dftools_domain_model_contentcomparisontest.edit'],
 							scope: this,

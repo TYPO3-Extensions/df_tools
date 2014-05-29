@@ -27,12 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\Parser;
  ***************************************************************/
 
 use SGalinski\DfTools\Parser\TcaParser;
-use SGalinski\DfTools\Parser\UrlParser;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class UrlParserServiceTest

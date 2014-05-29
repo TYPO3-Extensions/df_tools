@@ -29,11 +29,7 @@ namespace SGalinski\DfTools\Tests\Unit\View;
 use SGalinski\DfTools\Domain\Model\RedirectTest;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\View\RedirectTestArrayView;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class RedirectTestArrayViewTest

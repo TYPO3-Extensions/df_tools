@@ -27,14 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
-use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
-use SGalinski\DfTools\Domain\Service\RealUrlImportService;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class RealUrlImportServiceTest

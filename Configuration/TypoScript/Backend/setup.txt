@@ -21,6 +21,6 @@ module.tx_dftools {
 	}
 
 	legacy {
-    	enableLegacyFlashMessageHandling = 0
-    }
+		enableLegacyFlashMessageHandling = 0
+	}
 }

@@ -27,11 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\View;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\View\RedirectTestCategoryArrayView;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class RedirectTestCategoryArrayViewTest

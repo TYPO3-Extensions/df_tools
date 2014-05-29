@@ -28,14 +28,9 @@ namespace SGalinski\DfTools\Domain\Service;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
-use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Dbal\Database\DatabaseConnection;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Synchronization Service For The Link Check Aggregate

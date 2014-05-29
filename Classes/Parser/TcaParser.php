@@ -27,7 +27,6 @@ namespace SGalinski\DfTools\Parser;
  ***************************************************************/
 
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * TCA Parser

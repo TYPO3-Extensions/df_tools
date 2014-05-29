@@ -26,7 +26,6 @@ namespace SGalinski\DfTools\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**

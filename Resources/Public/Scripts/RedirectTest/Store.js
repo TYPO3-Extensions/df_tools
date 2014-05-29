@@ -34,28 +34,35 @@ Ext.ns('TYPO3.DfTools.RedirectTest');
  * @namespace TYPO3.DfTools.RedirectTest
  * @extends Ext.data.Record
  */
-TYPO3.DfTools.RedirectTest.Model = Ext.data.Record.create([{
+TYPO3.DfTools.RedirectTest.Model = Ext.data.Record.create([
+	{
 		name: '__identity',
 		type: 'int',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'testUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'expectedUrl',
 		type: 'string',
 		allowBlank: false
-	}, {
+	},
+	{
 		name: 'httpStatusCode',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'testResult',
 		type: 'int'
-	}, {
+	},
+	{
 		name: 'testMessage',
 		type: 'string'
-	}, {
+	},
+	{
 		name: 'categoryId',
 		allowBlank: false,
 		type: 'string',
@@ -75,7 +82,8 @@ TYPO3.DfTools.RedirectTest.Model = Ext.data.Record.create([{
 
 			return value;
 		}
-	}, {
+	},
+	{
 		name: '__trustedProperties'
 	}
 ]);

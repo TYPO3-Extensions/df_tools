@@ -27,7 +27,6 @@ namespace SGalinski\DfTools\View;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
 /**

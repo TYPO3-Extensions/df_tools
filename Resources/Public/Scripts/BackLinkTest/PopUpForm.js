@@ -61,23 +61,28 @@ TYPO3.DfTools.BackLinkTest.PopUpForm = Ext.extend(Ext.FormPanel, {
 			defaults: {
 				anchor: '100%'
 			},
-			items: [{
-				fieldLabel: TYPO3.lang['tx_dftools_domain_model_backlinktest.comment'],
-				height: 100,
-				name: 'comment',
-				id: 'comment',
-				allowBlank: true
-			}],
+			items: [
+				{
+					fieldLabel: TYPO3.lang['tx_dftools_domain_model_backlinktest.comment'],
+					height: 100,
+					name: 'comment',
+					id: 'comment',
+					allowBlank: true
+				}
+			],
 
-			buttons: [{
-				text: TYPO3.lang['tx_dftools_common.update'],
-				scope: this,
-				handler: this.updateAndClose
-			}, {
-				text: TYPO3.lang['tx_dftools_common.cancel'],
-				scope: this,
-				handler: this.close
-			}]
+			buttons: [
+				{
+					text: TYPO3.lang['tx_dftools_common.update'],
+					scope: this,
+					handler: this.updateAndClose
+				},
+				{
+					text: TYPO3.lang['tx_dftools_common.cancel'],
+					scope: this,
+					handler: this.close
+				}
+			]
 		}, configuration);
 
 		TYPO3.DfTools.BackLinkTest.PopUpForm.superclass.constructor.call(this, configuration);

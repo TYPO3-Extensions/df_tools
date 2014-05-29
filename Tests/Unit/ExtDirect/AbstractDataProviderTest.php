@@ -26,16 +26,8 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Exception\GenericException;
-use SGalinski\DfTools\ExtDirect\AbstractDataProvider;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\Utility\HttpUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 
 /**
  * Class AbstractDataProviderTest
@@ -101,9 +93,9 @@ class AbstractDataProviderTest extends BaseTestCase {
 		/** @var \stdClass $record */
 		$record = (object) array(
 			'records' => (object) array(
-				'__trustedProperties' => 'hmac',
-				'__identity' => 1
-			)
+					'__trustedProperties' => 'hmac',
+					'__identity' => 1
+				)
 		);
 
 		/** @noinspection PhpUndefinedMethodInspection */

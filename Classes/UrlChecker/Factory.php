@@ -26,8 +26,6 @@ namespace SGalinski\DfTools\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-
 /**
  * Factory For The Creation Of An Url Checker Service
  */

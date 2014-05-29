@@ -27,11 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\View;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use SGalinski\DfTools\Utility\HttpUtility;
-use SGalinski\DfTools\View\RecordSetArrayView;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Test case for class Tx_DfTools_View_RecordSet_ArrayView

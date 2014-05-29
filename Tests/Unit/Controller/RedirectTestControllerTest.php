@@ -26,17 +26,11 @@ namespace SGalinski\DfTools\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use SGalinski\DfTools\Controller\RedirectTestController;
 use SGalinski\DfTools\Domain\Model\RedirectTest;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 use SGalinski\DfTools\Domain\Repository\RedirectTestRepository;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use SGalinski\DfTools\View\RedirectTestArrayView;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Test case for class Tx_DfTools_Controller_RedirectTestController.

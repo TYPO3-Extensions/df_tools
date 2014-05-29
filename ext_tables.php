@@ -27,9 +27,8 @@ if (TYPO3_MODE === 'BE') {
 	);
 
 	$icons = array(
-		'run' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath(
-			$_EXTKEY
-		) . 'Resources/Public/Icons/run.png',
+		'run' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) .
+			'Resources/Public/Icons/run.png',
 	);
 	\TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons($icons, $_EXTKEY);
 }

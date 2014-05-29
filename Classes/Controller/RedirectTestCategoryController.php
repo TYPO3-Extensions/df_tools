@@ -27,7 +27,6 @@ namespace SGalinski\DfTools\Controller;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository;
 
 /**
  * Controller for the RedirectTestCategory domain model
