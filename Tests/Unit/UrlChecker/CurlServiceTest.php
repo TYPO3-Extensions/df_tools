@@ -35,7 +35,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 /**
  * Test case for class Tx_DfTools_Service_UrlChecker_CurlService.
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class CurlServiceTest extends BaseTestCase {

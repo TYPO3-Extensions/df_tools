@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Contains some useful tools like a testing tool for redirects, a link checker, a back link checker and a content comparison tool between the same or different urls. Furthermore there is full scheduler support for all tests and synchronization tasks.',
 	'category' => 'be',
 	'author' => 'Stefan Galinski',
-	'author_email' => 'stefan.galinski@gmail.com',
+	'author_email' => 'stefan@sgalinski.de',
 	'author_company' => '',
 	'shy' => '',
 	'dependencies' => '',
@@ -33,8 +33,8 @@ $EM_CONF[$_EXTKEY] = array(
 	'version' => '1.6.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '6.1.0-6.1.99',
-			'php' => '5.3.0-5.4.99',
+			'typo3' => '6.1.0-6.2.99',
+			'php' => '5.3.0-5.5.99',
 		),
 		'conflicts' => array(
 		),

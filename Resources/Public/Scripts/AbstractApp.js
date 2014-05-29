@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -27,7 +27,7 @@ Ext.ns('TYPO3.Backend.DfTools');
 /**
  * Abstract Application Code
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @class TYPO3.DfTools.AbstractApp
  * @extends Ext.Component
  * @namespace TYPO3.DfTools

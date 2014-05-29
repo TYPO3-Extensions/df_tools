@@ -1,4 +1,16 @@
 /* common styles */
+html {
+  height: 90%;
+}
+
+.docheader-funcmenu select {
+  color: #333;
+}
+
+#tx_dftools * {
+  font-size: 11px;
+}
+
 .tx_dftools-button-text {
   padding: 2px 3px 0 5px;
   vertical-align: top;
@@ -126,6 +138,25 @@ button span.t3-icon {
 
 .x-panel-header-text {
   line-height: 15px;
+}
+
+.x-btn-noicon .x-btn-small .x-btn-text {
+  height: auto;
+}
+
+button.x-btn-text {
+  background-color: transparent !important;
+}
+button.x-btn-text span {
+  cursor: pointer !important;
+}
+
+button span.t3-icon {
+  vertical-align: middle;
+}
+
+.x-btn-over {
+  background-color: transparent;
 }
 
 /* special styles */

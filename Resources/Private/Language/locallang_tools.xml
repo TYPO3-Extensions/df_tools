@@ -5,7 +5,7 @@
 		<description>Language labels for backend module dF Tools belonging to extension 'df_tools'</description>
 		<generator>LFEditor</generator>
 		<authorName>Stefan Galinski</authorName>
-		<authorEmail>sgalinski@df.eu</authorEmail>
+		<authorEmail>stefan@sgalinski.de</authorEmail>
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">

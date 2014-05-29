@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -60,7 +60,7 @@ TYPO3.DfTools.ContentComparisonTest.Model = Ext.data.Record.create([{
 /**
  * Redirect Test Store that is coupled with the category store
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @namespace TYPO3.DfTools.ContentComparisonTest
  * @class TYPO3.DfTools.ContentComparisonTest.Store
  * @extends TYPO3.DfTools.GroupingStore

@@ -1,4 +1,15 @@
 /* common styles */
+html {
+	height: 90%;
+}
+
+.docheader-funcmenu select {
+	color: #333;
+}
+
+#tx_dftools * {
+	font-size: 11px;
+}
 
 .tx_dftools-button-text {
 	padding: 2px 3px 0 5px;
@@ -143,8 +154,27 @@ button span.t3-icon {
 	line-height: 15px;
 }
 
-/* special styles */
+.x-btn-noicon .x-btn-small .x-btn-text {
+	height: auto;
+}
 
+button.x-btn-text {
+	background-color: transparent !important;
+
+	span {
+		cursor: pointer !important;
+	}
+}
+
+button span.t3-icon {
+	vertical-align: middle;
+}
+
+.x-btn-over {
+	background-color: transparent;
+}
+
+/* special styles */
 #tx_dftools-button-runTest {
 	margin-right: 10px;
 }
@@ -165,7 +195,6 @@ button span.t3-icon {
 }
 
 /* overview action */
-
 #typo3-docbody {
 	dl {
 		margin: 0 0 0 2em;

@@ -41,7 +41,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 /**
  * Test case for class Tx_DfTools_Controller_RedirectTestController.
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class RedirectTestControllerTest extends ControllerTestCase {

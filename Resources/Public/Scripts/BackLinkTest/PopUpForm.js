@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -27,7 +27,7 @@ Ext.ns('TYPO3.DfTools.BackLinkTest');
 /**
  * Provides an edit comment form that is opened inside a pop-up window
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @extends Ext.FormPanel
  * @class TYPO3.DfTools.BackLinkTest.PopUpForm
  * @namespace TYPO3.DfTools.BackLinkTest

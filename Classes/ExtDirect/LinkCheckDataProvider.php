@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\ExtDirect;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 Stefan Galinski <sgalinski@df.eu>, domainfactory GmbH
+ *  (c) 2011 Stefan Galinski <stefan@sgalinski.de>, domainfactory GmbH
  *
  *  All rights reserved
  *
@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * ExtDirect Data Provider For The Link Check Tests
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class LinkCheckDataProvider extends AbstractDataProvider {

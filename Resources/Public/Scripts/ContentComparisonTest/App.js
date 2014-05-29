@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -27,7 +27,7 @@ Ext.ns('TYPO3.Backend.DfTools', 'TYPO3.DfTools.ContentComparisonTest');
 /**
  * Main Application Code For The Content Comparison Test App
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @class TYPO3.DfTools.ContentComparisonTest.App
  * @extends TYPO3.DfTools.AbstractApp
  * @namespace TYPO3.DfTools.ContentComparisonTest

@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 /**
  * Test case for class Tx_DfTools_Domain_Model_RedirectTest.
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class RedirectTestTest extends BaseTestCase {

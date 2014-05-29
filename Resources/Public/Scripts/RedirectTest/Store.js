@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -84,7 +84,7 @@ TYPO3.DfTools.RedirectTest.Model = Ext.data.Record.create([{
  * Redirect Test Store that is coupled with the category store
  *
  * @requires TYPO3.DfTools.RedirectTestCategory.Store
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @namespace TYPO3.DfTools.RedirectTest
  * @class TYPO3.DfTools.RedirectTest.Store
  * @extends TYPO3.DfTools.GroupingStore

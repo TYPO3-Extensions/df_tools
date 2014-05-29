@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -59,7 +59,7 @@ TYPO3.DfTools.LinkCheck.Model = Ext.data.Record.create([{
 /**
  * Link Check test store
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @namespace TYPO3.DfTools.LinkCheck
  * @class TYPO3.DfTools.LinkCheck.Store
  * @extends TYPO3.DfTools.GroupingStore

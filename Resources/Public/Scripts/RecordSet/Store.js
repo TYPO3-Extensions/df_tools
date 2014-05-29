@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -58,7 +58,7 @@ TYPO3.DfTools.RecordSet.Model = Ext.data.Record.create([{
 /**
  * Record set store
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @namespace TYPO3.DfTools.RecordSet
  * @class TYPO3.DfTools.RecordSet.Store
  * @extends TYPO3.DfTools.DirectStore

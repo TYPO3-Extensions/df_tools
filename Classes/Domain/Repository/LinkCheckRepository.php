@@ -5,7 +5,7 @@ namespace SGalinski\DfTools\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -31,7 +31,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 /**
  * Repository for Tx_DfTools_Domain_Model_LinkCheck
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class LinkCheckRepository extends AbstractRepository {

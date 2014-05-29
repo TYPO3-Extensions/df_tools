@@ -37,7 +37,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 /**
  * Test case for class Tx_DfTools_View_ContentComparisonTest_ArrayView
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class ContentComparisonTestArrayViewTest extends BaseTestCase {

@@ -37,7 +37,7 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 /**
  * Test case for class Tx_DfTools_ExtDirect_RedirectTestCategoryDataProvider.
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
 class RedirectTestCategoryDataProviderTest extends ExtBaseConnectorTestCase {

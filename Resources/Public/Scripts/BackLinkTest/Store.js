@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -60,7 +60,7 @@ TYPO3.DfTools.BackLinkTest.Model = Ext.data.Record.create([{
 /**
  * Back Link Test Store
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @namespace TYPO3.DfTools.BackLinkTest
  * @class TYPO3.DfTools.BackLinkTest.Store
  * @extends TYPO3.DfTools.GroupingStore

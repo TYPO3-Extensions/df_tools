@@ -1,7 +1,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 domainfactory GmbH (Stefan Galinski <sgalinski@df.eu>)
+ *  (c) 2011 domainfactory GmbH (Stefan Galinski <stefan@sgalinski.de>)
  *
  *  All rights reserved
  *
@@ -27,7 +27,7 @@ Ext.ns('TYPO3.Backend.DfTools', 'TYPO3.DfTools.RedirectTest');
 /**
  * Main Application Code For The Redirect Test App
  *
- * @author Stefan Galinski <sgalinski@df.eu>
+ * @author Stefan Galinski <stefan@sgalinski.de>
  * @class TYPO3.DfTools.RedirectTest.App
  * @extends TYPO3.DfTools.AbstractApp
  * @namespace TYPO3.DfTools.RedirectTest
