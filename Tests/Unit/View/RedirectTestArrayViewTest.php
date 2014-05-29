@@ -29,12 +29,12 @@ namespace SGalinski\DfTools\Tests\Unit\View;
 use SGalinski\DfTools\Domain\Model\RedirectTest;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
  * Class RedirectTestArrayViewTest
  */
-class RedirectTestArrayViewTest extends BaseTestCase {
+class RedirectTestArrayViewTest extends UnitTestCase {
 	/**
 	 * @var \SGalinski\DfTools\View\RedirectTestArrayView
 	 */

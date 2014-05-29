@@ -116,7 +116,7 @@ abstract class AbstractDataProvider {
 	 * know on the client side which records are written successfully. Always
 	 * update a record once by once!
 	 *
-	 * @param \stdClass $updatedRecords
+	 * @param object $updatedRecords
 	 * @return array
 	 */
 	public function update($updatedRecords) {
@@ -153,7 +153,7 @@ abstract class AbstractDataProvider {
 	/**
 	 * Handles the incoming create record calls
 	 *
-	 * @param \stdClass $newRecord
+	 * @param object $newRecord
 	 * @return array
 	 */
 	public function create($newRecord) {
@@ -168,7 +168,7 @@ abstract class AbstractDataProvider {
 	 * Note: ExtJS transfers a single identifier object or multiple
 	 * ones based on the amount of deleted records.
 	 *
-	 * @param \stdClass $identifiers
+	 * @param object $identifiers
 	 * @return array
 	 */
 	public function destroy($identifiers) {

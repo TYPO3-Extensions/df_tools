@@ -135,7 +135,7 @@ TYPO3.DfTools.LinkCheck.App = Ext.extend(TYPO3.DfTools.AbstractApp, {
 	 * @private
 	 * @param {Ext.ux.grid.RowExpander} rowExpander
 	 * @param {Ext.data.Record} record
-	 * @param {void}
+	 * @return {void}
 	 */
 	createRecordSetGrid: function(rowExpander, record) {
 		var identity = record.get('__identity');

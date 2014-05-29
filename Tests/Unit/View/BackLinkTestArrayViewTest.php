@@ -28,12 +28,12 @@ namespace SGalinski\DfTools\Tests\Unit\View;
 
 use SGalinski\DfTools\Domain\Model\BackLinkTest;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
  * Class BackLinkTestArrayViewTest
  */
-class BackLinkTestArrayViewTest extends BaseTestCase {
+class BackLinkTestArrayViewTest extends UnitTestCase {
 	/**
 	 * @var \SGalinski\DfTools\View\BackLinkTestArrayView
 	 */

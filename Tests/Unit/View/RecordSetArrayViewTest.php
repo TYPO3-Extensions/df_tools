@@ -27,7 +27,7 @@ namespace SGalinski\DfTools\Tests\Unit\View;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
  * Test case for class Tx_DfTools_View_RecordSet_ArrayView
@@ -35,7 +35,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
  * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
-class RecordSetArrayViewTest extends BaseTestCase {
+class RecordSetArrayViewTest extends UnitTestCase {
 	/**
 	 * @var \SGalinski\DfTools\View\RecordSetArrayView|object
 	 */

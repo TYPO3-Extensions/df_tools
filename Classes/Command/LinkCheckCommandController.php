@@ -28,6 +28,7 @@ namespace SGalinski\DfTools\Command;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Service\LinkCheckService;
+use SGalinski\DfTools\Utility\LocalizationUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
 /**
@@ -66,7 +67,7 @@ class LinkCheckCommandController extends AbstractCommandController {
 
 			/** @var $failedRecord LinkCheck */
 			foreach ($failedRecords as $failedRecord) {
-				$testMessage = \SGalinski\DfTools\Utility\LocalizationUtility::localizeParameterDrivenString(
+				$testMessage = LocalizationUtility::localizeParameterDrivenString(
 					$failedRecord->getTestMessage(), 'df_tools'
 				);
 

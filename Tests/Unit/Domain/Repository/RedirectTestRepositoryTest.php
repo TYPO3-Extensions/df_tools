@@ -29,7 +29,6 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
 use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class RedirectTestRepositoryTest
@@ -75,10 +74,8 @@ class RedirectTestRepositoryTest extends ControllerTestCase {
 	 * @return Query
 	 */
 	protected function prepareFindSortedInRangeTests() {
-		/** @var $pageSelectInstance PageRepository */
 		$pageSelectInstance = $this->getMock('TYPO3\CMS\Frontend\Page\PageRepository', array('enableFields'));
 
-		/** @var $dataMapper DataMapper */
 		$class = 'TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper';
 		$dataMapper = $this->getMock($class, array('convertPropertyNameToColumnName'));
 
@@ -98,6 +95,7 @@ class RedirectTestRepositoryTest extends ControllerTestCase {
 		$dataMapper->expects($this->any())->method('convertPropertyNameToColumnName')
 			->with($this->isType('string'), 'SGalinski\DfTools\Domain\Model\RedirectTest')
 			->will($this->returnValue('field'));
+		/** @var $dataMapper DataMapper */
 		$this->fixture->injectDataMapper($dataMapper);
 
 		return $mockQuery;

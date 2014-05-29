@@ -27,6 +27,7 @@
 namespace SGalinski\DfTools\Command;
 
 use SGalinski\DfTools\Domain\Model\RedirectTest;
+use SGalinski\DfTools\Utility\LocalizationUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
 /**
@@ -71,7 +72,7 @@ class RedirectTestCommandController extends AbstractCommandController {
 
 			/** @var $failedRecord RedirectTest */
 			foreach ($failedRecords as $failedRecord) {
-				$testMessage = \SGalinski\DfTools\Utility\LocalizationUtility::localizeParameterDrivenString(
+				$testMessage = LocalizationUtility::localizeParameterDrivenString(
 					$failedRecord->getTestMessage(), 'df_tools'
 				);
 

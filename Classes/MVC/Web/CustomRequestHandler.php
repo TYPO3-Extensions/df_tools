@@ -54,7 +54,8 @@ class CustomRequestHandler extends AbstractRequestHandler {
 	/**
 	 * Handles the web request. The response will automatically be sent to the client.
 	 *
-	 * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+	 * @throws \Exception
+	 * @throws \TYPO3\CMS\Extbase\Exception
 	 * @return Response
 	 */
 	public function handleRequest() {

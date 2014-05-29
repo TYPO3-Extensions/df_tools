@@ -27,12 +27,12 @@ namespace SGalinski\DfTools\Tests\Unit\View;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
  * Class RedirectTestCategoryArrayViewTest
  */
-class RedirectTestCategoryArrayViewTest extends BaseTestCase {
+class RedirectTestCategoryArrayViewTest extends UnitTestCase {
 	/**
 	 * @var \SGalinski\DfTools\View\RedirectTestCategoryArrayView
 	 */

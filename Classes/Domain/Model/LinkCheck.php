@@ -83,9 +83,7 @@ class LinkCheck extends AbstractEntity implements TestableInterface {
 	protected $recordSets;
 
 	/**
-	 * Initilize the object
-	 *
-	 * @return void
+	 * Initialize the object
 	 */
 	public function __construct() {
 		$this->recordSets = new ObjectStorage();

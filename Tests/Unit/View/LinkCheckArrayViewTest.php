@@ -28,7 +28,7 @@ namespace SGalinski\DfTools\Tests\Unit\View;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
  * Test case for class Tx_DfTools_View_LinkCheck_ArrayView
@@ -36,7 +36,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
  * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
-class LinkCheckArrayViewTest extends BaseTestCase {
+class LinkCheckArrayViewTest extends UnitTestCase {
 	/**
 	 * @var \SGalinski\DfTools\View\LinkCheckArrayView
 	 */
