@@ -26,12 +26,12 @@ namespace SGalinski\DfTools\Tests\Unit\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class AbstractViewHelperTest
  */
-class AbstractViewHelperTest extends BaseTestCase {
+class AbstractViewHelperTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\ViewHelpers\AbstractViewHelper
 	 */

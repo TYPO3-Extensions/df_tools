@@ -26,13 +26,13 @@ namespace SGalinski\DfTools\Tests\Unit\Parser;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class TcaParserServiceTest
  */
-class TcaParserTest extends BaseTestCase {
+class TcaParserTest extends ControllerTestCase {
 	/**
 	 * @var array
 	 */

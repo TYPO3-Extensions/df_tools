@@ -26,13 +26,13 @@ namespace SGalinski\DfTools\Tests\Unit\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class FactoryTest
  */
-class FactoryTest extends BaseTestCase {
+class FactoryTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\UrlChecker\Factory|object
 	 */

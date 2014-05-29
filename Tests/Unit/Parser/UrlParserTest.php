@@ -27,12 +27,12 @@ namespace SGalinski\DfTools\Tests\Unit\Parser;
  ***************************************************************/
 
 use SGalinski\DfTools\Parser\TcaParser;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class UrlParserServiceTest
  */
-class UrlParserServiceTest extends BaseTestCase {
+class UrlParserServiceTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Parser\UrlParser|object
 	 */

@@ -28,8 +28,8 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
 
 use SGalinski\DfTools\Domain\Model\RedirectTest;
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Test case for class Tx_DfTools_Domain_Model_RedirectTest.
@@ -37,7 +37,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
  * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
-class RedirectTestTest extends BaseTestCase {
+class RedirectTestTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Model\RedirectTest
 	 */

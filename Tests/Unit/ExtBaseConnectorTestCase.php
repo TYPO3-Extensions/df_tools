@@ -26,12 +26,12 @@ namespace SGalinski\DfTools\Tests\Unit;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class ExtBaseConnectorTestCase
  */
-abstract class ExtBaseConnectorTestCase extends BaseTestCase {
+abstract class ExtBaseConnectorTestCase extends ControllerTestCase {
 	/**
 	 * @var object
 	 */

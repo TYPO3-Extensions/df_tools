@@ -28,14 +28,14 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
 
 use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use SGalinski\DfTools\UrlChecker\AbstractService;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class LinkCheckTest
  */
-class LinkCheckTest extends BaseTestCase {
+class LinkCheckTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Model\LinkCheck
 	 */

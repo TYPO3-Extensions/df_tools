@@ -63,7 +63,9 @@ class RedirectTestControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository RedirectTestRepository */
-		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\RedirectTestRepository');
+		$this->repository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\RedirectTestRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('redirectTestRepository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -125,7 +127,7 @@ class RedirectTestControllerTest extends ControllerTestCase {
 
 		/** @var $categoryRepository RedirectTestCategoryRepository|object */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$categoryRepository = $this->getMock($class, array('add'), array($this->objectManager));
+		$categoryRepository = $this->getMock($class, array('add'), array($this->objectManager), '', FALSE);
 		$this->fixture->_set('redirectTestCategoryRepository', $categoryRepository);
 
 		/** @noinspection PhpUndefinedMethodInspection */

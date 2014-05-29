@@ -26,13 +26,13 @@ namespace SGalinski\DfTools\Tests\Unit\ExtDirect;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use SGalinski\DfTools\UrlChecker\AbstractService;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class AbstractDataProviderTest
  */
-class AbstractDataProviderTest extends BaseTestCase {
+class AbstractDataProviderTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\ExtDirect\AbstractDataProvider|object
 	 */

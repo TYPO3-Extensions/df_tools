@@ -26,12 +26,12 @@ namespace SGalinski\DfTools\Tests\Unit\View;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class AbstractArrayViewTest
  */
-class AbstractArrayViewTest extends BaseTestCase {
+class AbstractArrayViewTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\View\AbstractArrayView|object
 	 */

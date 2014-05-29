@@ -56,7 +56,9 @@ class BackLinkTestControllerTest extends ControllerTestCase {
 		$this->fixture = $this->getAccessibleMock($class, array('forward', 'getUrlCheckerService'));
 		$this->fixture->_set('objectManager', $this->objectManager);
 
-		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\BackLinkTestRepository');
+		$this->repository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\BackLinkTestRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('backLinkTestRepository', $this->repository);
 
 		$this->view = $this->getMock('SGalinski\DfTools\View\BackLinkTestArrayView', array('assign'));

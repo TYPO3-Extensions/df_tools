@@ -27,12 +27,12 @@ namespace SGalinski\DfTools\Tests\Unit\Service;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RedirectTestCategory;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class RealUrlImportServiceTest
  */
-class RealUrlImportServiceTest extends BaseTestCase {
+class RealUrlImportServiceTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Service\RealUrlImportService|object
 	 */
@@ -63,11 +63,13 @@ class RealUrlImportServiceTest extends BaseTestCase {
 			array('getRealUrlRedirects', 'doesRedirectTestWithUrlAlreadyExists', 'getCategoryByCategoryField')
 		);
 
-		$this->testRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\RedirectTestRepository');
+		$this->testRepository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\RedirectTestRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('redirectTestRepository', $this->testRepository);
 
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$this->categoryRepository = $this->getMock($class, array('add'), array($this->objectManager));
+		$this->categoryRepository = $this->getMock($class, array('add'), array($this->objectManager), '', FALSE);
 		$this->fixture->_set('redirectTestCategoryRepository', $this->categoryRepository);
 
 		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager');

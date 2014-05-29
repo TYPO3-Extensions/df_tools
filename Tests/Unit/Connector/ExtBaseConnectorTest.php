@@ -27,13 +27,13 @@ namespace SGalinski\DfTools\Tests\Unit\Connector;
  ***************************************************************/
 
 use SGalinski\DfTools\Connector\ExtBaseConnector;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Extbase\Core\Bootstrap;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class ExtBaseConnectorTest
  */
-class ExtBaseConnectorTest extends BaseTestCase {
+class ExtBaseConnectorTest extends ControllerTestCase {
 	/**
 	 * @var \PHPUnit_Framework_MockObject_MockObject|\SGalinski\DfTools\Connector\ExtBaseConnector
 	 */

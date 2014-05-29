@@ -65,7 +65,9 @@ class LinkCheckControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository LinkCheckRepository */
-		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\LinkCheckRepository');
+		$this->repository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('linkCheckRepository', $this->repository);
 
 		$this->objectManager = $this->getMock('TYPO3\CMS\Extbase\Object\ObjectManager');

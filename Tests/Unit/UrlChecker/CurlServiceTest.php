@@ -26,7 +26,7 @@ namespace SGalinski\DfTools\Tests\Unit\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Test case for class Tx_DfTools_Service_UrlChecker_CurlService.
@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
  * @author Stefan Galinski <stefan@sgalinski.de>
  * @package df_tools
  */
-class CurlServiceTest extends BaseTestCase {
+class CurlServiceTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\UrlChecker\CurlService
 	 */

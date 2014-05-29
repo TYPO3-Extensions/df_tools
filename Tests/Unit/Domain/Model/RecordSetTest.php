@@ -27,12 +27,12 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use SGalinski\DfTools\Domain\Model\RecordSet;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class RecordSetTest
  */
-class RecordSetTest extends BaseTestCase {
+class RecordSetTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Model\RecordSet
 	 */

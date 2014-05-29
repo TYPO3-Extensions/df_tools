@@ -26,13 +26,13 @@ namespace SGalinski\DfTools\Tests\Unit\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use SGalinski\DfTools\Utility\LocalizationUtility;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class LocalizationUtilityTest
  */
-class LocalizationUtilityTest extends BaseTestCase {
+class LocalizationUtilityTest extends ControllerTestCase {
 	/**
 	 * @return array
 	 */

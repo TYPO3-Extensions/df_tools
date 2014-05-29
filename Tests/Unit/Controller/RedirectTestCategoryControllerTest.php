@@ -64,7 +64,7 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 	public function readWithoutFilterFindAllResults() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$mockRepository = $this->getMock($class, array('findAll'), array($this->objectManager));
+		$mockRepository = $this->getMock($class, array('findAll'), array($this->objectManager), '', FALSE);
 		$mockRepository->expects($this->once())->method('findAll');
 
 		$this->fixture->_set('redirectTestCategoryRepository', $mockRepository);
@@ -78,7 +78,9 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 	public function readWithFilterStringFindsCategoriesStartingWithTheFilterString() {
 		/** @noinspection PhpUndefinedMethodInspection */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$mockRepository = $this->getMock($class, array('findByStartingCategory'), array($this->objectManager));
+		$mockRepository = $this->getMock(
+			$class, array('findByStartingCategory'), array($this->objectManager), '', FALSE
+		);
 		$mockRepository->expects($this->once())->method('findByStartingCategory')->with('FooBar');
 
 		$this->fixture->_set('redirectTestCategoryRepository', $mockRepository);
@@ -95,7 +97,9 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 		$objectCollection->attach(new RedirectTestCategory());
 
 		/** @noinspection PhpUndefinedMethodInspection */
-		$mockRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository');
+		$mockRepository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository', [], [], '', FALSE
+		);
 		$mockRepository->expects($this->once())->method('findAllUnusedCategories')
 			->will($this->returnValue($objectCollection));
 		$mockRepository->expects($this->exactly(2))->method('remove')
@@ -117,7 +121,7 @@ class RedirectTestCategoryControllerTest extends ControllerTestCase {
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$class = 'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository';
-		$mockRepository = $this->getMock($class, array('update'), array($this->objectManager));
+		$mockRepository = $this->getMock($class, array('update'), array($this->objectManager), '', FALSE);
 		$mockRepository->expects($this->once())->method('update')->with($category);
 		$this->fixture->_set('redirectTestCategoryRepository', $mockRepository);
 

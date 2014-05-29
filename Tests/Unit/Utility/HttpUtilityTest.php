@@ -26,14 +26,14 @@ namespace SGalinski\DfTools\Tests\Unit\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use SGalinski\DfTools\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class HttpUtilityTest
  */
-class HttpUtilityTest extends BaseTestCase {
+class HttpUtilityTest extends ControllerTestCase {
 	/**
 	 * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
 	 */

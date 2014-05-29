@@ -26,12 +26,12 @@ namespace SGalinski\DfTools\Tests\Unit\UrlChecker;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 
 /**
  * Class AbstractServiceTest
  */
-class AbstractServiceTest extends BaseTestCase {
+class AbstractServiceTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\UrlChecker\AbstractService
 	 */

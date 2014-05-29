@@ -26,14 +26,14 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class AbstractRepositoryTest
  */
-class AbstractRepositoryTest extends BaseTestCase {
+class AbstractRepositoryTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Repository\AbstractRepository|object
 	 */
@@ -45,8 +45,7 @@ class AbstractRepositoryTest extends BaseTestCase {
 	public function setUp() {
 		$this->fixture = $this->getAccessibleMock(
 			'SGalinski\DfTools\Domain\Repository\AbstractRepository',
-			array('createQuery'),
-			array($this->objectManager)
+			array('createQuery'), array($this->objectManager), '', FALSE
 		);
 	}
 

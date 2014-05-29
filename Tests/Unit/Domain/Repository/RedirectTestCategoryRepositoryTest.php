@@ -26,13 +26,13 @@ namespace SGalinski\DfTools\Tests\Unit\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class RedirectTestCategoryRepositoryTest
  */
-class RedirectTestCategoryRepositoryTest extends BaseTestCase {
+class RedirectTestCategoryRepositoryTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository|object
 	 */
@@ -45,7 +45,7 @@ class RedirectTestCategoryRepositoryTest extends BaseTestCase {
 		$this->fixture = $this->getAccessibleMock(
 			'SGalinski\DfTools\Domain\Repository\RedirectTestCategoryRepository',
 			array('createQuery', 'findByCategory', 'getPageSelectInstance'),
-			array($this->objectManager)
+			array($this->objectManager), '', FALSE
 		);
 	}
 

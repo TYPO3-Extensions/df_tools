@@ -30,13 +30,13 @@ use SGalinski\DfTools\Domain\Model\LinkCheck;
 use SGalinski\DfTools\Domain\Model\RecordSet;
 use SGalinski\DfTools\Domain\Repository\LinkCheckRepository;
 use SGalinski\DfTools\Domain\Repository\RecordSetRepository;
+use SGalinski\DfTools\Tests\Unit\Controller\ControllerTestCase;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
-use TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase;
 
 /**
  * Class UrlSynchronizeServiceTest
  */
-class UrlSynchronizeServiceTest extends BaseTestCase {
+class UrlSynchronizeServiceTest extends ControllerTestCase {
 	/**
 	 * @var \SGalinski\DfTools\Domain\Service\UrlSynchronizeService|object
 	 */
@@ -112,7 +112,9 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return RecordSetRepository
 	 */
 	protected function prepareRecordSetRepository() {
-		$recordSetRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\RecordSetRepository');
+		$recordSetRepository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\RecordSetRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('recordSetRepository', $recordSetRepository);
 
 		return $recordSetRepository;
@@ -122,7 +124,9 @@ class UrlSynchronizeServiceTest extends BaseTestCase {
 	 * @return LinkCheckRepository
 	 */
 	protected function prepareLinkCheckRepository() {
-		$linkCheckRepository = $this->getMock('SGalinski\DfTools\Domain\Repository\LinkCheckRepository');
+		$linkCheckRepository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\LinkCheckRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('linkCheckRepository', $linkCheckRepository);
 
 		return $linkCheckRepository;

@@ -58,7 +58,9 @@ class ContentComparisonTestControllerTest extends ControllerTestCase {
 		$this->fixture->_set('objectManager', $this->objectManager);
 
 		/** @var $repository ContentComparisonTestRepository */
-		$this->repository = $this->getMock('SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository');
+		$this->repository = $this->getMock(
+			'SGalinski\DfTools\Domain\Repository\ContentComparisonTestRepository', [], [], '', FALSE
+		);
 		$this->fixture->_set('contentComparisonTestRepository', $this->repository);
 
 		/** @noinspection PhpUndefinedMethodInspection */
