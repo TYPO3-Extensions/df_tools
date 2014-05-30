@@ -86,11 +86,7 @@ class CustomRequestHandler extends AbstractRequestHandler {
 		try {
 			$this->dispatcher->dispatch($request, $response);
 		} catch (Exception $exception) {
-			if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'] <= 0) {
-				if (!is_object($GLOBALS['TSFE'])) {
-					throw $exception;
-				}
-
+			if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'] <= 0 && is_object($GLOBALS['TSFE'])) {
 				/** @var $tsfe TypoScriptFrontendController */
 				$tsfe = $GLOBALS['TSFE'];
 				$tsfe->pageNotFoundAndExit($exception->getMessage());
