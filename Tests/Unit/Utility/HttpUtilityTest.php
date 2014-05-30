@@ -48,6 +48,10 @@ class HttpUtilityTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function setUp() {
+		if (!is_object($GLOBALS['TSFE'])) {
+			$GLOBALS['TSFE'] = new \stdClass();
+		}
+
 		$this->backupTSFE = $GLOBALS['TSFE'];
 		$this->backupServer = $_SERVER;
 		$GLOBALS['TSFE']->config = array();

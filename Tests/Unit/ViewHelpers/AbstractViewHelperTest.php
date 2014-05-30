@@ -46,8 +46,14 @@ class AbstractViewHelperTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function setUp() {
+		if (!is_object($GLOBALS['TSFE'])) {
+			$GLOBALS['TSFE'] = new \stdClass();
+		}
+
 		$this->backupTSFE = $GLOBALS['TSFE'];
-		$this->fixture = $this->getMock('SGalinski\DfTools\ViewHelpers\AbstractViewHelper', array('dummy'));
+		$this->fixture = $this->getMock(
+			'SGalinski\DfTools\ViewHelpers\AbstractViewHelper', array('dummy'), [], '', FALSE
+		);
 	}
 
 	/**

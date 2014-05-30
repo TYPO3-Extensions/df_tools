@@ -33,6 +33,7 @@ use SGalinski\DfTools\UrlChecker\AbstractService;
  * Class AbstractDataProviderTest
  */
 class AbstractDataProviderTest extends ControllerTestCase {
+
 	/**
 	 * @var \SGalinski\DfTools\ExtDirect\AbstractDataProvider|object
 	 */
@@ -48,7 +49,9 @@ class AbstractDataProviderTest extends ControllerTestCase {
 	 */
 	public function setUp() {
 		$this->backupTSFE = $GLOBALS['TSFE'];
-		$GLOBALS['TSFE'] = $this->getMock('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController');
+		$GLOBALS['TSFE'] = $this->getMock(
+			'TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', [], [], '', FALSE
+		);
 
 		$methods = array('updateRecord', 'createRecord', 'destroyRecords', 'isInFrontendMode', 'runTestForRecord');
 		$proxy = $this->buildAccessibleProxy('SGalinski\DfTools\ExtDirect\AbstractDataProvider');
@@ -93,9 +96,9 @@ class AbstractDataProviderTest extends ControllerTestCase {
 		/** @var \stdClass $record */
 		$record = (object) array(
 			'records' => (object) array(
-					'__trustedProperties' => 'hmac',
-					'__identity' => 1
-				)
+				'__trustedProperties' => 'hmac',
+				'__identity' => 1
+			)
 		);
 
 		/** @noinspection PhpUndefinedMethodInspection */

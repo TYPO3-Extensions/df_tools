@@ -49,7 +49,9 @@ class ExtBaseConnectorTest extends ControllerTestCase {
 	 */
 	public function setUp() {
 		$this->backupTSFE = $GLOBALS['TSFE'];
-		$GLOBALS['TSFE'] = $this->getMock('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController');
+		$GLOBALS['TSFE'] = $this->getMock(
+			'TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', [], [], '', FALSE
+		);
 
 		/** @var $fixture ExtBaseConnector */
 		$proxyClass = $this->buildAccessibleProxy('SGalinski\DfTools\Connector\ExtBaseConnector');
