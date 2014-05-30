@@ -144,8 +144,10 @@ class StreamService extends AbstractService {
 				'url' => $url,
 				'content' => $content,
 			);
-			fclose($stream);
-
+			
+			if (is_resource($stream)) {
+				fclose($stream);
+			}
 		} catch (\RuntimeException $exception) {
 			if (is_resource($stream)) {
 				fclose($stream);
