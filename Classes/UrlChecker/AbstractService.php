@@ -51,7 +51,7 @@ abstract class AbstractService implements SingletonInterface {
 	 *
 	 * @var int
 	 */
-	protected $timeout = 7;
+	protected $timeout = 10;
 
 	/**
 	 * User Agent
@@ -86,6 +86,14 @@ abstract class AbstractService implements SingletonInterface {
 	public function __construct() {
 		$this->userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; de-DE) ' .
 			'AppleWebKit/534.17 (KHTML, like Gecko) Chrome/10.0.649.0 Safari/534.17';
+
+		if (isset ($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools'])) {
+			$serializedConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools'];
+			$newTimeout = intval(unserialize($serializedConfiguration)['cUrlTimeoutLimit']);
+			if ($newTimeout >= 1) {
+				$this->timeout = $newTimeout;
+			}
+		}
 	}
 
 	/**

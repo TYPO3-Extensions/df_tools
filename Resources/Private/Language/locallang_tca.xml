@@ -8,6 +8,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="tx_dftools.cUrlTimeoutLimit">Timeout limit for the url checker</label>
 			<label index="tx_dftools.disableAutoLinkSynchronizationFeature">Disable the automatic link synchronization (used for the link check tool; disables the TCEMain hooks)</label>
 			<label index="tx_dftools.excludedTableFields">Exclude Table Fields (only linkchecker, comma-separated, e.g. tx_table&lt;field&gt;)</label>
 			<label index="tx_dftools.excludedTables">Excluded Tables (only linkchecker, comma-separated)</label>

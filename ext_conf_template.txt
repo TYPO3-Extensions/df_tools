@@ -9,3 +9,6 @@ excludedTableFields =
 
 # cat=basic; type=bool; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.disableAutoLinkSynchronizationFeature
 disableAutoLinkSynchronizationFeature
+
+# cat=basic; type=int; label=LLL:EXT:df_tools/Resources/Private/Language/locallang_tca.xml:tx_dftools.cUrlTimeoutLimit
+cUrlTimeoutLimit = 10
