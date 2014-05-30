@@ -78,13 +78,13 @@ class UrlParserServiceTest extends ControllerTestCase {
 
 		$table = 'pages';
 		$fields = array('field1', 'field2');
-		$whereClause = '(field1 REGEXP \'(https|http|ftp)://\' OR ' .
-			'field2 REGEXP \'(https|http|ftp)://\') AND 1=1';
+		$whereClause = '(`field1` REGEXP \'(https|http|ftp)://\' OR ' .
+			'`field2` REGEXP \'(https|http|ftp)://\') AND 1=1';
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$dbMock->expects($this->once())->method('exec_SELECTgetRows')
 			->will($this->returnValue(array()))
-			->with('uid, field1, field2', $table, $whereClause);
+			->with('uid, `field1`, `field2`', $table, $whereClause);
 
 		$this->fixture->_call('fetchUrlsFromDatabase', $table, $fields);
 	}

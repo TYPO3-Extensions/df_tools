@@ -105,7 +105,7 @@ class UrlParser implements SingletonInterface {
 	protected function fetchUrlsFromDatabase($table, array $fields) {
 		$whereClause = array();
 		foreach ($fields as $field) {
-			$whereClause[] = $field . ' REGEXP \'(https|http|ftp)://\'';
+			$whereClause[] = '`' . $field . '` REGEXP \'(https|http|ftp)://\'';
 		}
 
 		$enableFields = $this->getPageSelectInstance()->enableFields(
@@ -115,12 +115,12 @@ class UrlParser implements SingletonInterface {
 		$dbConnection = $GLOBALS['TYPO3_DB'];
 
 		$rows = $dbConnection->exec_SELECTgetRows(
-			'uid, ' . implode(', ', $fields),
+			'uid, `' . implode('`, `', $fields) . '`',
 			$table,
 			'(' . implode(' OR ', $whereClause) . ')' . $enableFields
 		);
 
-		return $this->parseRows($rows, $table);
+		return $this->parseRows((is_array($rows) ? $rows : array()), $table);
 	}
 
 	/**
