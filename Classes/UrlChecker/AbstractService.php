@@ -88,8 +88,8 @@ abstract class AbstractService implements SingletonInterface {
 			'AppleWebKit/534.17 (KHTML, like Gecko) Chrome/10.0.649.0 Safari/534.17';
 
 		if (isset ($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools'])) {
-			$serializedConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools'];
-			$newTimeout = intval(unserialize($serializedConfiguration)['cUrlTimeoutLimit']);
+			$unserializedConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['df_tools']);
+			$newTimeout = intval($unserializedConfiguration['cUrlTimeoutLimit']);
 			if ($newTimeout >= 1) {
 				$this->timeout = $newTimeout;
 			}
